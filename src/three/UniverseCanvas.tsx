@@ -36,10 +36,10 @@ export function UniverseCanvas() {
         <EffectComposer multisampling={reduced ? 0 : 4}>
           <Bloom
             intensity={settings.bloomIntensity}
-            luminanceThreshold={0.6}
-            luminanceSmoothing={0.35}
+            luminanceThreshold={0.85}
+            luminanceSmoothing={0.3}
             mipmapBlur
-            radius={0.7}
+            radius={0.45}
           />
           <Vignette eskil={false} offset={0.22} darkness={0.85} />
         </EffectComposer>

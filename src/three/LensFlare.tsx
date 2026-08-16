@@ -7,10 +7,10 @@ import { usePortfolioStore } from "../store/portfolioStore";
 /* Ghost orbs travel along the axis from the sun to the screen center —
    the classic lens-flare signature. Fraction = how far along that axis. */
 const GHOSTS = [
-  { frac: 0.24, size: 0.34, opacity: 0.34, color: "#9fd8ff" },
-  { frac: 0.4, size: 0.2, opacity: 0.26, color: "#ffe9b0" },
-  { frac: 0.56, size: 0.12, opacity: 0.2, color: "#c9a8ff" },
-  { frac: 0.72, size: 0.07, opacity: 0.14, color: "#9fd8ff" },
+  { frac: 0.24, size: 0.3, opacity: 0.26, color: "#9fd8ff" },
+  { frac: 0.4, size: 0.17, opacity: 0.14, color: "#d8c8ff" },
+  { frac: 0.56, size: 0.1, opacity: 0.12, color: "#9fd8ff" },
+  { frac: 0.72, size: 0.06, opacity: 0.08, color: "#bfe8ff" },
 ];
 
 export function LensFlare({ position = [0, 0, 0] as [number, number, number] }) {
@@ -19,7 +19,7 @@ export function LensFlare({ position = [0, 0, 0] as [number, number, number] }) 
   const quality = usePortfolioStore((s) => s.quality);
   const reduced = usePortfolioStore((s) => s.reducedMotion);
 
-  const coreTex = useMemo(() => createGlowTexture("rgba(255, 246, 220, 0.95)", "rgba(255, 210, 140, 0)"), []);
+  const coreTex = useMemo(() => createGlowTexture("rgba(255, 252, 246, 0.9)", "rgba(255, 240, 220, 0)"), []);
   const streakTex = useMemo(() => createStreakTexture(), []);
   const ghostTexs = useMemo(() => GHOSTS.map((g) => createGlowTexture(hexToRgba(g.color, 0.85), hexToRgba(g.color, 0))), []);
 
@@ -47,8 +47,8 @@ export function LensFlare({ position = [0, 0, 0] as [number, number, number] }) 
     // core glow + anamorphic streak sit on the sun
     const core = g.children[0] as THREE.Sprite;
     const streak = g.children[1] as THREE.Sprite;
-    core.material.opacity = 0.36 + strength * 0.3;
-    streak.material.opacity = 0.1 + strength * 0.22;
+    core.material.opacity = 0.14 + strength * 0.12;
+    streak.material.opacity = 0.05 + strength * 0.1;
     // streak aligns with the axis toward the screen center
     (streak.material as unknown as { rotation: number }).rotation = Math.atan2(-proj.y, -proj.x);
 
@@ -73,13 +73,13 @@ export function LensFlare({ position = [0, 0, 0] as [number, number, number] }) 
 
   return (
     <group ref={group} position={position} visible={false}>
-      {/* tight core glow (replaces the old giant aura) */}
-      <sprite scale={[3.4, 3.4, 1]}>
-        <spriteMaterial map={coreTex} transparent depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} fog={false} opacity={0.6} />
+      {/* tight core — starlight, not a glow blob */}
+      <sprite scale={[1.6, 1.6, 1]}>
+        <spriteMaterial map={coreTex} transparent depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} fog={false} opacity={0.3} />
       </sprite>
       {/* anamorphic streak */}
-      <sprite scale={[9, 0.9, 1]}>
-        <spriteMaterial map={streakTex} transparent depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} fog={false} opacity={0.3} />
+      <sprite scale={[5.5, 0.55, 1]}>
+        <spriteMaterial map={streakTex} transparent depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} fog={false} opacity={0.16} />
       </sprite>
       {GHOSTS.map((gh, i) => (
         <sprite
