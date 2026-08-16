@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
-import { TerminalSquare } from "lucide-react";
+import { Box, Cpu, TerminalSquare } from "lucide-react";
 import { usePortfolioStore } from "../store/portfolioStore";
+import { TechLogoMark } from "./techLogos";
 
 /* ── Cricket: drag the ball around the oval ── */
 export function CricketWorld() {
@@ -215,13 +216,19 @@ export function AstronomyWorld() {
   );
 }
 
-/* ── Study: orbiting knowledge nodes ── */
+/* ── Study: orbiting knowledge nodes with floating brand icons ── */
 const NODES = [
-  { label: "3D WEB", dur: 14, delay: 0, top: 50, left: 50, r: 62 },
-  { label: "UNITY", dur: 18, delay: -4, top: 50, left: 50, r: 72 },
-  { label: "BLENDER", dur: 11, delay: -2, top: 50, left: 50, r: 50 },
-  { label: "SYSTEMS", dur: 16, delay: -7, top: 50, left: 50, r: 56 },
+  { label: "3D WEB", icon: "web3d", color: "#22d3ee", dur: 14, delay: 0, top: 50, left: 50, r: 62 },
+  { label: "UNITY", icon: "unity", color: "#e879f9", dur: 18, delay: -4, top: 50, left: 50, r: 72 },
+  { label: "BLENDER", icon: "blender", color: "#fb923c", dur: 11, delay: -2, top: 50, left: 50, r: 50 },
+  { label: "SYSTEMS", icon: "systems", color: "#60a5fa", dur: 16, delay: -7, top: 50, left: 50, r: 56 },
 ];
+
+function NodeIcon({ kind, size = 12 }: { kind: string; size?: number }) {
+  if (kind === "web3d") return <Box size={size} style={{ color: "#22d3ee" }} aria-label="3D Web" />;
+  if (kind === "systems") return <Cpu size={size} style={{ color: "#60a5fa" }} aria-label="Systems" />;
+  return <TechLogoMark name={kind === "unity" ? "Unity" : "Blender"} size={size} />;
+}
 
 export function StudyWorld() {
   return (
@@ -236,8 +243,13 @@ export function StudyWorld() {
               left: `${n.left}%`,
               animation: `orbit-${n.r} ${n.dur}s linear infinite`,
               animationDelay: `${n.delay}s`,
+              borderColor: `${n.color}55`,
+              boxShadow: `0 0 12px ${n.color}22`,
             }}
           >
+            <span className="knode-ico" style={{ background: `${n.color}1a`, borderColor: `${n.color}44` }}>
+              <NodeIcon kind={n.icon} />
+            </span>
             {n.label}
           </span>
         ))}
