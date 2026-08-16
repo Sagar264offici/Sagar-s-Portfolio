@@ -26,8 +26,9 @@ export function useLenis(): void {
 
   // Phones get pure native scrolling — Lenis's wheel smoothing is pointless on
   // touch, and its constant rAF loop only adds jank to the WebGL page.
-  // Reduced-motion users get native scrolling too.
-  const nativeScroll = reducedMotion || isTouchDevice();
+  // Reduced-motion users get native scrolling too, and professional mode is
+  // ALWAYS native so the calm recruiter layout can never fight the page.
+  const nativeScroll = reducedMotion || isTouchDevice() || professionalMode;
 
   useEffect(() => {
     if (nativeScroll) {

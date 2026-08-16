@@ -26,8 +26,10 @@ const PROJECT_STYLES: Record<string, PlanetStyle> = {
 
 const REAL_PALETTE: PlanetStyle[] = ["mercury", "venus", "mars", "uranus", "neptune", "pluto", "rocky", "icy"];
 
-/* which real texture map (if any) backs each procedural style */
-const REAL_KEY: Partial<Record<PlanetStyle, string>> = {
+/* every style maps to a real pack texture — no planet looks procedural anymore.
+   pluto/rocky/icy fall back to the closest real surface (grey-brown, cratered
+   or frosty blue) instead of the generated fbm look. */
+const REAL_KEY: Record<PlanetStyle, string> = {
   mercury: "mercury",
   venus: "venus",
   earth: "earth",
@@ -36,7 +38,10 @@ const REAL_KEY: Partial<Record<PlanetStyle, string>> = {
   saturn: "saturn",
   uranus: "uranus",
   neptune: "neptune",
+  pluto: "moon",
   moon: "moon",
+  rocky: "mercury",
+  icy: "neptune",
 };
 
 function hashIndex(key: string): number {
@@ -91,8 +96,7 @@ export function Planet({ def }: Props) {
   /* swap to the real 2K map the moment it loads; keep procedural until then */
   const [, setTexTick] = useState(0);
   useEffect(() => onRealTextures(() => setTexTick((t) => t + 1)), []);
-  const realKey = REAL_KEY[style];
-  const realTex = realKey ? getRealTexture(realKey) : undefined;
+  const realTex = getRealTexture(REAL_KEY[style]);
   const surfaceTex = realTex ?? proceduralTex;
   const isEarth = def.key === "project:rishikesh-greens-cafe";
   const realEarth = isEarth ? getRealTexture("earth") : undefined;

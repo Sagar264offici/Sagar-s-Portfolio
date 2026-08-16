@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { detectDevice, detectQuality, type QualityTier } from "../lib/device";
+import { detectDevice, detectQuality, isTouchDevice, type QualityTier } from "../lib/device";
 
 export type SectionId =
   | "home"
@@ -153,7 +153,9 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
       return false;
     }
   })() : true,
-  professionalMode: false,
+  // recruiters mostly arrive on phones — default to the calm, scrollable
+  // professional layout there; desktop keeps the full immersive universe.
+  professionalMode: isTouchDevice() ? true : false,
   secretMode: readStoredFlag("sp-secret-mode"),
   setProfessionalMode: (v) => set({ professionalMode: v }),
   toggleProfessionalMode: () => set((s) => ({ professionalMode: !s.professionalMode })),
