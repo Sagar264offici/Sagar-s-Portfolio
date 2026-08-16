@@ -13,18 +13,17 @@ interface Keyframe {
   look: [number, number, number];
 }
 
+/* A wide, stable vantage — the camera never plunges toward the sun. The
+   motion on scroll comes from the system's own slow rotation (scrollSpin in
+   Planet.tsx), not from dollying into the star. */
 const KEYFRAMES: Keyframe[] = [
   { t: 0.0, pos: [0, 1.9, 20], look: [0, 0.3, 0] },
-  { t: 0.08, pos: [5.5, 2.4, 13], look: [8.4, 1.9, -7.2] },
-  { t: 0.16, pos: [4.6, 2.1, 7], look: [8.4, 1.9, -7.2] },
-  { t: 0.25, pos: [1.6, 1.7, 12.5], look: [0, 0, 0] },
-  { t: 0.37, pos: [-8.5, 2.8, 7.5], look: [0, 0.2, 0] },
-  { t: 0.5, pos: [0, 3.6, 12.5], look: [0, 0, 0] },
-  { t: 0.63, pos: [7, 2.6, -9.5], look: [0, 0, 0] },
-  { t: 0.75, pos: [-7.5, 4.2, 6.5], look: [0, 0, 0] },
-  { t: 0.86, pos: [4.2, 2.2, -12.5], look: [0, 0, 0] },
-  { t: 0.95, pos: [0, 2.6, 16.5], look: [0, 0, 0] },
-  { t: 1.0, pos: [0, 3.2, 18.5], look: [0, 0, 0] },
+  { t: 0.1, pos: [3.2, 2.2, 15.2], look: [8, 1.9, -7] },
+  { t: 0.2, pos: [2.8, 2.0, 15], look: [8, 1.9, -7] },
+  { t: 0.35, pos: [1, 1.9, 17], look: [0, 0.2, 0] },
+  { t: 0.55, pos: [2.2, 2.4, 16.6], look: [0, 0.2, 0] },
+  { t: 0.75, pos: [0.6, 2.2, 17.6], look: [0, 0.2, 0] },
+  { t: 1.0, pos: [0, 2.2, 19], look: [0, 0.2, 0] },
 ];
 
 const FOCUS_OFFSET = new THREE.Vector3(0, 1.3, 3.2);

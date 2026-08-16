@@ -14,6 +14,9 @@ import { TechLogoMark } from "../components/techLogos";
 
 const TAU = Math.PI * 2;
 
+/* how many full turns the whole system makes across a full page scroll */
+const SCROLL_SPIN_TURNS = 0.5;
+
 /* Real solar-system looks, keyed by body. Project worlds each get a
    distinct planet identity; other bodies are picked from a real palette. */
 const PROJECT_STYLES: Record<string, PlanetStyle> = {
@@ -137,7 +140,10 @@ export function Planet({ def }: Props) {
     if (!reduced) orbit.angle += def.speed * delta;
     // manual spin: the ROTATE slider rotates the whole system on demand
     const spin = (usePortfolioStore.getState().orbitSpin / 360) * TAU;
-    const a = orbit.angle + spin;
+    // scroll spin: as you read, the whole system turns slowly — the motion
+    // comes from the worlds moving past, not the camera plunging at the sun
+    const scrollSpin = usePortfolioStore.getState().scrollProgress * SCROLL_SPIN_TURNS * TAU;
+    const a = orbit.angle + spin + scrollSpin;
     g.position.set(Math.cos(a) * def.ring, Math.sin(a * bob.freq + bob.phase) * bob.amp, Math.sin(a) * def.ring);
     registerPlanetPosition(def.key, g.position);
 
