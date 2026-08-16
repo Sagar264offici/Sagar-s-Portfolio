@@ -29,6 +29,16 @@ Planets with no real map in the pack (Pluto, rocky/icy dwarfs) stay procedural.
 
 ## 2. GLB models — how to activate
 
+### Space station
+
+The hero-corner station loads `spacestation.glb` automatically (a procedural
+station stands in until then). Drop a real GLB here and it renders instantly.
+
+> ⚠️ `spacestation2.blend` currently contains only a **default 2×2×2 cube** named
+> "Space station" (8 vertices) — it is a placeholder download, not the actual ISS
+> geometry. The real model is needed in any loadable format (GLB/GLTF/OBJ/FBX/DAE,
+> or a .blend with actual meshes — Blender is installed locally to convert it).
+
 `Planets.blend` is a **Blender source file** — browsers can't load `.blend`. To use
 the actual 3D geometry you must export it to `.glb` **inside Blender**
 (File → Export → glTF 2.0, or `blender --background Planets.blend --export-glb ...`),
