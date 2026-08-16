@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <radialGradient id="sun" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffe6c0" />
+      <stop offset="45%" stop-color="#fb923c" />
+      <stop offset="100%" stop-color="#7c2d12" />
+    </radialGradient>
+    <linearGradient id="fg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e6e9f2" />
+      <stop offset="100%" stop-color="#8b93a7" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="#05060a" />
+  <circle cx="600" cy="315" r="150" fill="url(#sun)" />
+  <ellipse cx="600" cy="315" rx="420" ry="150" fill="none" stroke="#22d3ee" stroke-width="4" opacity="0.6" />
+  <ellipse cx="600" cy="315" rx="520" ry="190" fill="none" stroke="#8b5cf6" stroke-width="3" opacity="0.4" />
+  <circle cx="955" cy="240" r="22" fill="#22d3ee" />
+  <circle cx="260" cy="420" r="16" fill="#8b5cf6" />
+  <text x="600" y="285" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="84" font-weight="700" fill="url(#fg)" letter-spacing="8">SAGAR PATHAK</text>
+  <text x="600" y="355" text-anchor="middle" font-family="Courier New, monospace" font-size="30" fill="#22d3ee" letter-spacing="4">I BUILD THINGS THAT SHOULDN'T BE THIS INTERACTIVE</text>
+</svg>
