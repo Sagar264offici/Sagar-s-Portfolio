@@ -123,12 +123,11 @@ export function Navbar() {
 
       {mobileOpen && (
         <div
-          className="glass"
+          className="glass nav-mobile-menu"
           style={{
             position: "fixed",
             top: "calc(var(--nav-h) + 10px)",
             right: "16px",
-            width: "min(320px, 84vw)",
             padding: "18px",
             zIndex: 50,
             display: "flex",

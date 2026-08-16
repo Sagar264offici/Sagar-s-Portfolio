@@ -53,6 +53,7 @@ export function CameraRig() {
 
   const reduced = usePortfolioStore((s) => s.reducedMotion);
   const focusedBody = usePortfolioStore((s) => s.focusedBody);
+  const touch = isTouchDevice();
 
   useFrame((state, delta) => {
     const dt = Math.min(delta, 0.05);
@@ -60,7 +61,7 @@ export function CameraRig() {
 
     // Mouse parallax (disabled in reduced motion, damped on touch so scrolls stay calm).
     const p = getPointer();
-    const touchFactor = isTouchDevice() ? 0.2 : 1;
+    const touchFactor = touch ? 0.2 : 1;
     pointer.current.x = reduced ? 0 : p.x * touchFactor;
     pointer.current.y = reduced ? 0 : p.y * touchFactor;
 
@@ -75,6 +76,17 @@ export function CameraRig() {
       const dir = bodyPos.clone().normalize();
       desiredPos = bodyPos.clone().add(dir.multiplyScalar(2.4)).add(new THREE.Vector3(0, 1.2, 0.4));
       desiredLook = bodyPos.clone();
+    } else if (touch) {
+      // Phones: the camera keeps its distance and only drifts a fraction of the
+      // cinematic dolly — full keyframe travel reads as the page fighting the
+      // scroll and feels laggy on touch. A gentle glide keeps the depth cue
+      // without the motion sickness.
+      focusPos.current = null;
+      const rest = new THREE.Vector3(0, 2.2, 18);
+      desiredPos = rest.clone().lerp(base.pos, 0.45);
+      desiredPos.x += pointer.current.x * 0.25;
+      desiredPos.y += -pointer.current.y * 0.15;
+      desiredLook = new THREE.Vector3(base.look.x * 0.35, base.look.y * 0.3, base.look.z);
     } else {
       focusPos.current = null;
       desiredPos = base.pos.clone();
@@ -85,7 +97,8 @@ export function CameraRig() {
       desiredLook.y += -pointer.current.y * 0.2;
     }
 
-    const lambda = focusedBody ? 2.6 : 1.6;
+    // Slower lerp on touch so the background glides instead of snapping after the finger.
+    const lambda = focusedBody ? 2.6 : touch ? 1.1 : 1.6;
     currentPos.current.lerp(desiredPos, 1 - Math.exp(-lambda * dt));
     currentLook.current.lerp(desiredLook, 1 - Math.exp(-lambda * dt));
 

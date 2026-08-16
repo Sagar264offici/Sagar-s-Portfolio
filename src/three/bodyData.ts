@@ -18,6 +18,8 @@ export interface BodyDef {
   seed: number;
   /** skills with no shipped project render as small, dim dwarf planets */
   dwarf: boolean;
+  /** real GLB from public/models/ — used when present, procedural surface otherwise */
+  model?: string;
   projectId?: string;
   skillName?: string;
   note?: string;
@@ -67,7 +69,17 @@ const moonBody: BodyDef = {
   tilt: 0.14,
   seed: seedOf("moon"),
   dwarf: false,
+  model: "moon.glb",
   note: "Astronomy mode",
+};
+
+/* real 3D model per deployed project — the GLBs live in public/models/ */
+const projectModels: Record<string, string> = {
+  "spdc-quiz-battle": "jupiter.glb",
+  "rishikesh-greens-cafe": "earth.glb",
+  "daitya-legion": "mars.glb",
+  "dentist-clinic-prototype": "uranus.glb",
+  "cricket-field-simulation": "saturn.glb",
 };
 
 /* ── ORBIT 2: the deployed projects — ringed main worlds ── */
@@ -84,6 +96,7 @@ const projectBodies: BodyDef[] = projects.map((p, i) => ({
   tilt: (hash(p.id) - 0.5) * 0.22,
   seed: seedOf(p.id),
   dwarf: false,
+  model: projectModels[p.id],
   projectId: p.id,
   note: p.category,
 }));

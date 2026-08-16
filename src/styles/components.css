@@ -2284,11 +2284,19 @@ html[data-pro="1"] .canvas-wrap canvas {
   }
 
   .orbit-nav {
-    bottom: 66px;
+    bottom: calc(66px + env(safe-area-inset-bottom));
   }
 
   .on-title {
     display: none;
+  }
+
+  /* the mobile menu dropdown must never overflow the viewport */
+  .nav-mobile-menu {
+    width: min(320px, 92vw);
+    max-height: calc(100dvh - var(--nav-h) - 24px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
   }
 
   .on-station {
@@ -2329,7 +2337,7 @@ html[data-pro="1"] .canvas-wrap canvas {
 
   .float-hr {
     right: 14px;
-    bottom: 16px;
+    bottom: calc(16px + env(safe-area-inset-bottom));
     padding: 10px 14px;
     font-size: 9px;
   }

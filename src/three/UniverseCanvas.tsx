@@ -1,7 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import { Bloom, EffectComposer, Vignette } from "@react-three/postprocessing";
 import { usePortfolioStore } from "../store/portfolioStore";
-import { qualitySettings } from "../lib/device";
+import { isTouchDevice, qualitySettings } from "../lib/device";
 import { UniverseScene } from "./UniverseScene";
 
 export function UniverseCanvas() {
@@ -12,10 +12,13 @@ export function UniverseCanvas() {
   if (!webgl) return null;
 
   const settings = qualitySettings(quality, reduced);
+  // Phones get a hard DPR cap — full-res pixels on a 120Hz panel cost more
+  // than the scene's visual payoff there.
+  const dprMax = isTouchDevice() ? 1.5 : reduced ? 1.5 : 2;
 
   return (
     <Canvas
-      dpr={[1, reduced ? 1.5 : 2]}
+      dpr={[1, dprMax]}
       camera={{ fov: 55, near: 0.1, far: 400, position: [0, 1.9, 20] }}
       gl={{
         antialias: settings.postprocessing ? false : true,

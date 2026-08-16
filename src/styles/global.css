@@ -455,3 +455,41 @@ html[data-reduced="1"] *::after {
     min-height: 40px;
   }
 }
+
+/* ── Phones: native feel + cheap compositing ─────────────
+   Three things make mobile scroll feel broken on a WebGL page:
+   1. backdrop-filter over the live canvas — the browser re-composites
+      the 3D scene behind every glass panel on every frame. Off on mobile;
+      the surfaces get a more opaque fill instead.
+   2. overscroll-behavior: none — kills the native iOS/Android bounce.
+   3. Whole-scene re-paints — off-screen sections stop rendering until
+      they're near the viewport (content-visibility). */
+@media (pointer: coarse) {
+  html,
+  body {
+    overscroll-behavior-y: auto;
+  }
+
+  .glass {
+    background: rgba(10, 13, 21, 0.92);
+  }
+
+  .nav-links,
+  .nav-toggle {
+    background: rgba(8, 10, 16, 0.78);
+  }
+
+  .section {
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 100svh;
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  *,
+  *::before,
+  *::after {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+}

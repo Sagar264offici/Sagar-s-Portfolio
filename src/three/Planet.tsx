@@ -5,6 +5,7 @@ import * as THREE from "three";
 import type { BodyDef } from "./bodyData";
 import { registerPlanetPosition, unregisterPlanetPosition, registerOrbit, unregisterOrbit, getOrbitState } from "./planetRegistry";
 import { createGlowTexture, createPlanetTexture, createRingTexture, createTrailTexture, hexToRgba, type PlanetStyle } from "./textures";
+import { ModelPlanet } from "./PlanetModel";
 import { usePortfolioStore } from "../store/portfolioStore";
 import { audio } from "../lib/audio";
 import { projectIcons } from "../components/icons";
@@ -52,7 +53,7 @@ interface Props {
 
 export function Planet({ def }: Props) {
   const group = useRef<THREE.Group>(null);
-  const core = useRef<THREE.Mesh>(null);
+  const core = useRef<THREE.Group>(null);
   const scale = useRef(1);
 
   const setHoveredPlanet = usePortfolioStore((s) => s.setHoveredPlanet);
@@ -114,6 +115,14 @@ export function Planet({ def }: Props) {
   });
 
   const segments = def.size > 0.5 ? 48 : 32;
+  // the procedural sphere — used directly for skill/dwarf worlds and as the
+  // automatic fallback when a real GLB model is missing
+  const proceduralBody = (
+    <mesh>
+      <sphereGeometry args={[def.size, segments, segments]} />
+      <meshStandardMaterial map={surfaceTex} emissive={def.color} emissiveIntensity={0.05} roughness={0.85} metalness={0.05} transparent={def.opacity < 1} opacity={def.opacity} />
+    </mesh>
+  );
   const showName = def.kind !== "project" && (def.kind === "moon" || hovered);
   // label sits higher on skill bodies so it clears the logo badge
   const labelY = def.skillName ? def.size + 1.05 : def.size + 0.5;
@@ -152,8 +161,9 @@ export function Planet({ def }: Props) {
         <meshBasicMaterial map={glowTex} transparent depthWrite={false} blending={THREE.AdditiveBlending} opacity={def.dwarf ? 0.18 : 0.3} toneMapped={false} />
       </mesh>
 
-      {/* planet body with real surface */}
-      <mesh
+      {/* planet body — real GLB model from public/models/ when present,
+          procedural surface otherwise (missing/corrupt files fall back too) */}
+      <group
         ref={core}
         onClick={(e) => {
           e.stopPropagation();
@@ -165,9 +175,12 @@ export function Planet({ def }: Props) {
         }}
         onPointerOut={() => setHoveredPlanet(null)}
       >
-        <sphereGeometry args={[def.size, segments, segments]} />
-        <meshStandardMaterial map={surfaceTex} emissive={def.color} emissiveIntensity={0.05} roughness={0.85} metalness={0.05} transparent={def.opacity < 1} opacity={def.opacity} />
-      </mesh>
+        {def.model ? (
+          <ModelPlanet src={`/models/${def.model}`} targetRadius={def.size} fallback={proceduralBody} />
+        ) : (
+          proceduralBody
+        )}
+      </group>
 
       {/* ring system on project worlds — Saturn-style */}
       {def.kind === "project" && (
