@@ -1,12 +1,17 @@
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { createGlowTexture, createSunTexture } from "./textures";
+import { getRealTexture, onRealTextures } from "./realTextures";
 import { LensFlare } from "./LensFlare";
 import { usePortfolioStore } from "../store/portfolioStore";
 
 export function CareerSun() {
-  const sunTex = useMemo(() => createSunTexture(), []);
+  const proceduralSun = useMemo(() => createSunTexture(), []);
+  const [, setTexTick] = useState(0);
+  useEffect(() => onRealTextures(() => setTexTick((t) => t + 1)), []);
+  /* the real 2K solar map once it loads — sunspots included, procedural until then */
+  const sunTex = getRealTexture("sun") ?? proceduralSun;
   const glowTex = useMemo(() => createGlowTexture("rgba(255, 190, 110, 0.9)", "rgba(255, 120, 40, 0)"), []);
   const core = useRef<THREE.Mesh>(null);
   const quality = usePortfolioStore((s) => s.quality);

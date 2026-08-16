@@ -1,51 +1,58 @@
-# 3D Models — Solar System GLBs
+# 3D Models & Textures — Solar System
 
-Drop the GLB files here and the site loads them automatically. No code changes needed —
-a planet uses its real 3D model when the file exists, and falls back to the procedural
-surface when it doesn't.
+Two independent systems here:
 
-## How to get the files (2 minutes)
+1. **Real 2K textures** — `Planets_Blendfile_Textures/` (already wired in, live now)
+2. **GLB models** — drop `.glb` files here and planets render as real 3D geometry
 
-The models come from this Sketchfab collection by **3dmigos**:
+## 1. Textures — ACTIVE ✅
 
-> https://skfb.ly/oOEAK — "Solar System gltf"
+The `Planets_Blendfile_Textures/Textures/` pack (from the same 3dmigos collection) is
+loaded automatically by `src/three/realTextures.ts`. The moment a file exists it
+replaces the procedural surface on that body — no code changes needed:
 
-Sketchfab requires a free login to download (the site cannot fetch them itself —
-their API rejects anonymous downloads).
+| Texture file              | Used on                                            |
+| ------------------------- | -------------------------------------------------- |
+| `Sun/2k_sun.jpg`          | The career sun (sunspots included)                 |
+| `Moon/2k_moon.jpg`        | The moon                                            |
+| `Mercury/2k_mercury.jpg`  | Mercury-styled skill planets                       |
+| `Venus/2k_venus_surface.jpg` | Venus-styled skill planets                      |
+| `Neptune/2k_neptune.jpg`  | Neptune-styled skill planets                       |
+| `Erath/2k_earth_daymap.jpg` + `2k_earth_clouds.jpg` | Greens Cafe (daymap + drifting cloud layer) |
+| `Mars/2k_mars.jpg`        | Daitya Legion                                       |
+| `Jupiter/2k_jupiter.jpg`  | Quiz Battle                                         |
+| `Uranus/2k_uranus.jpg`    | Dentist                                             |
+| `Saturn/2k_saturn.jpg` + `2k_saturn_ring_alpha.png` | Cricket Field (real ring strip, UV-remapped) |
 
-1. Open the link, log in / create a free account.
-2. Click **Download 3D model** on each of these 6 models:
-   - **The Moon**
-   - **Earth**
-   - **Mars**
-   - **Jupiter** (either variant — "Jupiter - Free Downloadable Model" or "jupiter")
-   - **Saturno v1.1** (this one is animated — bonus ring motion)
-   - **Uranus**
-3. Each download is a ZIP. Unzip it, find the `.glb` file inside, and rename it:
+Missing/corrupt files are harmless — the body just keeps its procedural surface.
+Planets with no real map in the pack (Pluto, rocky/icy dwarfs) stay procedural.
 
-   | Model    | Save as          |
-   | -------- | ---------------- |
-   | The Moon | `moon.glb`       |
-   | Earth    | `earth.glb`      |
-   | Mars     | `mars.glb`       |
-   | Jupiter  | `jupiter.glb`    |
-   | Saturno  | `saturn.glb`     |
-   | Uranus   | `uranus.glb`     |
+## 2. GLB models — how to activate
 
-4. Move the six `.glb` files into this folder (`public/models/`).
+`Planets.blend` is a **Blender source file** — browsers can't load `.blend`. To use
+the actual 3D geometry you must export it to `.glb` **inside Blender**
+(File → Export → glTF 2.0, or `blender --background Planets.blend --export-glb ...`),
+then drop the renamed files here:
 
-That's it. The moon and the five project planets (Quiz Battle = Jupiter, Greens Cafe =
-Earth, Daitya Legion = Mars, Dentist = Uranus, Cricket Field = Saturn) will render as
-the real models on the next `npm run dev` / build.
+| Export as      | Renders on            |
+| -------------- | --------------------- |
+| `moon.glb`     | The moon              |
+| `earth.glb`    | Greens Cafe           |
+| `mars.glb`     | Daitya Legion         |
+| `jupiter.glb`  | Quiz Battle           |
+| `saturn.glb`   | Cricket Field         |
+| `uranus.glb`   | Dentist               |
+
+Planets use the real model when the file exists, procedural (with real textures)
+otherwise — no code changes needed either way.
 
 ## Notes
 
-- **License:** these models are **CC Attribution** (CC-BY) — you can use them freely,
-  but the author must be credited. The site footer should include a line like
-  *"Planet models by 3dmigos via Sketchfab"* once the files are added.
-- **File size:** the six GLBs are roughly 2–6 MB each — fine for Vercel/Netlify.
+- **License:** models and textures are **CC Attribution (CC-BY)** — credit the author
+  (3dmigos via Sketchfab) once real models/textures are visibly shipped. The footer
+  should carry a line like *"Planet models by 3dmigos via Sketchfab"*.
+- **`Planets.blend` in `public/`:** it ships with the deploy and is never requested
+  by the site. If you want the repo leaner, move it out of `public/` (e.g. into a
+  root `models/` folder) — say the word and I'll relocate it.
 - The skill/dwarf planets stay procedural on purpose (TypeScript as Mercury would be
-  confusing); only the real celestial bodies use models.
-- Want the Sun swapped in too? The collection has "Sun" / "The Sun" — save as
-  `sun.glb` and ask, and I'll wire it into the career sun (the lens flare + corona
-  stay intact).
+  confusing); only the real celestial bodies use the pack.

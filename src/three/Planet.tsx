@@ -1,10 +1,11 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Billboard, Html, Text } from "@react-three/drei";
 import * as THREE from "three";
 import type { BodyDef } from "./bodyData";
 import { registerPlanetPosition, unregisterPlanetPosition, registerOrbit, unregisterOrbit, getOrbitState } from "./planetRegistry";
 import { createGlowTexture, createPlanetTexture, createRingTexture, createTrailTexture, hexToRgba, type PlanetStyle } from "./textures";
+import { getRealTexture, onRealTextures, remapRingUvs } from "./realTextures";
 import { ModelPlanet } from "./PlanetModel";
 import { usePortfolioStore } from "../store/portfolioStore";
 import { audio } from "../lib/audio";
@@ -24,6 +25,19 @@ const PROJECT_STYLES: Record<string, PlanetStyle> = {
 };
 
 const REAL_PALETTE: PlanetStyle[] = ["mercury", "venus", "mars", "uranus", "neptune", "pluto", "rocky", "icy"];
+
+/* which real texture map (if any) backs each procedural style */
+const REAL_KEY: Partial<Record<PlanetStyle, string>> = {
+  mercury: "mercury",
+  venus: "venus",
+  earth: "earth",
+  mars: "mars",
+  jupiter: "jupiter",
+  saturn: "saturn",
+  uranus: "uranus",
+  neptune: "neptune",
+  moon: "moon",
+};
 
 function hashIndex(key: string): number {
   let h = 0;
@@ -68,11 +82,30 @@ export function Planet({ def }: Props) {
   const glowTex = useMemo(() => createGlowTexture(hexToRgba(def.color, 0.75), hexToRgba(def.color, 0)), [def.color]);
   const trailTex = useMemo(() => createTrailTexture(def.color), [def.color]);
   const style = useMemo(() => styleFor(def), [def]);
-  const surfaceTex = useMemo(
+  const proceduralTex = useMemo(
     () => createPlanetTexture(style, def.seed, style === "rocky" || style === "icy" ? def.color : undefined),
     [style, def.seed, def.color]
   );
   const ringTex = useMemo(() => createRingTexture(), []);
+
+  /* swap to the real 2K map the moment it loads; keep procedural until then */
+  const [, setTexTick] = useState(0);
+  useEffect(() => onRealTextures(() => setTexTick((t) => t + 1)), []);
+  const realKey = REAL_KEY[style];
+  const realTex = realKey ? getRealTexture(realKey) : undefined;
+  const surfaceTex = realTex ?? proceduralTex;
+  const isEarth = def.key === "project:rishikesh-greens-cafe";
+  const realEarth = isEarth ? getRealTexture("earth") : undefined;
+  const cloudsTex = isEarth && realEarth ? getRealTexture("earthClouds") : undefined;
+  const isSaturn = def.key === "project:cricket-field-simulation";
+  const realRingTex = isSaturn ? getRealTexture("saturnRing") : undefined;
+  const cloudsRef = useRef<THREE.Mesh>(null);
+  /* when the real ring strip is live, remap ring UVs to the radial profile */
+  const realRingGeo = useMemo(() => {
+    if (!realRingTex) return null;
+    const g = new THREE.RingGeometry(def.size * 1.45, def.size * 2.3, 64);
+    return remapRingUvs(g);
+  }, [realRingTex, def.size]);
   const Icon = def.projectId ? projectIcons[def.projectId] : undefined;
 
   // every body bobs on its own rhythm so the system never reads as a train
@@ -106,6 +139,11 @@ export function Planet({ def }: Props) {
 
     if (core.current) {
       core.current.rotation.y += delta * 0.08;
+    }
+
+    // real Earth's cloud layer drifts on its own slower rhythm
+    if (cloudsRef.current) {
+      cloudsRef.current.rotation.y += delta * 0.028;
     }
 
     // damp hover scale
@@ -182,11 +220,29 @@ export function Planet({ def }: Props) {
         )}
       </group>
 
-      {/* ring system on project worlds — Saturn-style */}
+      {/* ring system on project worlds — the real Saturn ring strip when present */}
       {def.kind === "project" && (
         <mesh rotation={[Math.PI / 2 + 0.32, 0, 0.5]}>
-          <ringGeometry args={[def.size * 1.45, def.size * 2.3, 64]} />
-          <meshBasicMaterial map={ringTex} transparent side={THREE.DoubleSide} depthWrite={false} opacity={0.95} />
+          {realRingGeo ? (
+            <primitive object={realRingGeo} attach="geometry" />
+          ) : (
+            <ringGeometry args={[def.size * 1.45, def.size * 2.3, 64]} />
+          )}
+          <meshBasicMaterial
+            map={realRingTex ?? ringTex}
+            transparent
+            side={THREE.DoubleSide}
+            depthWrite={false}
+            opacity={realRingTex ? 1 : 0.95}
+          />
+        </mesh>
+      )}
+
+      {/* Earth's cloud layer — only when the real daymap is live */}
+      {cloudsTex && (
+        <mesh ref={cloudsRef} scale={1.012}>
+          <sphereGeometry args={[def.size, segments, segments]} />
+          <meshBasicMaterial map={cloudsTex} transparent depthWrite={false} blending={THREE.AdditiveBlending} opacity={0.5} />
         </mesh>
       )}
 
