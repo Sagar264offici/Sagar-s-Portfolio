@@ -26,6 +26,7 @@ interface GithubState {
   user: { login: string; name: string; avatar_url: string; html_url: string; public_repos: number; bio: string; location: string } | null;
   repos: GithubRepo[];
   events: GithubEvent[];
+  contributions: ContributionDay[];
   loading: boolean;
   source: "live" | "fallback" | "error";
   loadedAt: number;
@@ -50,6 +51,11 @@ export interface GithubEvent {
   type: string;
   created_at: string;
   repo: string;
+}
+
+export interface ContributionDay {
+  date: string;
+  count: number;
 }
 
 interface PortfolioState {
@@ -110,6 +116,7 @@ interface PortfolioState {
   setGithubUser: (u: GithubState["user"]) => void;
   setGithubRepos: (r: GithubRepo[]) => void;
   setGithubEvents: (e: GithubEvent[]) => void;
+  setGithubContributions: (c: ContributionDay[]) => void;
   setGithubLoading: (v: boolean) => void;
   setGithubSource: (s: GithubState["source"]) => void;
 
@@ -208,6 +215,7 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
     user: null,
     repos: [],
     events: [],
+    contributions: [],
     loading: true,
     source: "fallback",
     loadedAt: 0,
@@ -215,6 +223,7 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
   setGithubUser: (u) => set((s) => ({ github: { ...s.github, user: u } })),
   setGithubRepos: (r) => set((s) => ({ github: { ...s.github, repos: r } })),
   setGithubEvents: (e) => set((s) => ({ github: { ...s.github, events: e } })),
+  setGithubContributions: (c) => set((s) => ({ github: { ...s.github, contributions: c } })),
   setGithubLoading: (v) => set((s) => ({ github: { ...s.github, loading: v } })),
   setGithubSource: (src) => set((s) => ({ github: { ...s.github, source: src } })),
 

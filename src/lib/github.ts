@@ -1,4 +1,4 @@
-import type { GithubEvent, GithubRepo } from "../store/portfolioStore";
+import type { ContributionDay, GithubEvent, GithubRepo } from "../store/portfolioStore";
 import { projects } from "../data/projects";
 
 export const GITHUB_USERNAME = "Sagar264offici";
@@ -55,6 +55,15 @@ const fallbackRepos: GithubRepo[] = projects.map((p, i) => ({
   fork: false,
 }));
 
+/** The exact contribution graph via our serverless proxy (production).
+    Falls through to events when unavailable (e.g. plain `npm run dev`). */
+async function loadContributions(): Promise<ContributionDay[]> {
+  const res = await fetch(`/api/contributions?user=${GITHUB_USERNAME}`);
+  if (!res.ok) throw new Error(`contributions HTTP ${res.status}`);
+  const j = (await res.json()) as { days?: ContributionDay[] };
+  return Array.isArray(j.days) ? j.days : [];
+}
+
 const fallbackUser = {
   login: GITHUB_USERNAME,
   name: "Sagar Pathak",
@@ -69,10 +78,11 @@ export async function loadGithubData(): Promise<{
   user: typeof fallbackUser | null;
   repos: GithubRepo[];
   events: GithubEvent[];
+  contributions: ContributionDay[];
   source: "live" | "fallback" | "error";
 }> {
   try {
-    // Up to 3 pages of public events so the activity wall has real depth.
+    // Up to 3 pages of public events so the wall has depth even without the proxy.
     const [user, repos, ...eventPages] = await Promise.all([
       fetchJson<{
         login: string;
@@ -89,6 +99,15 @@ export async function loadGithubData(): Promise<{
       ),
     ]);
     const events = eventPages.flat();
+
+    // Primary source: the exact per-day contribution graph (matches the profile
+    // page). Best-effort — events fill in when the proxy is unreachable (dev).
+    let contributions: ContributionDay[] = [];
+    try {
+      contributions = await loadContributions();
+    } catch {
+      /* proxy unavailable — fall back to events below */
+    }
 
     return {
       user: {
@@ -119,6 +138,7 @@ export async function loadGithubData(): Promise<{
         created_at: e.created_at,
         repo: e.repo.name,
       })),
+      contributions,
       source: "live",
     };
   } catch (err) {
@@ -127,45 +147,59 @@ export async function loadGithubData(): Promise<{
       user: fallbackUser,
       repos: fallbackRepos,
       events: [],
+      contributions: [],
       source: rateLimited ? "fallback" : "error",
     };
   }
 }
 
 /**
- * Build a 52-week contribution map from real public event data.
- * When live data is unavailable, returns a deterministic generated map that is
- * clearly marked as illustrative (source === "fallback").
+ * Build the contribution map (one full year, 52 weeks — matching the profile
+ * graph) from the best source available:
+ *   1. the exact contribution calendar (serverless proxy),
+ *   2. real public events (dev / proxy down),
+ *   3. a deterministic illustration clearly marked as offline.
  */
-export function buildContributionMap(events: GithubEvent[], source: "live" | "fallback" | "error"): { date: string; count: number }[] {
-  const days = 7 * 26; // 26 weeks window
+export function buildContributionMap(
+  contributions: ContributionDay[],
+  events: GithubEvent[],
+  source: "live" | "fallback" | "error"
+): { date: string; count: number }[] {
+  const days = 365;
   const today = new Date();
-  const out: { date: string; count: number }[] = [];
 
-  if (events.length === 0 || source !== "live") {
-    // Deterministic illustration — same seed per day, clearly marked offline.
-    let seed = 20260707;
+  // Exact graph from GitHub — use it directly (already ~365 days).
+  if (contributions.length > 0) {
+    return contributions.slice(-days);
+  }
+
+  // Real public events — zero out days the events API does not cover.
+  if (events.length > 0 && source === "live") {
+    const byDay = new Map<string, number>();
+    for (const e of events) {
+      const day = e.created_at.slice(0, 10);
+      byDay.set(day, (byDay.get(day) || 0) + 1);
+    }
+    const out: { date: string; count: number }[] = [];
     for (let i = days - 1; i >= 0; i--) {
       const d = new Date(today);
       d.setDate(d.getDate() - i);
-      seed = (seed * 9301 + 49297) % 233280;
-      const r = seed / 233280;
-      const count = r > 0.96 ? 4 + Math.floor(r * 10) : r > 0.8 ? 1 + Math.floor(r * 4) : 0;
-      out.push({ date: d.toISOString().slice(0, 10), count });
+      const key = d.toISOString().slice(0, 10);
+      out.push({ date: key, count: byDay.get(key) || 0 });
     }
     return out;
   }
 
-  const byDay = new Map<string, number>();
-  for (const e of events) {
-    const day = e.created_at.slice(0, 10);
-    byDay.set(day, (byDay.get(day) || 0) + 1);
-  }
+  // Deterministic illustration — same seed per day, clearly marked offline.
+  let seed = 20260707;
+  const out: { date: string; count: number }[] = [];
   for (let i = days - 1; i >= 0; i--) {
     const d = new Date(today);
     d.setDate(d.getDate() - i);
-    const key = d.toISOString().slice(0, 10);
-    out.push({ date: key, count: byDay.get(key) || 0 });
+    seed = (seed * 9301 + 49297) % 233280;
+    const r = seed / 233280;
+    const count = r > 0.96 ? 4 + Math.floor(r * 10) : r > 0.8 ? 1 + Math.floor(r * 4) : 0;
+    out.push({ date: d.toISOString().slice(0, 10), count });
   }
   return out;
 }

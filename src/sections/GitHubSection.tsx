@@ -18,10 +18,11 @@ export function GitHubSection() {
   const repos = usePortfolioStore((s) => s.github.repos);
   const user = usePortfolioStore((s) => s.github.user);
   const events = usePortfolioStore((s) => s.github.events);
+  const contributions = usePortfolioStore((s) => s.github.contributions);
   const source = usePortfolioStore((s) => s.github.source);
   const [expanded, setExpanded] = useState<string | null>(null);
 
-  const map = useMemo(() => buildContributionMap(events, source), [events, source]);
+  const map = useMemo(() => buildContributionMap(contributions, events, source), [contributions, events, source]);
   const weeks = useMemo(() => {
     const w: { date: string; count: number }[][] = [];
     for (let i = 0; i < map.length; i += 7) w.push(map.slice(i, i + 7));
@@ -49,8 +50,9 @@ export function GitHubSection() {
             The <span className="text-grad">data archive</span>
           </h2>
           <p className="section-sub">
-            Public repositories and recent activity, fetched live from the GitHub API. If the API is rate-limited,
-            the system falls back to cached data — clearly labeled, never fabricated.
+            The exact contribution graph from your GitHub profile — same data the green squares show — plus public
+            repositories, fetched live. If the API is rate-limited, the system falls back to cached data — clearly
+            labeled, never fabricated.
           </p>
         </motion.div>
 
@@ -77,7 +79,7 @@ export function GitHubSection() {
                 <div key={wi} style={{ display: "grid", gridTemplateRows: "repeat(7, 1fr)", gap: 3 }}>
                   {Array.from({ length: 7 }).map((_, di) => {
                     const day = week[di];
-                    return <div key={di} className={`gh-cell l${day ? levelFor(day.count) : 0}`} title={day ? `${day.date} — ${day.count} public event${day.count === 1 ? "" : "s"}` : ""} />;
+                    return <div key={di} className={`gh-cell l${day ? levelFor(day.count) : 0}`} title={day ? `${day.date} — ${day.count} contribution${day.count === 1 ? "" : "s"}` : ""} />;
                   })}
                 </div>
               ))}

@@ -16,6 +16,7 @@ export function useGithubData(): void {
         s.setGithubUser(data.user);
         s.setGithubRepos(data.repos);
         s.setGithubEvents(data.events);
+        s.setGithubContributions(data.contributions);
         s.setGithubSource(data.source);
         s.setGithubLoading(false);
       })
