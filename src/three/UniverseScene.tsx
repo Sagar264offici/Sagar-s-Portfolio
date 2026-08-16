@@ -6,7 +6,7 @@ import { OrbitRings } from "./OrbitRings";
 import { Planet } from "./Planet";
 import { Starfield } from "./Starfield";
 import { Dust } from "./Dust";
-import { Avatar } from "./Avatar";
+import { SpaceStation } from "./SpaceStation";
 import { CameraRig } from "./CameraRig";
 import { BlackHole } from "./BlackHole";
 import { Nebula } from "./Nebula";
@@ -21,31 +21,6 @@ function CameraProbe() {
   const camera = useThree((s) => s.camera);
   registerTooltipCamera(camera as THREE.Camera);
   return null;
-}
-
-/** Avatar home in the hero (full top-left corner) and its station beside the About panel. */
-const HERO_POS = new THREE.Vector3(-10.2, 4.4, 1.4);
-const ABOUT_POS = new THREE.Vector3(9, 2.05, -8);
-
-function AvatarRig() {
-  const group = useRef<THREE.Group>(null);
-
-  useFrame((state, delta) => {
-    const g = group.current;
-    if (!g) return;
-    const p = usePortfolioStore.getState().scrollProgress;
-    const t = smoothstep(clamp(p / 0.12, 0, 1));
-    const target = new THREE.Vector3().lerpVectors(HERO_POS, ABOUT_POS, t);
-    // gentle float
-    target.y += Math.sin(state.clock.elapsedTime * 0.8) * 0.06;
-    g.position.lerp(target, 1 - Math.exp(-3.5 * delta));
-  });
-
-  return (
-    <group ref={group} scale={1.95}>
-      <Avatar />
-    </group>
-  );
 }
 
 export function UniverseScene() {
@@ -75,8 +50,8 @@ export function UniverseScene() {
       {/* keep every world out of its neighbors — a mesh collider for the solar system */}
       <OrbitCollider />
 
-      {/* the human in the universe — glides from the hero corner to the About panel */}
-      <AvatarRig />
+      {/* the station — glides from the hero corner to a berth beside About */}
+      <SpaceStation />
 
       <CameraRig />
       <CameraProbe />
