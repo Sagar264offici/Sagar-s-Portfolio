@@ -55,13 +55,33 @@ const fallbackRepos: GithubRepo[] = projects.map((p, i) => ({
   fork: false,
 }));
 
-/** The exact contribution graph via our serverless proxy (production).
-    Falls through to events when unavailable (e.g. plain `npm run dev`). */
+/** Public, CORS-enabled mirror of the exact per-day contribution calendar
+    (github-contributions-api.jogruber.de). Lets the green squares go live
+    even in plain `npm run dev`, where the Vercel proxy is not served. */
+const CONTRIBUTIONS_PUBLIC_API = "https://github-contributions-api.jogruber.de/v4";
+
+/** The exact contribution graph. Tries our serverless proxy first (production),
+    then the public mirror, then lets callers fall back to events. */
 async function loadContributions(): Promise<ContributionDay[]> {
-  const res = await fetch(`/api/contributions?user=${GITHUB_USERNAME}`);
-  if (!res.ok) throw new Error(`contributions HTTP ${res.status}`);
-  const j = (await res.json()) as { days?: ContributionDay[] };
-  return Array.isArray(j.days) ? j.days : [];
+  try {
+    const res = await fetch(`/api/contributions?user=${GITHUB_USERNAME}`);
+    if (!res.ok) throw new Error(`contributions HTTP ${res.status}`);
+    const j = (await res.json()) as { days?: ContributionDay[] };
+    if (Array.isArray(j.days) && j.days.length > 0) return j.days;
+  } catch {
+    /* proxy unavailable (local dev / not deployed) — public mirror below */
+  }
+
+  const pub = await fetch(`${CONTRIBUTIONS_PUBLIC_API}/${GITHUB_USERNAME}?y=last`, {
+    headers: { Accept: "application/json" },
+  });
+  if (!pub.ok) throw new Error(`public contributions HTTP ${pub.status}`);
+  const j = (await pub.json()) as { contributions?: { date: string; count: number }[] };
+  const days = Array.isArray(j.contributions)
+    ? j.contributions.map((d) => ({ date: d.date, count: d.count }))
+    : [];
+  if (days.length === 0) throw new Error("no contribution days parsed");
+  return days;
 }
 
 const fallbackUser = {
