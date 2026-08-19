@@ -125,10 +125,10 @@ export function HoloPanel() {
                 <div className="pp-sections">
                   <div className="pp-block">
                     <h4>CONFIDENCE</h4>
-                    <p>
-                      Broad confidence: <strong>{Math.round(skill.confidence * 100)}%</strong> of the visual scale — an honest
-                      mapping, not a test score.
-                    </p>
+                <p>
+                  Confidence level: <strong>{Math.round(skill.confidence * 100)}%</strong> — how comfortable I am with this
+                  technology based on actual use, not a test score.
+                </p>
                   </div>
                   <div className="pp-block">
                     <h4>SHIPPED IN</h4>
@@ -140,7 +140,7 @@ export function HoloPanel() {
                       </ul>
                     ) : (
                       <p>
-                        <strong>Dwarf planet.</strong> Learning in progress — no shipped project yet. Labeled honestly.
+                        Still learning — no shipped project using this yet.
                       </p>
                     )}
                   </div>

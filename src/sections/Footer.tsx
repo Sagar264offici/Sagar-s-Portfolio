@@ -37,7 +37,7 @@ export function Footer() {
           </a>
         ))}
       </div>
-      <div className="f-copy">© Sagar Pathak — Built as a career universe</div>
+      <div className="f-copy">© Sagar Pathak — Built from scratch, in Rishikesh</div>
     </footer>
   );
 }

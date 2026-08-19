@@ -50,13 +50,13 @@ export function RecruiterModal() {
             <div className="eyebrow">QUICK PROFILE</div>
             <h2 style={{ margin: "10px 0 0", fontSize: "var(--text-2xl)" }}>Sagar Pathak</h2>
             <p className="muted" style={{ margin: "4px 0 0" }}>
-              Developer / Creative Technologist — BSc Information Technology, Final Year
+              Developer — BSc Information Technology, Final Year
             </p>
 
             <div className="qp-grid">
               <div className="qp-item">
                 <div className="qp-k">ROLE</div>
-                <div className="qp-v">Developer · Builder · Problem Solver · Creative Technologist</div>
+                <div className="qp-v">Developer · Student · Builder</div>
               </div>
               <div className="qp-item">
                 <div className="qp-k">EDUCATION</div>
@@ -72,7 +72,7 @@ export function RecruiterModal() {
               </div>
               <div className="qp-item">
                 <div className="qp-k">PROJECTS</div>
-                <div className="qp-v small">5 featured — all live with source on GitHub</div>
+                <div className="qp-v small">5 projects — all live with source on GitHub</div>
               </div>
               <div className="qp-item">
                 <div className="qp-k">LOCATION</div>

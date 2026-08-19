@@ -10,8 +10,8 @@ const fadeUp = {
 const facts = [
   { k: "LOCATION", v: "Rishikesh, Uttarakhand, India" },
   { k: "DEGREE", v: "BSc Information Technology — Final Year" },
-  { k: "FOCUS", v: "Interactive experiences, simulations, experiments" },
-  { k: "FIELDS", v: "Cricket · Chess · Astronomy · Game dev · Learning" },
+  { k: "WORK", v: "Web projects, interactive experiments, 3D simulations" },
+  { k: "INTERESTS", v: "Cricket · Chess · Astronomy · Game dev · Learning" },
 ];
 
 export function About() {
@@ -23,20 +23,19 @@ export function About() {
             <div className="section-head">
               <span className="eyebrow">ABOUT — PERSONNEL FILE</span>
               <h2 className="h-xl" style={{ marginTop: 14 }}>
-                The person behind <span className="text-grad">the system</span>
+                The person behind <span className="text-grad">the code</span>
               </h2>
             </div>
             <div className="about-copy">
               <p>
-                I'm a BSc Information Technology student from Uttarakhand who enjoys building interactive software,
-                web experiences, simulations and experiments. I like understanding how systems work and turning ideas
-                into functioning interfaces.
+                I'm a BSc IT student from Rishikesh, Uttarakhand. I like building things for the web — mostly interactive
+                projects, sometimes experiments that go a little further than they need to. I enjoy understanding how
+                systems work and turning that into something you can actually click around in.
               </p>
               <p>
-                I care about programming, interactive design, cricket, chess, astronomy, technology and game
-                development — and I'm still learning every day. The solar system you're flying through is my career,
-                mapped honestly: the bright planets are things I've shipped with, the distant ones are things I'm
-                exploring.
+                Outside of code, there's cricket, chess, astronomy and game development. Still figuring out which
+                direction to take next. The solar system you're flying through is mapped honestly: the bright planets
+                are things I've shipped with, and the distant ones are things I'm still exploring.
               </p>
             </div>
             <ul className="about-facts">
@@ -64,7 +63,7 @@ export function About() {
                 AVAILABILITY
               </span>
               <p className="mono" style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.8, margin: 0 }}>
-                Final-year student, open to internships and collaborative builds. Run{" "}
+                Final-year BSc IT student, open to internships and collaborative projects. Run{" "}
                 <span style={{ color: "var(--cyan)" }}>'sudo hire-sagar'</span> in the terminal for a surprise.
               </p>
             </div>

@@ -3,7 +3,7 @@ import { ChevronDown, TerminalSquare } from "lucide-react";
 import { usePortfolioStore, scrollToSection } from "../store/portfolioStore";
 import { audio } from "../lib/audio";
 
-const roles = ["Developer", "Builder", "Problem Solver", "Creative Technologist"];
+const roles = ["Developer", "Student", "Builder"];
 
 const fade = (delay: number) => ({
   initial: { opacity: 0, y: 26 },
@@ -40,8 +40,7 @@ export function Hero() {
         </motion.div>
 
         <motion.p {...fade(0.6)} className="hero-desc">
-          BSc Information Technology student building interactive web experiences, experiments, simulations and
-          digital products from Rishikesh, Uttarakhand.
+          BSc IT student from Rishikesh — I build web projects, interactive experiments and the occasional 3D simulation. Still learning, still shipping.
         </motion.p>
 
         <motion.div {...fade(0.7)} className="hero-ctas">

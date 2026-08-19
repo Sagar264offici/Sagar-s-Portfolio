@@ -37,10 +37,10 @@ export function Hobbies() {
         <motion.div {...fadeUp} className="section-head">
           <span className="eyebrow">BEYOND THE CODE</span>
           <h2 className="h-xl" style={{ marginTop: 14 }}>
-            Side universes, <span className="text-grad">fully playable</span>
+            What I do <span className="text-grad">outside of projects</span>
           </h2>
           <p className="section-sub">
-            A developer is a person first. These are the micro-worlds that make Sagar, Sagar.
+            Not everything is about code. These are the things I spend time on when I'm not building websites.
           </p>
         </motion.div>
 
@@ -90,11 +90,11 @@ export function Hobbies() {
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 10 }}>
             <div>
               <span className="eyebrow" style={{ color: "var(--violet)" }}>
-                UNRELEASED LAB
+                LEARNING IN PROGRESS
               </span>
               <h3 style={{ margin: "8px 0 4px", fontSize: "var(--text-lg)" }}>Unity · Blender · 3D Experiments</h3>
               <p className="muted" style={{ margin: 0, fontSize: "var(--text-sm)", maxWidth: 560 }}>
-                Active exploration. Not shipped projects — experiments in progress, labeled honestly. Watch this orbit.
+                I'm learning these and experimenting with them. Some things are prototypes and some never leave my machine. Nothing shipped yet — but I'm working on it.
               </p>
             </div>
             <span className="chip" style={{ borderColor: "rgba(139,92,246,0.4)", color: "var(--violet)" }}>

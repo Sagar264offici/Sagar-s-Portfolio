@@ -90,7 +90,7 @@ const fallbackUser = {
   avatar_url: "",
   html_url: `https://github.com/${GITHUB_USERNAME}`,
   public_repos: fallbackRepos.length,
-  bio: "Developer • Builder • Problem Solver • Creative Technologist",
+  bio: "Developer • Student • Builder",
   location: "Rishikesh, Uttarakhand, India",
 };
 

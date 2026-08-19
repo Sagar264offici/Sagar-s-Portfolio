@@ -5,11 +5,11 @@ import { usePortfolioStore, scrollToSection } from "../store/portfolioStore";
 import { AstronomyGallery } from "./AstronomyGallery";
 
 const FACTS = [
-  "Space is the reason this portfolio is a solar system, not a page.",
-  "The career sun is a metaphor — the orbit is real, the star is code.",
-  "ORIGIN SIGNAL: born 7 July 2006 — hidden here, not on the homepage.",
-  "Rishikesh → Uttarakhand → India: the coordinates of the builder.",
-  "Next coordinates: 3D, Unity, Blender, deeper interactive experiments.",
+  "This portfolio is a solar system because of astronomy — not a random design choice.",
+  "The career sun is a metaphor, but the orbits are real code.",
+  "Born 7 July 2006 — that's here, not on the homepage.",
+  "Rishikesh → Uttarakhand → India — where I'm from and where I build from.",
+  "Currently interested in 3D web, Unity, Blender and deeper interactive experiments.",
 ];
 
 export function AstronomyOverlay() {
@@ -56,9 +56,9 @@ export function AstronomyOverlay() {
               <div className="eyebrow" style={{ justifyContent: "center" }}>
                 <Moon size={12} /> ASTRONOMY MODE
               </div>
-              <h2 style={{ margin: "10px 0 0", fontSize: "var(--text-2xl)" }}>The Sky Is a Hobby</h2>
+              <h2 style={{ margin: "10px 0 0", fontSize: "var(--text-2xl)" }}>Astronomy Mode</h2>
               <p className="mono" style={{ color: "var(--text-3)", fontSize: 11, letterSpacing: "0.2em", margin: "8px 0 0", textTransform: "uppercase" }}>
-                Observation log — Sagar's own captures
+                Observation log — my own astrophotography captures
               </p>
             </div>
 

@@ -66,14 +66,12 @@ export function Skills() {
         <motion.div {...fadeUp} className="section-head">
           <span className="eyebrow">SKILL SOLAR SYSTEM</span>
           <h2 className="h-xl" style={{ marginTop: 14 }}>
-            What I build with <span className="text-grad">vs what I'm exploring</span>
+            What I've shipped with <span className="text-grad">vs what I'm learning</span>
           </h2>
           <p className="section-sub">
-            No fake progress bars. In the 3D universe, orbit distance, brightness and size communicate broad
-            confidence — honest mapping, not test scores. Ringed planets are the deployed projects; the bright
-            inner worlds are stacks shipped on those sites; skills with no shipped project yet are small, dim{" "}
-            <strong style={{ color: "var(--text-2)" }}>dwarf planets</strong>. Click a skill row to open its
-            holographic body.
+            In the 3D universe, orbit distance and size reflect how confident I am with each technology — not a test
+            score, just an honest mapping. Skills I've used in real projects are brighter and closer. Skills I'm still
+            learning are smaller and further out. Click any skill row to see the details.
           </p>
         </motion.div>
 

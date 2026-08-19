@@ -32,12 +32,12 @@ export function Contact() {
     <section id="contact" className="section" style={{ alignItems: "flex-start" }}>
       <div className="section-inner">
         <motion.div {...fadeUp} className="section-head">
-          <span className="eyebrow">CONTACT SYSTEM</span>
+          <span className="eyebrow">GET IN TOUCH</span>
           <h2 className="h-xl" style={{ marginTop: 14 }}>
-            Open a <span className="text-grad">channel</span>
+            Let's <span className="text-grad">talk</span>
           </h2>
           <p className="section-sub">
-            Pick whichever channel feels right. Everything routes to a human — the number stays hidden by design.
+            Want to talk about a project, internship, collaboration, or just something nerdy? You can reach me here.
           </p>
         </motion.div>
 
@@ -78,7 +78,7 @@ export function Contact() {
               ALTERNATE EMAIL
             </div>
             <p className="muted" style={{ margin: "0 0 14px", fontSize: "var(--text-sm)" }}>
-              Primary line busy? Secondary channel:
+              Alternate email — in case the main one doesn't work:
             </p>
             <a className="btn" href={alternateEmailLink} data-cursor-label="SEND">
               <Mail size={13} /> {alternateEmail}

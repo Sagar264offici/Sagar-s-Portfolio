@@ -45,14 +45,13 @@ export function GitHubSection() {
     <section id="github" className="section" style={{ alignItems: "flex-start" }}>
       <div className="section-inner">
         <motion.div {...fadeUp} className="section-head">
-          <span className="eyebrow">GITHUB — ENGINEERING ARCHIVE</span>
+          <span className="eyebrow">GITHUB — DATA FEED</span>
           <h2 className="h-xl" style={{ marginTop: 14 }}>
-            The <span className="text-grad">data archive</span>
+            The <span className="text-grad">GitHub data</span>
           </h2>
           <p className="section-sub">
-            The exact contribution graph from your GitHub profile — same data the green squares show — plus public
-            repositories, fetched live. If the API is rate-limited, the system falls back to cached data — clearly
-            labeled, never fabricated.
+            This pulls directly from the GitHub API — the same contribution graph you'd see on my profile, plus my
+            public repositories. If the API is rate-limited, it falls back to cached data and clearly says so.
           </p>
         </motion.div>
 

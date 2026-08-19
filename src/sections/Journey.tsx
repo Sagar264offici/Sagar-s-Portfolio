@@ -40,10 +40,10 @@ export function Journey() {
             TRAJECTORY
           </span>
           <h2 className="h-xl" style={{ marginTop: 14 }}>
-            The journey <span className="text-grad">so far</span>
+            How I got <span className="text-grad">here</span>
           </h2>
           <p className="section-sub" style={{ margin: "12px auto 0" }}>
-            From 2006 to the next launch — a career plotted like an orbital trajectory.
+            A simple timeline — from Rishikesh to building interactive projects.
           </p>
         </motion.div>
 

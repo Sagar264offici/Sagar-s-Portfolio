@@ -31,11 +31,11 @@ export const projects: Project[] = [
     title: "SPDC Quiz Battle",
     slug: "spdc-quiz-battle",
     description:
-      "A highly interactive real-time quiz platform built with TypeScript, React and Upstash Redis — a state-driven battle arena where every answer is an event.",
+      "A real-time quiz platform I built for a college competition. Teams play together, scores update live, and the whole thing runs on React, TypeScript and Upstash Redis.",
     purpose:
-      "A competitive quiz platform designed to make learning feel like a live match: questions, scores and momentum all update in real time.",
+      "Built this for an SPDC college quiz event. The idea was to have a live quiz where multiple teams compete at the same time — questions, scores and timers all update in real time.",
     whyBuilt:
-      "I wanted to prove that a quiz could be engineered like a real-time application — with a state machine, an Upstash-backed realtime layer and a UI that reacts instantly to every interaction.",
+      "Quizzes at college were always organized manually. I wanted to make something that handles the live state, tracks team answers and updates scores while everyone is playing. It was also a good excuse to work with Upstash Redis for serverless state management.",
     category: "Interactive Web Application",
     technologies: ["TypeScript", "React", "Upstash Redis", "Vercel", "State-Driven UI", "REST API"],
     liveUrl: "https://spdcquiz.vercel.app/",
@@ -44,19 +44,19 @@ export const projects: Project[] = [
     visualTheme: "cyan",
     icon: "quiz",
     featured: true,
-    capabilities: ["Realtime interaction", "State-driven UI", "Upstash Redis persistence", "Web application architecture"],
-    emphasis: ["TypeScript", "React", "Upstash Redis", "realtime interaction", "state-driven UI", "web application architecture"],
+    capabilities: ["Real-time quiz state", "Live score tracking", "Team-based play", "Upstash Redis for persistence"],
+    emphasis: ["TypeScript", "React", "Upstash Redis", "real-time state", "REST API"],
   },
   {
     id: "rishikesh-greens-cafe",
     title: "Rishikesh Greens Cafe",
     slug: "rishikesh-greens-cafe",
     description:
-      "A product-oriented restaurant web experience — a modern, responsive frontend that sells the atmosphere before the food.",
+      "A website concept for a cafe in Rishikesh. The main goal was simple: make the place look good online and make the important information easy to find.",
     purpose:
-      "A business-facing website for a cafe in Rishikesh: menu-first design, warm visual identity and a responsive layout built to convert visitors into customers.",
+      "A responsive restaurant website for Rishikesh Greens Cafe. Menu, location, vibe — all on one page. Designed to look good on phones and desktops.",
     whyBuilt:
-      "Restaurants live on presentation. I treated the cafe itself as a product and built an interface that communicates its character before a single dish is ordered.",
+      "I wanted to practice building a real-world business website. A cafe is a good subject because the site needs to feel inviting while still being functional. It was also a chance to work on responsive layout and visual design.",
     category: "Restaurant / Business Web Experience",
     technologies: ["React", "TypeScript", "CSS", "Responsive Design", "Vercel"],
     liveUrl: "https://rishikesh-greens-cafe.vercel.app/",
@@ -65,19 +65,19 @@ export const projects: Project[] = [
     visualTheme: "amber",
     icon: "cafe",
     featured: true,
-    capabilities: ["Product-oriented UI", "Restaurant experience", "Responsive frontend", "Modern interface"],
-    emphasis: ["product-oriented UI", "restaurant experience", "responsive frontend", "modern interface", "deployment"],
+    capabilities: ["Responsive layout", "Menu and info pages", "Mobile-friendly", "Clean visual design"],
+    emphasis: ["React", "TypeScript", "CSS", "responsive design", "business website"],
   },
   {
     id: "daitya-legion",
     title: "Daitya Legion",
     slug: "daitya-legion",
     description:
-      "A cricket team landing page — heavy branding, visual design and an interactive presentation for a crew that plays as one.",
+      "A landing page for our cricket team. Heavy on branding and visual presentation — the kind of page that makes a local team look like they have their own website.",
     purpose:
-      "A landing experience for our cricket team: identity-first design, animated presentation and a community-oriented web presence.",
+      "A team landing page for Daitya Legion — our cricket team. Focused on identity, visual design and giving the team a proper web presence.",
     whyBuilt:
-      "Cricket teams live and die on identity. I wanted to show that I can build branding-forward experiences that make a team feel like a unit on and off the pitch.",
+      "Our team didn't have a proper website, so I built one. It was a good project for working on branding, visual design and making something that represents a group of people rather than just a product.",
     category: "Cricket Team / Community Web Experience",
     technologies: ["React", "TypeScript", "CSS", "Branding", "Vercel"],
     liveUrl: "https://daitya-legion.vercel.app/",
@@ -86,19 +86,19 @@ export const projects: Project[] = [
     visualTheme: "magenta",
     icon: "legion",
     featured: true,
-    capabilities: ["Team branding", "Visual design", "Interactive presentation", "Community-oriented web experience"],
-    emphasis: ["team branding", "visual design", "interactive presentation", "community-oriented web experience"],
+    capabilities: ["Team identity and branding", "Animated landing page", "Visual design", "Responsive layout"],
+    emphasis: ["React", "TypeScript", "CSS", "branding", "visual design"],
   },
   {
     id: "dentist-clinic-prototype",
     title: "Dentist Clinic Prototype",
     slug: "dentist-clinic-prototype",
     description:
-      "A clinic management / service website prototype — structured information architecture and a calm, trustworthy service-oriented UX.",
+      "A prototype for a dental clinic website. Services, appointment info and practice details — all organized so a patient can find what they need quickly.",
     purpose:
-      "A prototype for a dental clinic: services, appointments and practice information organized so patients can find exactly what they need in seconds.",
+      "A clinic website prototype focused on services, appointments and practice information. Built with a calm, clean layout that prioritizes readability.",
     whyBuilt:
-      "Healthcare interfaces need trust more than flash. This project is about restrained layout, clear hierarchy and making a service feel dependable.",
+      "Healthcare websites have a different feel from other projects. Everything needs to look trustworthy and be easy to navigate. This was a good exercise in building something where clarity matters more than flash.",
     category: "Clinic Management / Service Website Prototype",
     technologies: ["React", "TypeScript", "CSS", "Responsive Layout", "Vercel"],
     liveUrl: "https://dentist-clinic-prototype.vercel.app/",
@@ -107,19 +107,19 @@ export const projects: Project[] = [
     visualTheme: "blue",
     icon: "dentist",
     featured: true,
-    capabilities: ["Product interface", "Service-oriented UX", "Responsive layout", "Structured information architecture"],
-    emphasis: ["product interface", "service-oriented UX", "responsive layout", "structured information architecture"],
+    capabilities: ["Service and appointment pages", "Clean information hierarchy", "Responsive layout", "Calm, readable design"],
+    emphasis: ["React", "TypeScript", "CSS", "responsive layout", "prototype"],
   },
   {
     id: "cricket-field-simulation",
     title: "Cricket Field Simulation",
     slug: "cricket-field-simulation",
     description:
-      "A 3D interactive cricket field visualization — spatial interaction, a controllable camera and a field you can actually explore.",
+      "This started as a Three.js experiment. I wanted to see how far I could take a cricket field in 3D — so I added a controllable camera and made the field something you can move around instead of just looking at.",
     purpose:
-      "A 3D cricket field you can fly around: players positioned on the oval, spatial navigation and a view that turns a sport into geometry.",
+      "A 3D cricket field you can explore. Players are positioned on the oval, the camera can be moved around, and you get a spatial view of the field instead of a flat diagram.",
     whyBuilt:
-      "I am not limited to CRUD and dashboards. This project exists to prove I can build spatial, interactive 3D experiences — not just pages.",
+      "I've always liked cricket and I've been learning Three.js, so this was a natural combination. It started as a small experiment and grew into something where you can actually navigate the field in 3D. It pushed me to understand camera systems and spatial interaction.",
     category: "3D Interactive Simulation",
     technologies: ["Three.js", "3D Camera", "Spatial Interaction", "TypeScript", "Vercel"],
     liveUrl: "https://cricket-field-simulation.vercel.app/",
@@ -128,8 +128,8 @@ export const projects: Project[] = [
     visualTheme: "violet",
     icon: "cricket",
     featured: true,
-    capabilities: ["Interactive field visualization", "3D camera", "Spatial interaction", "Sports visualization"],
-    emphasis: ["interactive field visualization", "3D camera", "spatial interaction", "sports visualization"],
+    capabilities: ["3D cricket field", "Controllable camera", "Player positioning", "Spatial navigation"],
+    emphasis: ["Three.js", "3D camera", "spatial interaction", "interactive visualization"],
   },
 ];
 

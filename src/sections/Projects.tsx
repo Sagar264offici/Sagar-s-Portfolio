@@ -27,11 +27,10 @@ export function Projects() {
         <motion.div {...fadeUp} className="section-head">
           <span className="eyebrow">PROJECT UNIVERSE — MODE C: HR QUICK VIEW</span>
           <h2 className="h-xl" style={{ marginTop: 14 }}>
-            Five worlds, <span className="text-grad">already live</span>
+            Five projects, <span className="text-grad">all shipped</span>
           </h2>
           <p className="section-sub">
-            These are the project planets orbiting the career sun. Click any card (or its planet in 3D) to open the
-            holographic briefing.
+            Every project here is live and has source code on GitHub. Click any card (or its planet in 3D) to open the details.
           </p>
         </motion.div>
 

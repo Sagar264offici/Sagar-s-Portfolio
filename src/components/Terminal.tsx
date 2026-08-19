@@ -16,9 +16,9 @@ interface Line {
 let lineId = 0;
 
 const WELCOME: Line[] = [
-  { id: lineId++, text: "SAGAR PATHAK — PORTFOLIO INTERFACE v1.0", cls: "t-out-cyan" },
+  { id: lineId++, text: "SAGAR PATHAK — PORTFOLIO TERMINAL", cls: "t-out-cyan" },
   { id: lineId++, text: "Type 'help' to see available commands.", cls: "t-out-dim" },
-  { id: lineId++, text: "PS: try 'sudo hire-sagar' 😉", cls: "t-out-dim" },
+  { id: lineId++, text: "PS: try 'sudo hire-sagar'", cls: "t-out-dim" },
 ];
 
 export function Terminal() {
