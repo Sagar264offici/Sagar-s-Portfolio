@@ -9,6 +9,7 @@ function iconFor(id: string) {
     case "linkedin":
       return <Linkedin size={15} />;
     case "mail":
+    case "email":
       return <Mail size={15} />;
     case "whatsapp":
       return <WhatsAppIcon size={15} />;

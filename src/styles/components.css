@@ -1437,11 +1437,12 @@
 
 /* ══════════════════════ FOOTER ══════════════════════ */
 .footer {
-  padding: var(--sp-12) var(--sp-6) var(--sp-8);
+  padding: var(--sp-12) var(--sp-6) calc(var(--sp-12) + 80px);
   text-align: center;
   border-top: 1px solid var(--line);
   position: relative;
   background: linear-gradient(to top, rgba(5, 6, 10, 0.9), transparent);
+  pointer-events: auto;
 }
 
 .footer .f-name {
@@ -1463,6 +1464,11 @@
   gap: var(--sp-3);
   margin-bottom: var(--sp-6);
   flex-wrap: wrap;
+  pointer-events: auto;
+}
+
+.footer .f-links a {
+  pointer-events: auto;
 }
 
 .footer .f-copy {

@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sagar Pathak — Developer Resume</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  @page { size: A4; margin: 0; }
+
+  :root {
+    --sidebar-bg: #2d3748;
+    --sidebar-text: #e2e8f0;
+    --sidebar-muted: #a0aec0;
+    --accent: #4a90d9;
+    --dark: #1a202c;
+    --text: #2d3748;
+    --text-2: #4a5568;
+    --text-3: #718096;
+    --line: #e2e8f0;
+    --dot-empty: #cbd5e0;
+    --dot-fill: #2d3748;
+  }
+
+  body {
+    font-family: 'Open Sans', 'Segoe UI', sans-serif;
+    background: #d1d5db;
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    width: 210mm;
+    height: 297mm;
+    overflow: hidden;
+    margin: 20px auto;
+    background: #fff;
+    display: grid;
+    grid-template-columns: 210px 1fr;
+  }
+
+  @media screen {
+    .page { box-shadow: 0 4px 24px rgba(0,0,0,0.12); }
+  }
+  @media print {
+    body { background: none; }
+    .page { margin: 0; box-shadow: none; width: 100%; height: 100vh; }
+  }
+
+  /* ═══════════════════════════════
+     SIDEBAR
+     ═══════════════════════════════ */
+  .sidebar {
+    background: var(--sidebar-bg);
+    padding: 28px 20px 24px 20px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sb-section {
+    width: 100%;
+    margin-bottom: 18px;
+  }
+  .sb-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #fff;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1.5px solid rgba(255,255,255,0.15);
+  }
+
+  .about-item {
+    font-size: 10px;
+    line-height: 1.7;
+    color: var(--sidebar-text);
+    margin-bottom: 3px;
+  }
+  .about-item .label {
+    color: var(--sidebar-muted);
+    display: inline-block;
+    min-width: 60px;
+  }
+
+  .contact-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 9.5px;
+    line-height: 1.5;
+    color: var(--sidebar-text);
+  }
+  .contact-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    color: var(--accent);
+    margin-top: 1px;
+  }
+  .contact-item a {
+    color: var(--sidebar-text);
+    text-decoration: none;
+    word-break: break-all;
+  }
+
+  .interests-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 8px;
+  }
+  .interest-item {
+    font-size: 9.5px;
+    color: var(--sidebar-text);
+    line-height: 1.7;
+  }
+
+  .hobbies-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .hobby-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    color: var(--sidebar-text);
+  }
+
+  /* ═══════════════════════════════
+     MAIN CONTENT
+     ═══════════════════════════════ */
+  .main {
+    padding: 28px 30px 22px 30px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .name-block {
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    border-bottom: 2.5px solid var(--dark);
+  }
+  .name-block h1 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 44px;
+    font-weight: 700;
+    color: var(--dark);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .name-block .role {
+    font-family: 'Oswald', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: var(--text-3);
+  }
+
+  .section { margin-bottom: 14px; }
+  .section:last-child { margin-bottom: 0; }
+  .sec-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--dark);
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1.5px solid var(--line);
+  }
+
+  .objective {
+    font-size: 11px;
+    line-height: 1.8;
+    color: var(--text-2);
+  }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .edu-item { margin-bottom: 12px; }
+  .edu-item:last-child { margin-bottom: 0; }
+  .edu-years {
+    font-family: 'Oswald', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--dark);
+    float: left;
+    width: 55px;
+    line-height: 1.4;
+  }
+  .edu-details { margin-left: 60px; }
+  .edu-degree {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--dark);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .edu-school {
+    font-size: 10px;
+    color: var(--text-3);
+    font-style: italic;
+  }
+  .edu-certs {
+    font-size: 9.5px;
+    color: var(--text-2);
+    line-height: 1.6;
+    margin-top: 3px;
+  }
+  .edu-certs strong {
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .tech-list {
+    font-size: 10.5px;
+    line-height: 1.8;
+    color: var(--text-2);
+  }
+
+  .exp-item { margin-bottom: 14px; }
+  .exp-item:last-child { margin-bottom: 0; }
+  .exp-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--dark);
+    text-transform: uppercase;
+  }
+  .exp-meta {
+    font-size: 10px;
+    color: var(--text-3);
+    margin-bottom: 4px;
+    font-style: italic;
+  }
+  .exp-desc {
+    font-size: 10.5px;
+    line-height: 1.65;
+    color: var(--text-2);
+    margin-bottom: 5px;
+  }
+  .exp-bullets {
+    padding-left: 16px;
+    font-size: 10.5px;
+    line-height: 1.65;
+    color: var(--text-2);
+  }
+  .exp-bullets li { margin-bottom: 3px; }
+  .exp-bullets li::marker { color: var(--text-3); font-size: 8px; }
+
+  .expertise-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .exp-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 7px;
+  }
+  .exp-row:last-child { margin-bottom: 0; }
+  .exp-label {
+    font-size: 10px;
+    color: var(--text-2);
+    flex: 1;
+    padding-right: 8px;
+  }
+  .dots { display: flex; gap: 3px; }
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--dot-empty);
+  }
+  .dot.filled { background: var(--dot-fill); }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- ═══════════ SIDEBAR ═══════════ -->
+  <div class="sidebar">
+
+    <!-- Name -->
+    <div class="sb-section" style="margin-bottom:16px;">
+      <div style="font-family:'Oswald',sans-serif;font-size:21px;font-weight:700;color:#fff;letter-spacing:1px;text-transform:uppercase;line-height:1.2;">Sagar Pathak</div>
+      <div style="font-size:10px;font-weight:600;color:var(--accent);letter-spacing:1.5px;text-transform:uppercase;margin-top:4px;">Full-Stack Developer</div>
+    </div>
+
+    <!-- About Me -->
+    <div class="sb-section">
+      <div class="sb-title">About Me</div>
+      <div class="about-item"><span class="label">Location:</span> Rishikesh, India</div>
+      <div class="about-item"><span class="label">Degree:</span> BSc IT — Final Year</div>
+      <div class="about-item"><span class="label">Focus:</span> Web Dev & 3D</div>
+    </div>
+
+    <!-- Contact -->
+    <div class="sb-section">
+      <div class="sb-title">Contact</div>
+      <div class="contact-item">
+        <div class="contact-icon">✉</div>
+        <div><a href="mailto:pathaksagar264@gmail.com">pathaksagar264@gmail.com</a></div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">⌂</div>
+        <div>Rishikesh, Uttarakhand, India</div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">⌘</div>
+        <div><a href="https://sagar-horizon.vercel.app">sagar-horizon.vercel.app</a></div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">⟨/⟩</div>
+        <div><a href="https://github.com/Sagar264offici">Sagar264offici</a></div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">in</div>
+        <div><a href="https://linkedin.com/in/sagarakanoone">sagarakanoone</a></div>
+      </div>
+    </div>
+
+    <!-- Interests -->
+    <div class="sb-section">
+      <div class="sb-title">Interests</div>
+      <div class="interests-grid">
+        <div class="interest-item">Cricket</div>
+        <div class="interest-item">Chess</div>
+        <div class="interest-item">Astronomy</div>
+        <div class="interest-item">Game Dev</div>
+        <div class="interest-item">3D Simulations</div>
+        <div class="interest-item">Web Experiments</div>
+      </div>
+    </div>
+
+    <!-- Hobbies -->
+    <div class="sb-section" style="margin-top:auto;">
+      <div class="sb-title">Hobbies</div>
+      <div class="hobbies-row">
+        <div class="hobby-icon">
+          <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 20.5h4"/><path d="M6.5 20.5V7l6-4.5"/><path d="M6.5 7h5"/><circle cx="17" cy="9" r="3"/><path d="M15.8 10.2l2.4 2.4"/></svg>
+        </div>
+        <div class="hobby-icon">
+          <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1z"/><path d="M16.5 18c1-2 2.5-5 2.5-9a7 7 0 0 0-7-7H6.635a1 1 0 0 0-.768 1.64L7 5l-2.32 5.802a2 2 0 0 0 .95 2.526l2.87 1.456"/><path d="m15 5 1.425-1.425"/><path d="m17 8 1.53-1.53"/><path d="M9.713 12.185 7 18"/></svg>
+        </div>
+        <div class="hobby-icon">
+          <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" x2="10" y1="12" y2="12"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="15" x2="15.01" y1="13" y2="13"/><line x1="18" x2="18.01" y1="11" y2="11"/><rect width="20" height="12" x="2" y="6" rx="2"/></svg>
+        </div>
+        <div class="hobby-icon">
+          <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/></svg>
+        </div>
+        <div class="hobby-icon">
+          <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><path d="m9 20 3-6 3 6"/><path d="m6 8 6 2 6-2"/><path d="M12 10v4"/></svg>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════ MAIN CONTENT ═══════════ -->
+  <div class="main">
+
+    <!-- Name -->
+    <div class="name-block">
+      <h1>Sagar Pathak</h1>
+      <div class="role">Full-Stack Developer</div>
+    </div>
+
+    <!-- Career Objective -->
+    <div class="section">
+      <div class="sec-title">Career Objective</div>
+      <div class="objective">
+        To build innovative, interactive, and user-focused web applications using modern technologies like React, TypeScript, and serverless architectures. Seeking opportunities to contribute to impactful projects while continuously learning and growing as a full-stack developer in a collaborative team environment.
+      </div>
+    </div>
+
+    <!-- Education + Technical Proficiencies -->
+    <div class="two-col">
+      <div class="section">
+        <div class="sec-title">Education</div>
+        <div class="edu-item">
+          <div class="edu-years">2024<br>Present</div>
+          <div class="edu-details">
+            <div class="edu-degree">Bachelor of Science in Information Technology</div>
+            <div class="edu-school">Sri Dev Suman Uttarakhand University</div>
+            <div class="edu-certs">
+              <strong>Certifications:</strong><br>
+              Building Interactive 3D Experiences (Three.js)<br>
+              Modern React & TypeScript Patterns
+            </div>
+          </div>
+          <div style="clear:both;"></div>
+        </div>
+        <div class="edu-item">
+          <div class="edu-years">2023<br>2024</div>
+          <div class="edu-details">
+            <div class="edu-degree">Class 12 — PCM</div>
+            <div class="edu-school">Physics, Chemistry, Mathematics</div>
+          </div>
+          <div style="clear:both;"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="sec-title">Technical Proficiencies:</div>
+        <div class="tech-list">
+          TypeScript, JavaScript (ES6+), React.js, HTML5, CSS3,<br>
+          Three.js, Node.js, REST APIs, Upstash Redis,<br>
+          Git, GitHub, Vercel, Linux, npm,<br>
+          Responsive Design, Serverless Architecture,<br>
+          Real-Time State Management, 3D Spatial Interaction,<br>
+          Component-Based UI, CSS Animations,<br>
+          Object-Oriented Design, Web Services (REST/SOAP),<br>
+          Cross-Browser Compatibility, Web User Interface Design
+        </div>
+      </div>
+    </div>
+
+    <!-- Experience -->
+    <div class="section">
+      <div class="sec-title">Experience</div>
+
+      <div class="exp-item">
+        <div class="exp-title">Full-Stack Developer — Personal Projects</div>
+        <div class="exp-meta">2024 to Present | Independent — Rishikesh, India</div>
+        <div class="exp-desc">
+          Building and deploying interactive web applications focused on real-time systems, 3D simulations, and responsive user experiences using modern JavaScript frameworks.
+        </div>
+        <ul class="exp-bullets">
+          <li>Led development of SPDC Quiz Battle — a real-time multiplayer quiz platform with live score tracking, team-based play, and serverless state management via Upstash Redis</li>
+          <li>Built Cricket Field Simulation — an interactive 3D cricket field with controllable orbit camera, spatial player positioning, and real-time navigation using Three.js</li>
+          <li>Developed 4 additional production web applications deployed on Vercel, each serving real users with responsive layouts and clean UI design</li>
+          <li>Implemented CI/CD pipelines and automated deployments, achieving zero-downtime production releases across all projects</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Expertise + Skills -->
+    <div class="expertise-grid">
+      <div class="section">
+        <div class="sec-title">Expertise</div>
+        <div class="exp-row">
+          <span class="exp-label">React / TypeScript Development</span>
+          <div class="dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div></div>
+        </div>
+        <div class="exp-row">
+          <span class="exp-label">Real-Time State Management</span>
+          <div class="dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div></div>
+        </div>
+        <div class="exp-row">
+          <span class="exp-label">3D Interactive Simulations</span>
+          <div class="dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div></div>
+        </div>
+        <div class="exp-row">
+          <span class="exp-label">Responsive UI / CSS Design</span>
+          <div class="dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div></div>
+        </div>
+        <div class="exp-row">
+          <span class="exp-label">Serverless Deployment (Vercel)</span>
+          <div class="dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="sec-title">Skills</div>
+        <div class="exp-row">
+          <span class="exp-label">Problem Solving & Debugging</span>
+          <div class="dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div></div>
+        </div>
+        <div class="exp-row">
+          <span class="exp-label">Self-Driven Learning</span>
+          <div class="dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div></div>
+        </div>
+        <div class="exp-row">
+          <span class="exp-label">Project Lifecycle Management</span>
+          <div class="dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div></div>
+        </div>
+        <div class="exp-row">
+          <span class="exp-label">Technical Documentation</span>
+          <div class="dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div></div>
+        </div>
+        <div class="exp-row">
+          <span class="exp-label">Independent & Collaborative Work</span>
+          <div class="dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>
