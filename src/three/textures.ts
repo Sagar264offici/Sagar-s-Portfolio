@@ -124,7 +124,8 @@ export type PlanetStyle =
   | "pluto"
   | "moon"
   | "rocky"
-  | "icy";
+  | "icy"
+  | "nightlight";
 
 interface Crater {
   x: number;
@@ -351,6 +352,37 @@ export function createPlanetTexture(style: PlanetStyle, seed: number, base?: str
             r = r * (1 - k) + 236 * k;
             g = g * (1 - k) + 242 * k;
             b = b * (1 - k) + 248 * k;
+          }
+          break;
+        }
+        case "nightlight": {
+          /* Deep midnight surface — dark navy with subtle violet-blue
+             atmospheric bands. The surface should feel like a world
+             built from darkness, rain and ambient glow. */
+          const atm = fbm(u * 4.2, v * 4.2, seed, 4);
+          const bands = Math.sin(v * Math.PI * 6 + fbm(u * 2.8, v * 3.2, seed, 3) * 3.2);
+          const shimmer = 0.08 * Math.sin(u * 40 + v * 28 + seed * 0.3);
+          const light = 0.55 + 0.4 * (0.5 + 0.5 * bands) + shimmer;
+          /* base: deep midnight navy */
+          r = (12 + atm * 18) * light;
+          g = (16 + atm * 22) * light;
+          b = (38 + atm * 30) * light;
+          /* subtle violet cloud bands */
+          const clBand = fbm(u * 5.5 + 11, v * 5.5 + 3, seed + 9, 3);
+          if (clBand > 0.55) {
+            const k = (clBand - 0.55) * 2.2;
+            r = r * (1 - k) + (42 + k * 26) * k;
+            g = g * (1 - k) + (30 + k * 18) * k;
+            b = b * (1 - k) + (82 + k * 40) * k;
+          }
+          /* occasional brighter blue streaks — like distant lightning
+             reflected in cloud layers */
+          const streak = fbm(u * 8 + 22, v * 8, seed + 17, 2);
+          if (streak > 0.72) {
+            const k = (streak - 0.72) * 3.5;
+            r = r * (1 - k) + 64 * k;
+            g = g * (1 - k) + 80 * k;
+            b = b * (1 - k) + 180 * k;
           }
           break;
         }

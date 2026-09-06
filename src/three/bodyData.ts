@@ -53,6 +53,7 @@ const themeColors: Record<string, string> = {
   magenta: "#e879f9",
   blue: "#60a5fa",
   violet: "#a78bfa",
+  nightlight: "#4f6fff",
 };
 
 /* ── ORBIT 1 (inner): the moon of the career sun ── */
@@ -80,6 +81,7 @@ const projectModels: Record<string, string> = {
   "daitya-legion": "mars.glb",
   "dentist-clinic-prototype": "uranus.glb",
   "cricket-field-simulation": "saturn.glb",
+  nightlight: "neptune.glb",
 };
 
 /* ── ORBIT 2: the deployed projects — ringed main worlds ── */

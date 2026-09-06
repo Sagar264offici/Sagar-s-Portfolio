@@ -7,6 +7,7 @@ import { registerPlanetPosition, unregisterPlanetPosition, registerOrbit, unregi
 import { createGlowTexture, createPlanetTexture, createRingTexture, createTrailTexture, hexToRgba, type PlanetStyle } from "./textures";
 import { getRealTexture, onRealTextures, remapRingUvs } from "./realTextures";
 import { ModelPlanet } from "./PlanetModel";
+import { NightLightEffects } from "./NightLightEffects";
 import { usePortfolioStore } from "../store/portfolioStore";
 import { audio } from "../lib/audio";
 import { projectIcons } from "../components/icons";
@@ -25,6 +26,7 @@ const PROJECT_STYLES: Record<string, PlanetStyle> = {
   "project:daitya-legion": "mars",
   "project:dentist-clinic-prototype": "uranus",
   "project:cricket-field-simulation": "saturn",
+  "project:nightlight": "nightlight",
 };
 
 const REAL_PALETTE: PlanetStyle[] = ["mercury", "venus", "mars", "uranus", "neptune", "pluto", "rocky", "icy"];
@@ -45,6 +47,7 @@ const REAL_KEY: Record<PlanetStyle, string> = {
   moon: "moon",
   rocky: "mercury",
   icy: "neptune",
+  nightlight: "neptune",
 };
 
 function hashIndex(key: string): number {
@@ -105,6 +108,7 @@ export function Planet({ def }: Props) {
   const realEarth = isEarth ? getRealTexture("earth") : undefined;
   const cloudsTex = isEarth && realEarth ? getRealTexture("earthClouds") : undefined;
   const isSaturn = def.key === "project:cricket-field-simulation";
+  const isNightLight = def.key === "project:nightlight";
   const realRingTex = isSaturn ? getRealTexture("saturnRing") : undefined;
   const cloudsRef = useRef<THREE.Mesh>(null);
   /* when the real ring strip is live, remap ring UVs to the radial profile */
@@ -171,6 +175,9 @@ export function Planet({ def }: Props) {
       <meshStandardMaterial map={surfaceTex} emissive={def.color} emissiveIntensity={0.05} roughness={0.85} metalness={0.05} transparent={def.opacity < 1} opacity={def.opacity} />
     </mesh>
   );
+  /* NightLight gets a secondary subtitle on hover */
+  const nlSub = isNightLight && hovered ? "FEEL IT" : null;
+
   const showName = def.kind !== "project" && (def.kind === "moon" || hovered);
   // label sits higher on skill bodies so it clears the logo badge
   const labelY = def.skillName ? def.size + 1.05 : def.size + 0.5;
@@ -231,7 +238,7 @@ export function Planet({ def }: Props) {
       </group>
 
       {/* ring system on project worlds — the real Saturn ring strip when present */}
-      {def.kind === "project" && (
+      {def.kind === "project" && !isNightLight && (
         <mesh rotation={[Math.PI / 2 + 0.32, 0, 0.5]}>
           {realRingGeo ? (
             <primitive object={realRingGeo} attach="geometry" />
@@ -248,6 +255,34 @@ export function Planet({ def }: Props) {
         </mesh>
       )}
 
+      {/* NightLight: thin luminous rings — subtle blue-violet, distinct from Saturn */}
+      {isNightLight && (
+        <mesh rotation={[Math.PI / 2 + 0.28, 0, 0.3]}>
+          <ringGeometry args={[def.size * 1.35, def.size * 1.9, 64]} />
+          <meshBasicMaterial
+            color="#6b7cff"
+            transparent
+            side={THREE.DoubleSide}
+            depthWrite={false}
+            opacity={0.22}
+            blending={THREE.AdditiveBlending}
+          />
+        </mesh>
+      )}
+      {isNightLight && (
+        <mesh rotation={[Math.PI / 2 + 0.28, 0, 0.3]}>
+          <ringGeometry args={[def.size * 2.0, def.size * 2.15, 64]} />
+          <meshBasicMaterial
+            color="#8b6fff"
+            transparent
+            side={THREE.DoubleSide}
+            depthWrite={false}
+            opacity={0.12}
+            blending={THREE.AdditiveBlending}
+          />
+        </mesh>
+      )}
+
       {/* Earth's cloud layer — only when the real daymap is live */}
       {cloudsTex && (
         <mesh ref={cloudsRef} scale={1.012}>
@@ -255,6 +290,9 @@ export function Planet({ def }: Props) {
           <meshBasicMaterial map={cloudsTex} transparent depthWrite={false} blending={THREE.AdditiveBlending} opacity={0.5} />
         </mesh>
       )}
+
+      {/* NightLight: cloud + atmosphere layers + rain + lightning + audio waves */}
+      {isNightLight && <NightLightEffects size={def.size} hovered={hovered} quality={quality} reduced={reduced} />}
 
       {/* floating icon chip for projects */}
       {def.kind === "project" && Icon && (
@@ -288,6 +326,15 @@ export function Planet({ def }: Props) {
         <Billboard position={[0, labelY, 0]}>
           <Text fontSize={0.16} color={hovered ? "#ffffff" : def.color} letterSpacing={0.08} anchorX="center" anchorY="middle" outlineWidth={0} fillOpacity={showName ? 1 : 0}>
             {def.name}
+          </Text>
+        </Billboard>
+      )}
+
+      {/* NightLight subtitle: "FEEL IT" fades in on hover */}
+      {isNightLight && nlSub && (
+        <Billboard position={[0, def.size + 1.35, 0]}>
+          <Text fontSize={0.11} color="#8b9cff" letterSpacing={0.22} anchorX="center" anchorY="middle" fillOpacity={hovered ? 0.9 : 0}>
+            {nlSub}
           </Text>
         </Billboard>
       )}

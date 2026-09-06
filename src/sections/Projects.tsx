@@ -27,7 +27,7 @@ export function Projects() {
         <motion.div {...fadeUp} className="section-head">
           <span className="eyebrow">PROJECT UNIVERSE — MODE C: HR QUICK VIEW</span>
           <h2 className="h-xl" style={{ marginTop: 14 }}>
-            Five projects, <span className="text-grad">all shipped</span>
+            {projects.length} projects, <span className="text-grad">all shipped</span>
           </h2>
           <p className="section-sub">
             Every project here is live and has source code on GitHub. Click any card (or its planet in 3D) to open the details.
@@ -56,26 +56,30 @@ export function Projects() {
                 ))}
               </div>
               <div className="proj-actions" onClick={(e) => e.stopPropagation()}>
-                <a
-                  className="btn btn-sm btn-primary"
-                  href={p.liveUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  data-cursor-label="LAUNCH"
-                  onClick={() => audio.blip("select")}
-                >
-                  <ExternalLink size={12} /> LIVE
-                </a>
-                <a
-                  className="btn btn-sm"
-                  href={p.githubUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  data-cursor-label="CODE"
-                  onClick={() => audio.blip("click")}
-                >
-                  <Github size={12} /> GITHUB
-                </a>
+                {p.liveUrl && (
+                  <a
+                    className="btn btn-sm btn-primary"
+                    href={p.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-cursor-label="LAUNCH"
+                    onClick={() => audio.blip("select")}
+                  >
+                    <ExternalLink size={12} /> {p.id === "nightlight" ? "ENTER NIGHTLIGHT" : "LIVE"}
+                  </a>
+                )}
+                {p.githubUrl && (
+                  <a
+                    className="btn btn-sm"
+                    href={p.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-cursor-label="CODE"
+                    onClick={() => audio.blip("click")}
+                  >
+                    <Github size={12} /> GITHUB
+                  </a>
+                )}
               </div>
             </motion.article>
           ))}

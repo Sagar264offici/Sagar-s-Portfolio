@@ -3,7 +3,8 @@ export type ProjectCategory =
   | "Restaurant / Business Web Experience"
   | "Cricket Team / Community Web Experience"
   | "Clinic Management / Service Website Prototype"
-  | "3D Interactive Simulation";
+  | "3D Interactive Simulation"
+  | "Music Experience";
 
 export interface Project {
   id: string;
@@ -19,7 +20,7 @@ export interface Project {
   status: "LIVE" | "PROTOTYPE" | "EXPERIMENT";
   visualTheme: string;
   /** icon key rendered on the floating 3D planet chip */
-  icon: "quiz" | "cafe" | "legion" | "dentist" | "cricket";
+  icon: "quiz" | "cafe" | "legion" | "dentist" | "cricket" | "music";
   featured: boolean;
   capabilities: string[];
   emphasis: string[];
@@ -130,6 +131,36 @@ export const projects: Project[] = [
     featured: true,
     capabilities: ["3D cricket field", "Controllable camera", "Player positioning", "Spatial navigation"],
     emphasis: ["Three.js", "3D camera", "spatial interaction", "interactive visualization"],
+  },
+  {
+    id: "nightlight",
+    title: "NightLight",
+    slug: "nightlight",
+    description:
+      "An immersive music experience built around atmosphere, emotion and sound.",
+    purpose:
+      "A fully immersive Android music experience with mood-aware recommendations, atmospheric visual design, and cinematic interaction — built to feel like listening inside a living, breathing night.",
+    whyBuilt:
+      "Music apps often feel clinical. I wanted to create something where the interface itself becomes part of the listening experience — rain, clouds, neon glow, and darkness as design language. NightLight is my most atmospheric project: a music player that reacts to mood and atmosphere rather than just playing tracks.",
+    category: "Music Experience",
+    technologies: ["Android", "Java", "Media3", "TypeScript", "Hono", "MongoDB"],
+    liveUrl: "https://nightlight-music.vercel.app/",
+    githubUrl: "",
+    status: "LIVE",
+    visualTheme: "nightlight",
+    icon: "music",
+    featured: true,
+    capabilities: [
+      "Immersive music player",
+      "Smart shuffle",
+      "Mood-aware recommendations",
+      "Lyrics experience",
+      "Background playback",
+      "Playlist importing",
+      "Listen-together sessions",
+      "Atmospheric visual design",
+    ],
+    emphasis: ["Android", "Media3", "atmospheric UI", "mood engine", "cinematic interaction"],
   },
 ];
 

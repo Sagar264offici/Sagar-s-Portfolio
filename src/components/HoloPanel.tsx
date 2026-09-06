@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { ExternalLink, Github, X } from "lucide-react";
+import { ExternalLink, Github, Music, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { usePortfolioStore } from "../store/portfolioStore";
 import { getProjectById } from "../data/projects";
@@ -76,6 +76,21 @@ export function HoloPanel() {
                   {project.description}
                 </p>
 
+                {/* NightLight: subtitle + curated feature grid */}
+                {project.id === "nightlight" && (
+                  <div style={{ marginTop: "var(--sp-4)", marginBottom: "var(--sp-3)" }}>
+                    <div style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.2em", color: "#8b9cff", textTransform: "uppercase", marginBottom: 8 }}>
+                      <Music size={12} style={{ display: "inline", verticalAlign: "-2px", marginRight: 6 }} />
+                      FEEL IT
+                    </div>
+                    <div className="proj-tags">
+                      {project.technologies.map((t) => (
+                        <span key={t}>{t}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 <div className="pp-sections">
                   <div className="pp-block">
                     <h4>WHAT IT DOES</h4>
@@ -85,14 +100,16 @@ export function HoloPanel() {
                     <h4>WHY I BUILT IT</h4>
                     <p>{project.whyBuilt}</p>
                   </div>
-                  <div className="pp-block">
-                    <h4>TECH STACK</h4>
-                    <div className="proj-tags">
-                      {project.technologies.map((t) => (
-                        <span key={t}>{t}</span>
-                      ))}
+                  {project.id !== "nightlight" && (
+                    <div className="pp-block">
+                      <h4>TECH STACK</h4>
+                      <div className="proj-tags">
+                        {project.technologies.map((t) => (
+                          <span key={t}>{t}</span>
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  )}
                   <div className="pp-block">
                     <h4>KEY FEATURES</h4>
                     <ul>
@@ -104,12 +121,16 @@ export function HoloPanel() {
                 </div>
 
                 <div className="pp-actions">
-                  <a className="btn btn-primary" href={project.liveUrl} target="_blank" rel="noopener noreferrer" data-cursor-label="LAUNCH">
-                    LAUNCH LIVE PROJECT <ExternalLink size={14} />
-                  </a>
-                  <a className="btn" href={project.githubUrl} target="_blank" rel="noopener noreferrer" data-cursor-label="CODE">
-                    <Github size={14} /> OPEN SOURCE
-                  </a>
+                  {project.liveUrl && (
+                    <a className="btn btn-primary" href={project.liveUrl} target="_blank" rel="noopener noreferrer" data-cursor-label="LAUNCH">
+                      {project.id === "nightlight" ? "ENTER NIGHTLIGHT" : "LAUNCH LIVE PROJECT"} <ExternalLink size={14} />
+                    </a>
+                  )}
+                  {project.githubUrl && (
+                    <a className="btn" href={project.githubUrl} target="_blank" rel="noopener noreferrer" data-cursor-label="CODE">
+                      <Github size={14} /> OPEN SOURCE
+                    </a>
+                  )}
                 </div>
               </>
             ) : skill ? (
