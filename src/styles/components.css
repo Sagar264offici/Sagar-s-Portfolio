@@ -989,84 +989,121 @@
   gap: var(--sp-2);
 }
 
-/* GitHub-style calendar */
+/* GitHub-style calendar — fixed-width columns, scrollable */
 .gh-calendar {
   width: 100%;
+  overflow: hidden;
 }
 
-.gh-months {
-  display: grid;
-  gap: 3px;
+/* Month labels row */
+.gh-months-row {
+  display: flex;
   margin-bottom: 4px;
-  padding-left: 30px;
+}
+
+.gh-months-spacer {
+  width: 28px; /* matches day-label column width */
+  flex-shrink: 0;
+}
+
+.gh-months-scroll {
+  flex: 1;
+  overflow-x: hidden;
+  position: relative;
+  height: 14px;
+}
+
+.gh-months-inner {
+  position: relative;
+  height: 100%;
 }
 
 .gh-month-label {
+  position: absolute;
+  top: 0;
   font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.1em;
+  font-size: 10px;
+  letter-spacing: 0.08em;
   color: var(--text-3);
   text-transform: uppercase;
   white-space: nowrap;
+  transform: translateX(0);
 }
 
+/* Calendar body — day labels + scrollable grid */
 .gh-calendar-body {
   display: flex;
   gap: 4px;
 }
 
+/* Day labels column (Mon, Wed, Fri) */
 .gh-days {
-  display: grid;
-  grid-template-rows: repeat(7, 1fr);
+  display: flex;
+  flex-direction: column;
   gap: 3px;
-  min-width: 26px;
+  width: 28px;
+  flex-shrink: 0;
 }
 
 .gh-day-label {
   font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.06em;
+  font-size: 10px;
+  letter-spacing: 0.04em;
   color: var(--text-3);
   display: flex;
   align-items: center;
-  height: 11px;
+  width: 28px;
 }
 
-.gh-grid {
-  display: grid;
-  gap: 3px;
+/* Scrollable grid container */
+.gh-grid-scroll {
+  flex: 1;
   overflow-x: auto;
+  overflow-y: hidden;
   padding-bottom: 6px;
-  width: 100%;
+  -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
   scrollbar-color: var(--line-strong) transparent;
 }
 
-.gh-grid::-webkit-scrollbar {
+.gh-grid-scroll::-webkit-scrollbar {
   height: 4px;
 }
 
-.gh-grid::-webkit-scrollbar-track {
+.gh-grid-scroll::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.gh-grid::-webkit-scrollbar-thumb {
+.gh-grid-scroll::-webkit-scrollbar-thumb {
   background: var(--line-strong);
   border-radius: 99px;
 }
 
+/* Inner grid — fixed-width week columns */
+.gh-grid-inner {
+  display: flex;
+  gap: 3px;
+}
+
+.gh-week-col {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+/* Individual cells */
 .gh-cell {
-  aspect-ratio: 1;
   border-radius: 2px;
-  background: rgba(148, 163, 184, 0.1);
+  background: rgba(148, 163, 184, 0.08);
   cursor: pointer;
   transition: transform var(--speed-fast), box-shadow var(--speed-fast);
-  min-width: 10px;
+  flex-shrink: 0;
 }
 
 .gh-cell:hover {
-  transform: scale(1.5);
-  box-shadow: 0 0 10px currentColor;
+  transform: scale(1.6);
+  box-shadow: 0 0 8px currentColor;
   z-index: 2;
   position: relative;
 }
@@ -1077,30 +1114,23 @@
 .gh-cell.l3 { background: #26a641; color: #26a641; }
 .gh-cell.l4 { background: #39d353; color: #39d353; box-shadow: 0 0 6px rgba(57, 211, 83, 0.5); }
 
+/* Legend */
 .gh-legend {
   display: flex;
   align-items: center;
   justify-content: flex-end;
   gap: 4px;
-  margin-top: 8px;
+  margin-top: 10px;
 }
 
 .gh-legend-cell {
-  width: 10px;
-  height: 10px;
-  min-width: 10px;
-  aspect-ratio: auto;
   cursor: default;
+  flex-shrink: 0;
 }
 
 .gh-legend-cell:hover {
   transform: none;
   box-shadow: none;
-}
-
-/* Smooth scroll container for the grid */
-.gh-grid {
-  -webkit-overflow-scrolling: touch;
 }
 
 .gh-repos {
@@ -2666,34 +2696,32 @@ html[data-pro="1"] .canvas-wrap canvas {
     font-size: 11px;
   }
 
-  /* GitHub calendar — scrollable on mobile */
+  /* GitHub calendar */
   .gh-wall {
     padding: var(--sp-4);
-  }
-
-  .gh-calendar-body {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
-  }
-
-  .gh-cell {
-    min-width: 11px;
-    min-height: 11px;
-  }
-
-  .gh-months {
-    padding-left: 28px;
-  }
-
-  .gh-day-label {
-    font-size: 8px;
   }
 
   .gh-head {
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
+  }
+
+  .gh-month-label {
+    font-size: 9px;
+  }
+
+  .gh-day-label {
+    font-size: 9px;
+    width: 24px;
+  }
+
+  .gh-days {
+    width: 24px;
+  }
+
+  .gh-months-spacer {
+    width: 24px;
   }
 
   /* Hobbies — single column */

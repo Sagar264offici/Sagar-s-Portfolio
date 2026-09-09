@@ -15,6 +15,11 @@ const fadeUp = {
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 const DAYS = ["", "Mon", "", "Wed", "", "Fri", ""];
 
+// Fixed column width — matches GitHub's actual cell sizing
+const CELL_SIZE = 13;
+const CELL_GAP = 3;
+const WEEK_WIDTH = CELL_SIZE + CELL_GAP; // 16px per week column
+
 export function GitHubSection() {
   const repos = usePortfolioStore((s) => s.github.repos);
   const user = usePortfolioStore((s) => s.github.user);
@@ -39,21 +44,19 @@ export function GitHubSection() {
   };
 
   const totalContributions = map.reduce((s, d) => s + d.count, 0);
-  const totalDays = map.filter((d) => d.count > 0).length;
 
   const selected = repos.find((r) => r.name === expanded) || null;
 
-  // Compute which months appear at the top of the grid
+  // Compute month labels positioned above the correct week columns
   const monthLabels = useMemo(() => {
-    const labels: { month: string; weekIndex: number }[] = [];
+    const labels: { month: string; left: number }[] = [];
     let lastMonth = -1;
     for (let i = 0; i < weeks.length; i++) {
-      // Check the first day of each week
       const firstDay = weeks[i]?.[0];
       if (firstDay) {
         const m = new Date(firstDay.date).getMonth();
         if (m !== lastMonth) {
-          labels.push({ month: MONTHS[m], weekIndex: i });
+          labels.push({ month: MONTHS[m], left: i * WEEK_WIDTH });
           lastMonth = m;
         }
       }
@@ -95,13 +98,18 @@ export function GitHubSection() {
 
             {/* GitHub-style contribution graph */}
             <div className="gh-calendar">
-              {/* Month labels row */}
-              <div className="gh-months" style={{ gridTemplateColumns: `repeat(${weeks.length}, 1fr)` }}>
-                {monthLabels.map((ml, i) => (
-                  <span key={i} className="gh-month-label" style={{ gridColumn: ml.weekIndex + 1 }}>
-                    {ml.month}
-                  </span>
-                ))}
+              {/* Month labels — positioned absolutely over the scrollable grid */}
+              <div className="gh-months-row">
+                <div className="gh-months-spacer" />
+                <div className="gh-months-scroll">
+                  <div className="gh-months-inner" style={{ width: weeks.length * WEEK_WIDTH }}>
+                    {monthLabels.map((ml, i) => (
+                      <span key={i} className="gh-month-label" style={{ left: ml.left }}>
+                        {ml.month}
+                      </span>
+                    ))}
+                  </div>
+                </div>
               </div>
 
               {/* Grid with day labels */}
@@ -109,20 +117,29 @@ export function GitHubSection() {
                 {/* Day labels column */}
                 <div className="gh-days">
                   {DAYS.map((d, i) => (
-                    <span key={i} className="gh-day-label">{d}</span>
+                    <span key={i} className="gh-day-label" style={{ height: CELL_SIZE }}>{d}</span>
                   ))}
                 </div>
 
-                {/* Contribution grid */}
-                <div className="gh-grid" aria-hidden style={{ gridTemplateColumns: `repeat(${weeks.length}, 1fr)` }}>
-                  {weeks.map((week, wi) => (
-                    <div key={wi} style={{ display: "grid", gridTemplateRows: "repeat(7, 1fr)", gap: 3 }}>
-                      {Array.from({ length: 7 }).map((_, di) => {
-                        const day = week[di];
-                        return <div key={di} className={`gh-cell l${day ? levelFor(day.count) : 0}`} title={day ? `${day.date} — ${day.count} contribution${day.count === 1 ? "" : "s"}` : ""} />;
-                      })}
-                    </div>
-                  ))}
+                {/* Contribution grid — fixed-width columns, scrollable */}
+                <div className="gh-grid-scroll" aria-hidden>
+                  <div className="gh-grid-inner" style={{ width: weeks.length * WEEK_WIDTH }}>
+                    {weeks.map((week, wi) => (
+                      <div key={wi} className="gh-week-col" style={{ width: WEEK_WIDTH }}>
+                        {Array.from({ length: 7 }).map((_, di) => {
+                          const day = week[di];
+                          return (
+                            <div
+                              key={di}
+                              className={`gh-cell l${day ? levelFor(day.count) : 0}`}
+                              style={{ width: CELL_SIZE, height: CELL_SIZE }}
+                              title={day ? `${day.date} — ${day.count} contribution${day.count === 1 ? "" : "s"}` : ""}
+                            />
+                          );
+                        })}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
 
@@ -130,7 +147,7 @@ export function GitHubSection() {
               <div className="gh-legend">
                 <span className="mono" style={{ fontSize: 9, letterSpacing: "0.14em", color: "var(--text-3)" }}>LESS</span>
                 {[0, 1, 2, 3, 4].map((l) => (
-                  <span key={l} className={`gh-cell l${l} gh-legend-cell`} />
+                  <span key={l} className={`gh-cell l${l} gh-legend-cell`} style={{ width: CELL_SIZE, height: CELL_SIZE }} />
                 ))}
                 <span className="mono" style={{ fontSize: 9, letterSpacing: "0.14em", color: "var(--text-3)" }}>MORE</span>
               </div>
