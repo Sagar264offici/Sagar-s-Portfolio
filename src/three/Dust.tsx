@@ -8,14 +8,12 @@ interface Props {
 
 export function Dust({ count }: Props) {
   const ref = useRef<THREE.Points>(null);
-  const speeds = useMemo(() => {
-    const arr = new Float32Array(count);
-    for (let i = 0; i < count; i++) arr[i] = 0.02 + Math.random() * 0.05;
-    return arr;
-  }, [count]);
+  // Throttle GPU buffer uploads — update every 3rd frame for perf
+  const frameRef = useRef(0);
 
-  const geometry = useMemo(() => {
+  const [geometry, speeds] = useMemo(() => {
     const positions = new Float32Array(count * 3);
+    const spd = new Float32Array(count);
     for (let i = 0; i < count; i++) {
       const theta = Math.random() * Math.PI * 2;
       const r = 3 + Math.random() * 26;
@@ -23,21 +21,26 @@ export function Dust({ count }: Props) {
       positions[i * 3] = Math.cos(theta) * r;
       positions[i * 3 + 1] = y;
       positions[i * 3 + 2] = Math.sin(theta) * r;
+      spd[i] = 0.02 + Math.random() * 0.05;
     }
     const g = new THREE.BufferGeometry();
     g.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-    return g;
+    return [g, spd] as const;
   }, [count]);
 
-  useFrame((state, delta) => {
+  useFrame((_, delta) => {
     if (!ref.current) return;
+    frameRef.current++;
+    // Only upload to GPU every 3rd frame — saves ~66% of buffer uploads
+    const shouldUpdate = frameRef.current % 3 === 0;
     const pos = ref.current.geometry.attributes.position as THREE.BufferAttribute;
     const arr = pos.array as Float32Array;
+    const step = shouldUpdate ? 1 : 0.33; // partial movement when not uploading
     for (let i = 0; i < count; i++) {
-      arr[i * 3 + 1] += speeds[i] * delta * 6;
+      arr[i * 3 + 1] += speeds[i] * delta * 6 * (shouldUpdate ? 1 : 0.5);
       if (arr[i * 3 + 1] > 8) arr[i * 3 + 1] = -8;
     }
-    pos.needsUpdate = true;
+    if (shouldUpdate) pos.needsUpdate = true;
     ref.current.rotation.y += delta * 0.005;
   });
 

@@ -24,6 +24,7 @@ export function LensFlare({ position = [0, 0, 0] as [number, number, number] }) 
   const ghostTexs = useMemo(() => GHOSTS.map((g) => createGlowTexture(hexToRgba(g.color, 0.85), hexToRgba(g.color, 0))), []);
 
   const sunWorld = useMemo(() => new THREE.Vector3(...position), [position]);
+  // Reuse scratch vectors to avoid per-frame allocations
   const proj = useMemo(() => new THREE.Vector3(), []);
   const ndc = useMemo(() => new THREE.Vector3(), []);
 
@@ -61,7 +62,7 @@ export function LensFlare({ position = [0, 0, 0] as [number, number, number] }) 
         continue;
       }
       const f = GHOSTS[i].frac;
-      ndc.set(proj.x + -proj.x * f, proj.y + -proj.y * f, proj.z);
+      ndc.set(proj.x * (1 - f), proj.y * (1 - f), proj.z);
       ndc.unproject(camera);
       s.position.copy(ndc);
       const dist = camera.position.distanceTo(ndc);

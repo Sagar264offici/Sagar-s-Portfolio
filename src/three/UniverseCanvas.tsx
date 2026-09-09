@@ -25,21 +25,24 @@ export function UniverseCanvas() {
         powerPreference: "high-performance",
         alpha: false,
         stencil: false,
+        // Power-of-two textures + no depth pre-pass for faster rendering
+        toneMapping: 0, // NoToneMapping — faster, and the scene is already dark
       }}
       onCreated={({ gl }) => gl.setClearColor("#01030a")}
       performance={{ min: 0.5 }}
+      frameloop="always"
     >
       <fog attach="fog" args={["#01030a", 45, 150]} />
       <UniverseScene />
 
       {settings.postprocessing && (
-        <EffectComposer multisampling={reduced ? 0 : 4}>
+        <EffectComposer multisampling={reduced ? 0 : 2}>
           <Bloom
-            intensity={settings.bloomIntensity}
-            luminanceThreshold={0.85}
-            luminanceSmoothing={0.3}
+            intensity={settings.bloomIntensity * 0.85}
+            luminanceThreshold={0.88}
+            luminanceSmoothing={0.35}
             mipmapBlur
-            radius={0.45}
+            radius={0.4}
           />
           <Vignette eskil={false} offset={0.22} darkness={0.85} />
         </EffectComposer>

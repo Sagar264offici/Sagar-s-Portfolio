@@ -14,6 +14,7 @@ interface Props {
 function RainParticles({ size, quality, reduced }: { size: number; quality: QualityTier; reduced: boolean }) {
   const ref = useRef<THREE.Points>(null);
   const count = reduced ? 0 : quality === "low" ? 40 : quality === "medium" ? 80 : 140;
+  const frameRef = useRef(0);
 
   const [positions, velocities] = useMemo(() => {
     const pos = new Float32Array(count * 3);
@@ -32,6 +33,8 @@ function RainParticles({ size, quality, reduced }: { size: number; quality: Qual
 
   useFrame((_, delta) => {
     if (!ref.current || reduced) return;
+    frameRef.current++;
+    const shouldUpdate = frameRef.current % 2 === 0;
     const arr = ref.current.geometry.attributes.position.array as Float32Array;
     const r = size * 1.6;
     for (let i = 0; i < count; i++) {
@@ -43,7 +46,7 @@ function RainParticles({ size, quality, reduced }: { size: number; quality: Qual
         arr[i * 3 + 2] = Math.sin(angle) * r;
       }
     }
-    ref.current.geometry.attributes.position.needsUpdate = true;
+    if (shouldUpdate) ref.current.geometry.attributes.position.needsUpdate = true;
   });
 
   if (count === 0) return null;

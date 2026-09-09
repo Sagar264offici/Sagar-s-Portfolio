@@ -42,6 +42,12 @@ function sampleKeyframes(t: number): { pos: THREE.Vector3; look: THREE.Vector3 }
   };
 }
 
+// Reusable scratch vectors to avoid per-frame allocations
+const _desiredPos = new THREE.Vector3();
+const _desiredLook = new THREE.Vector3();
+const _rest = new THREE.Vector3(0, 2.2, 18);
+const _dir = new THREE.Vector3();
+
 export function CameraRig() {
   const camera = useThree((s) => s.camera);
   const pointer = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
@@ -64,42 +70,38 @@ export function CameraRig() {
     pointer.current.x = reduced ? 0 : p.x * touchFactor;
     pointer.current.y = reduced ? 0 : p.y * touchFactor;
 
-    let desiredPos: THREE.Vector3;
-    let desiredLook: THREE.Vector3;
     const base = sampleKeyframes(progress);
 
     // Focus mode: fly toward a planet.
     const bodyPos = focusedBody ? getPlanetPosition(focusedBody) : undefined;
     if (focusedBody && bodyPos) {
-      focusPos.current = bodyPos.clone();
-      const dir = bodyPos.clone().normalize();
-      desiredPos = bodyPos.clone().add(dir.multiplyScalar(2.4)).add(new THREE.Vector3(0, 1.2, 0.4));
-      desiredLook = bodyPos.clone();
+      focusPos.current = bodyPos;
+      _dir.copy(bodyPos).normalize();
+      _desiredPos.copy(bodyPos).add(_dir.multiplyScalar(2.4));
+      _desiredPos.y += 1.2;
+      _desiredPos.z += 0.4;
+      _desiredLook.copy(bodyPos);
     } else if (touch) {
-      // Phones: the camera keeps its distance and only drifts a fraction of the
-      // cinematic dolly — full keyframe travel reads as the page fighting the
-      // scroll and feels laggy on touch. A gentle glide keeps the depth cue
-      // without the motion sickness.
       focusPos.current = null;
-      const rest = new THREE.Vector3(0, 2.2, 18);
-      desiredPos = rest.clone().lerp(base.pos, 0.45);
-      desiredPos.x += pointer.current.x * 0.25;
-      desiredPos.y += -pointer.current.y * 0.15;
-      desiredLook = new THREE.Vector3(base.look.x * 0.35, base.look.y * 0.3, base.look.z);
+      _desiredPos.copy(_rest).lerp(base.pos, 0.45);
+      _desiredPos.x += pointer.current.x * 0.25;
+      _desiredPos.y += -pointer.current.y * 0.15;
+      _desiredLook.set(base.look.x * 0.35, base.look.y * 0.3, base.look.z);
     } else {
       focusPos.current = null;
-      desiredPos = base.pos.clone();
-      desiredLook = base.look.clone();
-      desiredPos.x += pointer.current.x * 0.9;
-      desiredPos.y += -pointer.current.y * 0.6;
-      desiredLook.x += pointer.current.x * 0.35;
-      desiredLook.y += -pointer.current.y * 0.2;
+      _desiredPos.copy(base.pos);
+      _desiredLook.copy(base.look);
+      _desiredPos.x += pointer.current.x * 0.9;
+      _desiredPos.y += -pointer.current.y * 0.6;
+      _desiredLook.x += pointer.current.x * 0.35;
+      _desiredLook.y += -pointer.current.y * 0.2;
     }
 
     // Slower lerp on touch so the background glides instead of snapping after the finger.
     const lambda = focusedBody ? 2.6 : touch ? 1.1 : 1.6;
-    currentPos.current.lerp(desiredPos, 1 - Math.exp(-lambda * dt));
-    currentLook.current.lerp(desiredLook, 1 - Math.exp(-lambda * dt));
+    const lerpFactor = 1 - Math.exp(-lambda * dt);
+    currentPos.current.lerp(_desiredPos, lerpFactor);
+    currentLook.current.lerp(_desiredLook, lerpFactor);
 
     camera.position.copy(currentPos.current);
     camera.lookAt(currentLook.current);

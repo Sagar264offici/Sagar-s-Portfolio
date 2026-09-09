@@ -12,7 +12,8 @@ const fadeUp = {
   transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] as const },
 };
 
-const MONTHS = ["", "FEB", "", "APR", "", "JUN", "", "AUG", "", "OCT", "", "DEC"];
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const DAYS = ["", "Mon", "", "Wed", "", "Fri", ""];
 
 export function GitHubSection() {
   const repos = usePortfolioStore((s) => s.github.repos);
@@ -37,9 +38,28 @@ export function GitHubSection() {
     return 4;
   };
 
+  const totalContributions = map.reduce((s, d) => s + d.count, 0);
   const totalDays = map.filter((d) => d.count > 0).length;
 
   const selected = repos.find((r) => r.name === expanded) || null;
+
+  // Compute which months appear at the top of the grid
+  const monthLabels = useMemo(() => {
+    const labels: { month: string; weekIndex: number }[] = [];
+    let lastMonth = -1;
+    for (let i = 0; i < weeks.length; i++) {
+      // Check the first day of each week
+      const firstDay = weeks[i]?.[0];
+      if (firstDay) {
+        const m = new Date(firstDay.date).getMonth();
+        if (m !== lastMonth) {
+          labels.push({ month: MONTHS[m], weekIndex: i });
+          lastMonth = m;
+        }
+      }
+    }
+    return labels;
+  }, [weeks]);
 
   return (
     <section id="github" className="section" style={{ alignItems: "flex-start" }}>
@@ -69,29 +89,51 @@ export function GitHubSection() {
               </div>
               <span className="chip">
                 <span className="dot" />
-                {user ? `${totalDays} ACTIVE DAYS · ${user.public_repos} REPOS` : "SYNCING"}
+                {user ? `${totalContributions.toLocaleString()} CONTRIBUTIONS · ${user.public_repos} REPOS` : "SYNCING"}
               </span>
             </div>
 
-            <div className="gh-grid" aria-hidden style={{ gridTemplateColumns: `repeat(${weeks.length}, 1fr)` }}>
-              {weeks.map((week, wi) => (
-                <div key={wi} style={{ display: "grid", gridTemplateRows: "repeat(7, 1fr)", gap: 3 }}>
-                  {Array.from({ length: 7 }).map((_, di) => {
-                    const day = week[di];
-                    return <div key={di} className={`gh-cell l${day ? levelFor(day.count) : 0}`} title={day ? `${day.date} — ${day.count} contribution${day.count === 1 ? "" : "s"}` : ""} />;
-                  })}
-                </div>
-              ))}
-            </div>
+            {/* GitHub-style contribution graph */}
+            <div className="gh-calendar">
+              {/* Month labels row */}
+              <div className="gh-months" style={{ gridTemplateColumns: `repeat(${weeks.length}, 1fr)` }}>
+                {monthLabels.map((ml, i) => (
+                  <span key={i} className="gh-month-label" style={{ gridColumn: ml.weekIndex + 1 }}>
+                    {ml.month}
+                  </span>
+                ))}
+              </div>
 
-            <div className="mono" style={{ display: "flex", justifyContent: "space-between", fontSize: 9, letterSpacing: "0.14em", color: "var(--text-3)", marginTop: 8, textTransform: "uppercase" }}>
-              <span>{MONTHS[0]}</span>
-              <span>LESS</span>
-              {[1, 2, 3, 4].map((l) => (
-                <span key={l} className={`gh-cell l${l}`} style={{ width: 10, height: 10, display: "inline-block" }} />
-              ))}
-              <span>MORE</span>
-              <span>{MONTHS[11]}</span>
+              {/* Grid with day labels */}
+              <div className="gh-calendar-body">
+                {/* Day labels column */}
+                <div className="gh-days">
+                  {DAYS.map((d, i) => (
+                    <span key={i} className="gh-day-label">{d}</span>
+                  ))}
+                </div>
+
+                {/* Contribution grid */}
+                <div className="gh-grid" aria-hidden style={{ gridTemplateColumns: `repeat(${weeks.length}, 1fr)` }}>
+                  {weeks.map((week, wi) => (
+                    <div key={wi} style={{ display: "grid", gridTemplateRows: "repeat(7, 1fr)", gap: 3 }}>
+                      {Array.from({ length: 7 }).map((_, di) => {
+                        const day = week[di];
+                        return <div key={di} className={`gh-cell l${day ? levelFor(day.count) : 0}`} title={day ? `${day.date} — ${day.count} contribution${day.count === 1 ? "" : "s"}` : ""} />;
+                      })}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Legend */}
+              <div className="gh-legend">
+                <span className="mono" style={{ fontSize: 9, letterSpacing: "0.14em", color: "var(--text-3)" }}>LESS</span>
+                {[0, 1, 2, 3, 4].map((l) => (
+                  <span key={l} className={`gh-cell l${l} gh-legend-cell`} />
+                ))}
+                <span className="mono" style={{ fontSize: 9, letterSpacing: "0.14em", color: "var(--text-3)" }}>MORE</span>
+              </div>
             </div>
             {source !== "live" && (
               <p className="mono" style={{ fontSize: 9, color: "var(--amber)", margin: "10px 0 0", letterSpacing: "0.08em" }}>

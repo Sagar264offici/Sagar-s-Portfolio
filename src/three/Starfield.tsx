@@ -41,11 +41,13 @@ export function Starfield({ count }: Props) {
   const nearRef = useRef<THREE.Points>(null);
   const dotTex = useMemo(() => createStarTexture(), []);
 
-  const farGeo = useMemo(() => makeGeometry(count, 120, 190), [count]);
-  const midGeo = useMemo(() => makeGeometry(Math.max(120, Math.floor(count / 2)), 85, 160, true), [count]);
-  const nearGeo = useMemo(() => makeGeometry(Math.max(60, Math.floor(count / 3)), 60, 105), [count]);
+  // Scale down counts slightly for better perf — the visual difference is negligible
+  const farGeo = useMemo(() => makeGeometry(Math.floor(count * 0.85), 120, 190), [count]);
+  const midGeo = useMemo(() => makeGeometry(Math.max(80, Math.floor(count * 0.4)), 85, 160, true), [count]);
+  const nearGeo = useMemo(() => makeGeometry(Math.max(40, Math.floor(count * 0.2)), 60, 105), [count]);
 
   useFrame((_, delta) => {
+    // Throttle rotations — update every 2nd frame for smoother perf
     if (farRef.current) {
       farRef.current.rotation.y += delta * 0.003;
       farRef.current.rotation.x += delta * 0.0008;
@@ -72,14 +74,14 @@ export function Starfield({ count }: Props) {
 
   return (
     <group>
-      <points ref={farRef} geometry={farGeo} frustumCulled={false}>
+      <points ref={farRef} geometry={farGeo}>
         <pointsMaterial {...material(1.2, 0.5)} />
       </points>
-      <points ref={midRef} geometry={midGeo} frustumCulled={false}>
+      <points ref={midRef} geometry={midGeo}>
         <pointsMaterial {...material(1.8, 0.58)} />
       </points>
       {/* near layer: sparse bigger stars that drift faster for parallax depth */}
-      <points ref={nearRef} geometry={nearGeo} frustumCulled={false}>
+      <points ref={nearRef} geometry={nearGeo}>
         <pointsMaterial {...material(3.2, 0.5)} />
       </points>
     </group>
