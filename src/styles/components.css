@@ -2353,17 +2353,48 @@ html[data-pro="1"] .canvas-wrap canvas {
 }
 
 /* ══════════════════════ RESPONSIVE ══════════════════════ */
+
+/* ── TABLET (≤ 1024px) ── */
 @media (max-width: 1024px) {
   .about-grid {
     grid-template-columns: 1fr;
+    gap: var(--sp-6);
   }
 
   .gh-layout {
     grid-template-columns: 1fr;
+    gap: var(--sp-5);
+  }
+
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hobby-grid {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
+
+  .contact-grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+
+  /* Bump mono labels up a notch for readability */
+  .eyebrow {
+    font-size: 11px;
+  }
+
+  .section-sub {
+    max-width: 100%;
   }
 }
 
+.mobile-menu-btn {
+  display: none;
+}
+
+/* ── LARGE MOBILE (≤ 820px) ── */
 @media (max-width: 820px) {
+  /* Hide desktop-only chrome */
   .nav-links {
     display: none;
   }
@@ -2376,137 +2407,71 @@ html[data-pro="1"] .canvas-wrap canvas {
     display: none;
   }
 
-  .project-panel .pp-sections {
-    grid-template-columns: 1fr;
-  }
-
-  .qp-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .section {
-    padding-left: var(--sp-4);
-    padding-right: var(--sp-4);
-  }
-
   .hud,
   .hud-corner {
     display: none;
   }
-}
 
-.mobile-menu-btn {
-  display: none;
-}
-
-@media (max-width: 560px) {
-  .on-spin input[type="range"] {
-    width: 72px;
+  /* Floating button — move above orbit nav to avoid overlap */
+  .float-hr {
+    bottom: calc(80px + env(safe-area-inset-bottom));
+    right: 14px;
+    padding: 10px 16px;
+    font-size: 9px;
+    letter-spacing: 0.16em;
   }
 
-  .on-spin-label {
-    display: none;
+  /* Section layout */
+  .section {
+    padding-left: var(--sp-4);
+    padding-right: var(--sp-4);
+    padding-top: calc(var(--nav-h) + var(--sp-6));
   }
 
-  .astro-card {
-    padding: 22px 14px;
-  }
-
-  .astro-hero {
-    margin-bottom: var(--sp-4);
-  }
-
-  .astro-hero + .ag {
-    margin-top: var(--sp-3);
-  }
-
-  .ag-caption-sub {
+  .section-inner {
     max-width: 100%;
   }
 
-  .ag-arrow {
-    width: 32px;
-    height: 32px;
+  .section-head {
+    margin-bottom: var(--sp-6);
   }
 
-  .ag-thumb {
-    width: 52px;
-    height: 36px;
-  }
-
-  .orbit-nav {
-    bottom: calc(66px + env(safe-area-inset-bottom));
-  }
-
-  .on-title {
-    display: none;
-  }
-
-  /* the mobile menu dropdown must never overflow the viewport */
-  .nav-mobile-menu {
-    width: min(320px, 92vw);
-    max-height: calc(100dvh - var(--nav-h) - 24px);
-    overflow-y: auto;
-    overscroll-behavior: contain;
-  }
-
-  .on-station {
-    padding: 6px 9px;
-    font-size: 8px;
-  }
-
-  .on-pop {
-    max-height: 48vh;
-  }
-
-  .nav-top {
-    padding: 0 var(--sp-4);
-  }
-
-  .nav-toggle .nv-label {
-    display: none;
-  }
-
+  /* Hero */
   .hero {
     padding-left: var(--sp-4);
     padding-right: var(--sp-4);
+    padding-top: calc(var(--nav-h) + var(--sp-6));
     align-items: flex-start;
-    padding-top: calc(var(--nav-h) + var(--sp-8));
   }
 
   .hero-name {
-    font-size: clamp(2.4rem, 13vw, 3.6rem);
+    font-size: clamp(2.6rem, 12vw, 4rem);
+  }
+
+  .hero-tagline {
+    font-size: clamp(1rem, 2.8vw, 1.3rem);
+  }
+
+  .hero-desc {
+    font-size: var(--text-sm);
   }
 
   .hero-scroll-hint {
     display: none;
   }
 
-  .about-facts {
-    grid-template-columns: 1fr;
-  }
-
-  .float-hr {
-    right: 14px;
-    bottom: calc(16px + env(safe-area-inset-bottom));
-    padding: 10px 14px;
-    font-size: 9px;
-  }
-
   .hero-ctas {
     flex-direction: column;
     align-items: stretch;
+    gap: 10px;
   }
 
   .hero-ctas .btn {
     width: 100%;
+    text-align: center;
   }
 
-  .section {
-    padding-left: 14px;
-    padding-right: 14px;
-  }
-
+  /* Projects */
   .proj-grid {
     grid-template-columns: 1fr;
     gap: var(--sp-4);
@@ -2516,6 +2481,7 @@ html[data-pro="1"] .canvas-wrap canvas {
     padding: var(--sp-4);
   }
 
+  /* Project panel */
   .project-panel {
     padding: 10px;
   }
@@ -2523,6 +2489,10 @@ html[data-pro="1"] .canvas-wrap canvas {
   .project-panel .pp-card {
     padding: 26px 18px;
     border-radius: var(--radius-md);
+  }
+
+  .project-panel .pp-sections {
+    grid-template-columns: 1fr;
   }
 
   .project-panel .pp-actions {
@@ -2533,6 +2503,12 @@ html[data-pro="1"] .canvas-wrap canvas {
     width: 100%;
   }
 
+  /* Recruiter panel */
+  .qp-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Terminal */
   .terminal {
     padding: 10px;
   }
@@ -2541,32 +2517,368 @@ html[data-pro="1"] .canvas-wrap canvas {
     height: 76vh;
   }
 
+  /* GitHub */
   .gh-repos {
-    max-height: 400px;
+    max-height: none;
   }
 
+  .repo-card {
+    padding: 12px 14px;
+  }
+
+  /* Hobbies */
   .hobby-grid {
     grid-template-columns: 1fr;
+    gap: var(--sp-4);
+  }
+
+  .hobby-card {
+    padding: var(--sp-4);
+  }
+
+  /* Contact */
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: var(--sp-3);
   }
 
   .contact-card {
     padding: var(--sp-4);
   }
 
-  .qp-ctas {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .astro-card ul {
-    grid-template-columns: 1fr !important;
-  }
-
+  /* Modal */
   .modal {
     padding: 12px;
   }
 
   .modal-card {
     padding: 22px 18px;
+  }
+
+  /* Footer */
+  .footer {
+    padding: var(--sp-8) var(--sp-4) calc(var(--sp-8) + 80px);
+  }
+
+  /* Nav bar compact */
+  .nav-top {
+    padding: 0 var(--sp-4);
+  }
+
+  .nav-toggle .nv-label {
+    display: none;
+  }
+}
+
+/* ── SMALL MOBILE (≤ 560px) ── */
+@media (max-width: 560px) {
+  /* Hero — tighter */
+  .hero-name {
+    font-size: clamp(2.2rem, 14vw, 3.2rem);
+  }
+
+  .hero-copy .tag {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+  }
+
+  .hero-tagline {
+    font-size: 1rem;
+  }
+
+  /* Sections — reduce vertical padding */
+  .section {
+    padding-top: calc(var(--nav-h) + var(--sp-4));
+    padding-bottom: var(--sp-8);
+  }
+
+  .section-head {
+    margin-bottom: var(--sp-5);
+  }
+
+  .section-head h2 {
+    font-size: clamp(1.5rem, 6vw, 2rem);
+  }
+
+  .section-sub {
+    font-size: var(--text-sm);
+  }
+
+  /* Eyebrow — readable but compact */
+  .eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.22em;
+  }
+
+  /* About facts — single column */
+  .about-facts {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .about-facts li {
+    padding: 10px 12px;
+    font-size: 11px;
+  }
+
+  /* Projects — full width cards */
+  .proj-grid {
+    grid-template-columns: 1fr;
+    gap: var(--sp-3);
+  }
+
+  .proj-card {
+    padding: var(--sp-3);
+  }
+
+  .proj-card h3 {
+    font-size: var(--text-lg);
+  }
+
+  .proj-tags span {
+    font-size: 9px;
+    padding: 3px 7px;
+  }
+
+  /* Skills */
+  .skills-grid {
+    grid-template-columns: 1fr;
+    gap: var(--sp-4);
+  }
+
+  .skill-panel {
+    padding: var(--sp-4);
+  }
+
+  .skill-row {
+    padding: 8px 10px;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .skill-row .sr-name {
+    font-size: 13px;
+  }
+
+  .skill-row .sr-note {
+    max-width: 100%;
+    text-align: left;
+    font-size: 11px;
+  }
+
+  /* GitHub calendar — scrollable on mobile */
+  .gh-wall {
+    padding: var(--sp-4);
+  }
+
+  .gh-calendar-body {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+
+  .gh-cell {
+    min-width: 11px;
+    min-height: 11px;
+  }
+
+  .gh-months {
+    padding-left: 28px;
+  }
+
+  .gh-day-label {
+    font-size: 8px;
+  }
+
+  .gh-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  /* Hobbies — single column */
+  .hobby-grid {
+    grid-template-columns: 1fr;
+    gap: var(--sp-3);
+  }
+
+  .hobby-card {
+    padding: var(--sp-3);
+  }
+
+  .hobby-card h3 {
+    font-size: var(--text-base);
+  }
+
+  .mini-world {
+    height: 120px;
+  }
+
+  /* Contact */
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: var(--sp-3);
+    margin-top: var(--sp-5);
+  }
+
+  /* Timeline */
+  .timeline {
+    padding-left: 32px;
+  }
+
+  .tl-step h3 {
+    font-size: var(--text-lg);
+  }
+
+  .tl-step p {
+    font-size: var(--text-xs);
+  }
+
+  /* Orbit nav — compact */
+  .orbit-nav {
+    bottom: calc(56px + env(safe-area-inset-bottom));
+  }
+
+  .on-spin input[type="range"] {
+    width: 64px;
+  }
+
+  .on-spin-label {
+    display: none;
+  }
+
+  .on-title {
+    display: none;
+  }
+
+  .on-station {
+    padding: 5px 8px;
+    font-size: 8px;
+    letter-spacing: 0.1em;
+  }
+
+  .on-pop {
+    max-height: 44vh;
+  }
+
+  .on-spin {
+    padding: 4px 8px;
+  }
+
+  /* Float button — compact */
+  .float-hr {
+    right: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom));
+    padding: 8px 12px;
+    font-size: 8px;
+    letter-spacing: 0.14em;
+  }
+
+  .float-hr svg {
+    display: none;
+  }
+
+  /* Astro gallery */
+  .astro-card {
+    padding: 18px 12px;
+  }
+
+  .astro-hero {
+    margin-bottom: var(--sp-3);
+  }
+
+  .astro-hero .a-planet {
+    width: 64px;
+    height: 64px;
+  }
+
+  .ag-arrow {
+    width: 30px;
+    height: 30px;
+  }
+
+  .ag-thumb {
+    width: 48px;
+    height: 34px;
+  }
+
+  .ag-caption-sub {
+    max-width: 100%;
+    font-size: 11px;
+  }
+
+  /* Nav — full-width mobile menu */
+  .nav-mobile-menu {
+    width: min(320px, 92vw);
+    max-height: calc(100dvh - var(--nav-h) - 24px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    right: 8px;
+  }
+
+  .nav-mobile-menu .nav-link {
+    padding: 10px 12px;
+    font-size: 11px;
+  }
+
+  /* Footer */
+  .footer {
+    padding: var(--sp-6) var(--sp-4) calc(var(--sp-6) + 70px);
+  }
+
+  .footer .f-name {
+    font-size: var(--text-lg);
+  }
+
+  .footer .f-links {
+    gap: var(--sp-2);
+  }
+
+  /* Modal */
+  .modal-card {
+    padding: 18px 14px;
+    max-height: 90vh;
+  }
+
+  /* Contact bottom boxes */
+  .contact-bottom-row {
+    flex-direction: column !important;
+    gap: var(--sp-3) !important;
+  }
+
+  .contact-bottom-row > div {
+    flex: 1 1 auto !important;
+    max-width: 100% !important;
+  }
+
+  /* Lab / learning section */
+  .lab-row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+
+  .lab-row .chip {
+    align-self: flex-start;
+  }
+
+  /* Hobby buttons row */
+  .hobby-card .btn {
+    font-size: 10px;
+    padding: 8px 12px;
+  }
+
+  /* Skill legend — scrollable */
+  .skills-legend {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: var(--sp-3);
+    padding-bottom: 6px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .skills-legend .lg-item {
+    flex-shrink: 0;
+    font-size: 9px;
   }
 }

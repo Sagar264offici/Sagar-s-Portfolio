@@ -61,7 +61,7 @@ export function Contact() {
           ))}
         </div>
 
-        <motion.div {...fadeUp} style={{ marginTop: "var(--sp-6)", display: "flex", flexWrap: "wrap", gap: "var(--sp-4)", alignItems: "center" }}>
+        <motion.div {...fadeUp} className="contact-bottom-row" style={{ marginTop: "var(--sp-6)", display: "flex", flexWrap: "wrap", gap: "var(--sp-4)", alignItems: "center" }}>
           <div className="glass corner-lines" style={{ padding: "var(--sp-5)", flex: "1 1 320px", maxWidth: 460 }}>
             <div className="eyebrow" style={{ marginBottom: 8 }}>
               PAPERS

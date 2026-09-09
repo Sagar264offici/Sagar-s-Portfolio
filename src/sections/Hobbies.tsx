@@ -87,7 +87,7 @@ export function Hobbies() {
 
         {/* Unreleased lab */}
         <motion.div {...fadeUp} className="glass corner-lines" style={{ marginTop: "var(--sp-6)", padding: "var(--sp-5)", borderColor: "rgba(139,92,246,0.3)" }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 10 }}>
+          <div className="lab-row" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 10 }}>
             <div>
               <span className="eyebrow" style={{ color: "var(--violet)" }}>
                 LEARNING IN PROGRESS
