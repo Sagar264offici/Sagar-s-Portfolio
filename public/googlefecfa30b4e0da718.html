@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="googlefecfa30b4e0da718" />
+    <meta name="description" content="Sagar Portfolio - Professional Web Developer & Designer. Specializing in building modern, responsive websites and digital solutions. View projects and get in touch.">
+    <meta name="keywords" content="web developer, portfolio, frontend developer, HTML CSS JavaScript, responsive design, UI/UX designer, Sagar, software developer, web designer, programming">
+    <meta name="author" content="Sagar">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="English">
+    <meta name="geo.region" content="US">
+    <meta name="theme-color" content="#1a1a2e">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.sagarportfolio.com/">
+    <meta property="og:title" content="Sagar Portfolio | Web Developer & Designer">
+    <meta property="og:description" content="Professional Web Developer & Designer specializing in modern, responsive websites and digital solutions.">
+    <meta property="og:image" content="https://www.sagarportfolio.com/images/og-image.jpg">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:site_name" content="Sagar Portfolio">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://www.sagarportfolio.com/">
+    <meta name="twitter:title" content="Sagar Portfolio | Web Developer & Designer">
+    <meta name="twitter:description" content="Professional Web Developer & Designer specializing in modern, responsive websites and digital solutions.">
+    <meta name="twitter:image" content="https://www.sagarportfolio.com/images/og-image.jpg">
+    <meta name="twitter:creator" content="@sagar">
+    <meta name="twitter:site" content="@sagar">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://www.sagarportfolio.com/">
+
+    <!-- Title -->
+    <title>Sagar Portfolio | Web Developer & Designer - Modern Responsive Websites</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+    <!-- Preconnect for Performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
+    <!-- Structured Data (Schema.org JSON-LD) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Sagar",
+        "jobTitle": "Web Developer & Designer",
+        "url": "https://www.sagarportfolio.com",
+        "sameAs": [
+            "https://github.com/sagar",
+            "https://linkedin.com/in/sagar",
+            "https://twitter.com/sagar"
+        ],
+        "description": "Professional Web Developer & Designer specializing in modern, responsive websites and digital solutions.",
+        "knowsAbout": ["Web Development", "Frontend Development", "UI/UX Design", "JavaScript", "React", "HTML5", "CSS3"],
+        "worksFor": {
+            "@type": "Organization",
+            "name": "Sagar Portfolio"
+        }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Sagar Portfolio",
+        "url": "https://www.sagarportfolio.com",
+        "description": "Professional Web Developer & Designer specializing in modern, responsive websites and digital solutions.",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://www.sagarportfolio.com/search?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+        a {
+            color: #2563eb;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        a:hover {
+            color: #1d4ed8;
+        }
+
+        /* Header */
+        header {
+            background-color: #1a1a2e;
+            color: #fff;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+        }
+        nav a {
+            color: #ccc;
+            margin-left: 2rem;
+            font-weight: 500;
+        }
+        nav a:hover, nav a.active {
+            color: #fff;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            padding: 6rem 2rem;
+            text-align: center;
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .hero-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        .hero-content p {
+            font-size: 1.5rem;
+            color: #a0a0c0;
+            margin-bottom: 2rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 2.5rem;
+            background-color: #2563eb;
+            color: #fff;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            border: 2px solid #2563eb;
+        }
+        .btn:hover {
+            background-color: transparent;
+            color: #2563eb;
+        }
+
+        /* Sections */
+        section {
+            padding: 5rem 2rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #1a1a2e;
+        }
+        .section-subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* About Section */
+        #about {
+            background-color: #fff;
+        }
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+        .about-text p {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 1.5rem;
+        }
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        .skill-tag {
+            background-color: #e0e7ff;
+            color: #3730a3;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        /* Projects Section */
+        #projects {
+            background-color: #f8f9fa;
+        }
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        .project-card {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .project-image {
+            height: 200px;
+            background-color: #e0e7ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6366f1;
+            font-size: 3rem;
+        }
+        .project-info {
+            padding: 1.5rem;
+        }
+        .project-info h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: #1a1a2e;
+        }
+        .project-info p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        /* Contact Section */
+        #contact {
+            background-color: #fff;
+        }
+        .contact-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+        .form-group input,
+        .form-group textarea {
+            padding: 0.8rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            font-family: inherit;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #1a1a2e;
+            color: #a0a0c0;
+            text-align: center;
+            padding: 2rem;
+        }
+        footer a {
+            color: #a0a0c0;
+        }
+        footer a:hover {
+            color: #fff;
+        }
+        .social-links {
+            margin-bottom: 1rem;
+        }
+        .social-links a {
+            margin: 0 0.5rem;
+            font-size: 1.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-content h1 { font-size: 2rem; }
+            .hero-content p { font-size: 1.1rem; }
+            .about-content { grid-template-columns: 1fr; }
+            .section-title { font-size: 2rem; }
+            nav a { margin-left: 1rem; font-size: 0.9rem; }
+        }
+
+        /* Structured / Utility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0,0,0,0);
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Skip to Content for Accessibility -->
+    <a href="#main-content" class="sr-only">Skip to main content</a>
+
+    <!-- Header -->
+    <header role="banner">
+        <div class="header-container">
+            <a href="/" class="logo" aria-label="Sagar Portfolio - Home">Sagar Portfolio</a>
+            <nav role="navigation" aria-label="Main navigation">
+                <a href="#about">About</a>
+                <a href="#projects">Projects</a>
+                <a href="#contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <!-- Hero Section -->
+        <section class="hero" aria-labelledby="hero-heading">
+            <div class="hero-content">
+                <h1 id="hero-heading">Hi, I'm Sagar<br>Web Developer & Designer</h1>
+                <p>I build modern, responsive, and user-friendly websites that help businesses grow in the digital world.</p>
+                <a href="#projects" class="btn">View My Work</a>
+                <a href="#contact" class="btn" style="margin-left: 1rem; border-color: #fff; color: #fff;">Get In Touch</a>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" aria-labelledby="about-heading">
+            <div class="container">
+                <h2 id="about-heading" class="section-title">About Me</h2>
+                <p class="section-subtitle">Passionate developer with a focus on creating exceptional digital experiences</p>
+                <div class="about-content">
+                    <div class="about-text">
+                        <p>Hello! I'm Sagar, a dedicated web developer and designer with a passion for crafting beautiful, functional, and performant websites. I specialize in modern web technologies and believe in writing clean, maintainable code.</p>
+                        <p>With a strong foundation in frontend development and a keen eye for design, I bring ideas to life on the web. I stay up-to-date with the latest industry trends and technologies to deliver cutting-edge solutions.</p>
+                        <div class="skills" aria-label="Technical skills">
+                            <span class="skill-tag">HTML5</span>
+                            <span class="skill-tag">CSS3</span>
+                            <span class="skill-tag">JavaScript</span>
+                            <span class="skill-tag">React</span>
+                            <span class="skill-tag">Responsive Design</span>
+                            <span class="skill-tag">UI/UX</span>
+                            <span class="skill-tag">Web Performance</span>
+                        </div>
+                    </div>
+                    <div class="about-image" aria-hidden="true" style="text-align: center; font-size: 8rem;">👨‍💻</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" aria-labelledby="projects-heading">
+            <div class="container">
+                <h2 id="projects-heading" class="section-title">My Projects</h2>
+                <p class="section-subtitle">A selection of recent work showcasing my expertise and creativity</p>
+                <div class="projects-grid">
+                    <article class="project-card">
+                        <div class="project-image" aria-hidden="true">🚀</div>
+                        <div class="project-info">
+                            <h3>Project One</h3>
+                            <p>A modern web application built with the latest technologies and designed for optimal user experience.</p>
+                        </div>
+                    </article>
+                    <article class="project-card">
+                        <div class="project-image" aria-hidden="true">🎨</div>
+                        <div class="project-info">
+                            <h3>Project Two</h3>
+                            <p>A beautifully designed responsive website focused on performance and accessibility.</p>
+                        </div>
+                    </article>
+                    <article class="project-card">
+                        <div class="project-image" aria-hidden="true">💡</div>
+                        <div class="project-info">
+                            <h3>Project Three</h3>
+                            <p>An interactive digital solution with seamless UX and robust backend architecture.</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" aria-labelledby="contact-heading">
+            <div class="container">
+                <h2 id="contact-heading" class="section-title">Get In Touch</h2>
+                <p class="section-subtitle">Have a project in mind? Let's work together to bring your ideas to life</p>
+                <div class="contact-content">
+                    <form class="contact-form" action="#" method="POST" aria-label="Contact form">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" id="name" name="name" required placeholder="Your Name" autocomplete="name">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required placeholder="Your Email" autocomplete="email">
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" required placeholder="Tell me about your project..."></textarea>
+                        </div>
+                        <button type="submit" class="btn">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer role="contentinfo">
+        <div class="social-links" aria-label="Social media links">
+            <a href="https://github.com/sagar" aria-label="GitHub">GitHub</a> |
+            <a href="https://linkedin.com/in/sagar" aria-label="LinkedIn">LinkedIn</a> |
+            <a href="https://twitter.com/sagar" aria-label="Twitter">Twitter</a>
+        </div>
+        <p>&copy; 2025 Sagar Portfolio. All rights reserved.</p>
+        <p>Built with ❤️ for the web.</p>
+    </footer>
+
+    <!-- Google Analytics placeholder -->
+    <script>
+        // Google Analytics would be added here
+        // gtag('config', 'G-XXXXXXXXXX');
+    </script>
+
+</body>
+</html>
