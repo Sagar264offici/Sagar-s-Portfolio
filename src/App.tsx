@@ -23,6 +23,7 @@ import { Journey } from "./sections/Journey";
 import { Hobbies } from "./sections/Hobbies";
 import { Contact } from "./sections/Contact";
 import { Footer } from "./sections/Footer";
+import { WarpDrive } from "./components/WarpDrive";
 import { useLenis } from "./hooks/useLenis";
 import { useKonami } from "./hooks/useKonami";
 import { useGithubData } from "./hooks/useGithubData";
@@ -114,6 +115,7 @@ export default function App() {
         <Hobbies />
         <Contact />
         <Footer />
+        <WarpDrive />
       </main>
 
       <button

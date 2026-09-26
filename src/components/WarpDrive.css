@@ -1,0 +1,116 @@
+/* ── Warp drive outro — low-visibility space warp at page end ── */
+.warp-drive {
+  position: relative;
+  padding: var(--sp-8) 0 0;
+  pointer-events: none;
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 420px;
+}
+
+.warp-drive__label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 10px;
+  letter-spacing: 0.32em;
+  color: var(--text-3);
+  opacity: 0.7;
+  margin-bottom: var(--sp-4);
+  text-transform: uppercase;
+}
+
+.warp-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 8px var(--cyan);
+  animation: breathe 2.4s ease-in-out infinite;
+}
+
+.warp-drive__stage {
+  position: relative;
+  width: 100%;
+  height: 480px;
+  overflow: hidden;
+  background: #05060a;
+  /* Fade top/bottom so the warp melts into the page — keeps visibility low */
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent);
+  mix-blend-mode: screen;
+}
+
+.warp-drive__stage.is-mobile {
+  height: 320px;
+}
+
+.warp-drive__stage .aero-shards {
+  position: absolute;
+  inset: 0;
+}
+
+.warp-drive__vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 90% 70% at 50% 50%, transparent 55%, rgba(5, 6, 10, 0.75) 100%),
+    linear-gradient(to bottom, var(--bg) 0%, transparent 22%, transparent 78%, var(--bg) 100%);
+}
+
+/* ── Cheap CSS fallback (no WebGPU / reduced motion / not yet loaded) ── */
+.warp-fallback {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 55%, rgba(34, 211, 238, 0.05), transparent 70%),
+    #05060a;
+}
+
+.warp-streak {
+  position: absolute;
+  left: 50%;
+  height: 1px;
+  border-radius: 99px;
+  background: linear-gradient(90deg, transparent, rgba(139, 180, 255, 0.8), rgba(34, 211, 238, 0.9), transparent);
+  transform-origin: left center;
+  animation: warp-streak linear infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes warp-streak {
+  from {
+    transform: translateX(-45vw) scaleX(0.25);
+  }
+  50% {
+    opacity: 0.5;
+  }
+  to {
+    transform: translateX(45vw) scaleX(1.4);
+  }
+}
+
+html[data-reduced="1"] .warp-streak {
+  animation: none !important;
+}
+
+@media (max-width: 768px) {
+  .warp-drive__stage {
+    height: 320px;
+  }
+  .warp-drive {
+    contain-intrinsic-size: 1px 320px;
+  }
+}
+
+/* Phones: kill blend cost, keep it dim and cheap */
+@media (pointer: coarse) {
+  .warp-drive__stage {
+    mix-blend-mode: normal;
+  }
+  .warp-streak {
+    animation-duration: 3.4s !important;
+  }
+}
