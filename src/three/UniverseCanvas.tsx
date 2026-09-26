@@ -36,7 +36,7 @@ export function UniverseCanvas() {
       <UniverseScene />
 
       {settings.postprocessing && (
-        <EffectComposer multisampling={reduced ? 0 : 2}>
+        <EffectComposer multisampling={reduced || quality === "low" || quality === "medium" ? 0 : 2}>
           <Bloom
             intensity={settings.bloomIntensity * 0.85}
             luminanceThreshold={0.88}

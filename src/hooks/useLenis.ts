@@ -32,7 +32,18 @@ export function useLenis(): void {
 
   useEffect(() => {
     if (nativeScroll) {
-      const onScroll = () => trackScroll();
+      // Coalesce bursts of native scroll events into one store update per
+      // frame — updating zustand (and re-rendering HUD/nav) several times
+      // per frame is pure main-thread churn with zero visual benefit.
+      let ticking = false;
+      const onScroll = () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          ticking = false;
+          trackScroll();
+        });
+      };
       window.addEventListener("scroll", onScroll, { passive: true });
       onScroll();
       return () => window.removeEventListener("scroll", onScroll);

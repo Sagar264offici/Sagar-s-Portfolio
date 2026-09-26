@@ -4,9 +4,10 @@ import * as THREE from "three";
 
 interface Props {
   count: number;
+  reduced?: boolean;
 }
 
-export function Dust({ count }: Props) {
+export function Dust({ count, reduced = false }: Props) {
   const ref = useRef<THREE.Points>(null);
   // Throttle GPU buffer uploads — update every 3rd frame for perf
   const frameRef = useRef(0);
@@ -29,7 +30,7 @@ export function Dust({ count }: Props) {
   }, [count]);
 
   useFrame((_, delta) => {
-    if (!ref.current) return;
+    if (!ref.current || reduced) return;
     frameRef.current++;
     // Only upload to GPU every 3rd frame — saves ~66% of buffer uploads
     const shouldUpdate = frameRef.current % 3 === 0;

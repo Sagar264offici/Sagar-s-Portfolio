@@ -19,6 +19,9 @@ const tierLabel: Record<string, string> = {
   moon: "SPECIAL",
 };
 
+// scratch vector — the tooltip tracks every frame while hovering
+const _projVec = new THREE.Vector3();
+
 export function PlanetTooltip() {
   const hovered = usePortfolioStore((s) => s.hoveredPlanet);
   const root = useRef<HTMLDivElement>(null);
@@ -31,7 +34,7 @@ export function PlanetTooltip() {
         if (hovered && camRef) {
           const v = getPlanetPosition(hovered);
           if (v) {
-            const vec = v.clone().project(camRef);
+            const vec = _projVec.copy(v).project(camRef);
             if (vec.z < 1) {
               const x = ((vec.x + 1) / 2) * window.innerWidth;
               const y = ((-vec.y + 1) / 2) * window.innerHeight;

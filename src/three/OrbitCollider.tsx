@@ -9,17 +9,25 @@ const TAU = Math.PI * 2;
    by angle and softly push any pair closer than their combined
    surface size apart — a cheap angular repulsion that keeps the
    system believable without ever letting two worlds overlap. */
+
+// scratch map reused across frames — no per-frame allocation.
+// Throttled: repulsion converges fine at 20Hz, full rate is wasted work.
+const _byRing = new Map<number, ReturnType<typeof getOrbitStates>>();
+let _tick = 0;
+
 export function OrbitCollider() {
   useFrame(() => {
+    _tick++;
+    if (_tick % 3 !== 0) return;
     const states = getOrbitStates();
-    const byRing = new Map<number, typeof states>();
+    _byRing.clear();
     for (const s of states) {
-      const list = byRing.get(s.ring);
+      const list = _byRing.get(s.ring);
       if (list) list.push(s);
-      else byRing.set(s.ring, [s]);
+      else _byRing.set(s.ring, [s]);
     }
 
-    for (const list of byRing.values()) {
+    for (const list of _byRing.values()) {
       if (list.length < 2) continue;
       let maxSize = 0;
       for (const s of list) maxSize = Math.max(maxSize, s.size);

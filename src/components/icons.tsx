@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Coffee, Music, Shield, Stethoscope, Zap } from "lucide-react";
+import { Coffee, GraduationCap, Music, Package, Shield, Stethoscope, Zap } from "lucide-react";
 
 interface IconProps {
   size?: number;
@@ -27,6 +27,8 @@ export const projectIcons: Record<string, (size: number) => ReactNode> = {
   "dentist-clinic-prototype": (s) => <Stethoscope size={s} />,
   "cricket-field-simulation": (s) => <CricketIcon size={s} />,
   nightlight: (s) => <Music size={s} />,
+  "web-development-packages": (s) => <Package size={s} />,
+  "vikas-it-institute": (s) => <GraduationCap size={s} />,
 };
 
 /** Official WhatsApp glyph (Simple Icons path). */

@@ -10,6 +10,8 @@ import { clamp, smoothstep } from "../lib/utils";
 
 const HERO_POS = new THREE.Vector3(-10.2, 4.4, 1.4);
 const ABOUT_POS = new THREE.Vector3(9, 2.05, -8);
+// scratch target — allocating a Vector3 every frame churns the GC
+const _stationTarget = new THREE.Vector3();
 
 class ModelBoundary extends Component<{ fallback: ReactNode; children: ReactNode }, { failed: boolean }> {
   state = { failed: false };
@@ -104,7 +106,7 @@ export function SpaceStation() {
     if (!g) return;
     const p = usePortfolioStore.getState().scrollProgress;
     const t = smoothstep(clamp(p / 0.12, 0, 1));
-    const target = new THREE.Vector3().lerpVectors(HERO_POS, ABOUT_POS, t);
+    const target = _stationTarget.lerpVectors(HERO_POS, ABOUT_POS, t);
     // gentle float
     target.y += Math.sin(state.clock.elapsedTime * 0.8) * 0.06;
     g.position.lerp(target, 1 - Math.exp(-3.5 * delta));

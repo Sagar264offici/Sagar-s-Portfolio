@@ -27,6 +27,8 @@ const PROJECT_STYLES: Record<string, PlanetStyle> = {
   "project:dentist-clinic-prototype": "uranus",
   "project:cricket-field-simulation": "saturn",
   "project:nightlight": "nightlight",
+  "project:web-development-packages": "mercury",
+  "project:vikas-it-institute": "neptune",
 };
 
 const REAL_PALETTE: PlanetStyle[] = ["mercury", "venus", "mars", "uranus", "neptune", "pluto", "rocky", "icy"];

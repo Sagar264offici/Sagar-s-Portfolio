@@ -38,7 +38,7 @@ export function UniverseScene() {
 
       <Nebula />
       <Starfield count={settings.starCount} />
-      <Dust count={settings.dustCount} />
+      <Dust count={settings.dustCount} reduced={reduced} />
       <CareerSun />
       <OrbitRings />
       {bodyDefs.map((def) => (

@@ -28,7 +28,7 @@ const KEYFRAMES: Keyframe[] = [
 
 const FOCUS_OFFSET = new THREE.Vector3(0, 1.3, 3.2);
 
-function sampleKeyframes(t: number): { pos: THREE.Vector3; look: THREE.Vector3 } {
+function sampleKeyframes(t: number, pos: THREE.Vector3, look: THREE.Vector3): void {
   const p = clamp(t, 0, 1);
   let i = 0;
   while (i < KEYFRAMES.length - 2 && p > KEYFRAMES[i + 1].t) i++;
@@ -36,10 +36,8 @@ function sampleKeyframes(t: number): { pos: THREE.Vector3; look: THREE.Vector3 }
   const b = KEYFRAMES[Math.min(i + 1, KEYFRAMES.length - 1)];
   const span = Math.max(0.0001, b.t - a.t);
   const local = smoothstep((p - a.t) / span);
-  return {
-    pos: new THREE.Vector3(lerp(a.pos[0], b.pos[0], local), lerp(a.pos[1], b.pos[1], local), lerp(a.pos[2], b.pos[2], local)),
-    look: new THREE.Vector3(lerp(a.look[0], b.look[0], local), lerp(a.look[1], b.look[1], local), lerp(a.look[2], b.look[2], local)),
-  };
+  pos.set(lerp(a.pos[0], b.pos[0], local), lerp(a.pos[1], b.pos[1], local), lerp(a.pos[2], b.pos[2], local));
+  look.set(lerp(a.look[0], b.look[0], local), lerp(a.look[1], b.look[1], local), lerp(a.look[2], b.look[2], local));
 }
 
 // Reusable scratch vectors to avoid per-frame allocations
@@ -47,6 +45,8 @@ const _desiredPos = new THREE.Vector3();
 const _desiredLook = new THREE.Vector3();
 const _rest = new THREE.Vector3(0, 2.2, 18);
 const _dir = new THREE.Vector3();
+const _basePos = new THREE.Vector3();
+const _baseLook = new THREE.Vector3();
 
 export function CameraRig() {
   const camera = useThree((s) => s.camera);
@@ -70,7 +70,7 @@ export function CameraRig() {
     pointer.current.x = reduced ? 0 : p.x * touchFactor;
     pointer.current.y = reduced ? 0 : p.y * touchFactor;
 
-    const base = sampleKeyframes(progress);
+    sampleKeyframes(progress, _basePos, _baseLook);
 
     // Focus mode: fly toward a planet.
     const bodyPos = focusedBody ? getPlanetPosition(focusedBody) : undefined;
@@ -83,14 +83,14 @@ export function CameraRig() {
       _desiredLook.copy(bodyPos);
     } else if (touch) {
       focusPos.current = null;
-      _desiredPos.copy(_rest).lerp(base.pos, 0.45);
+      _desiredPos.copy(_rest).lerp(_basePos, 0.45);
       _desiredPos.x += pointer.current.x * 0.25;
       _desiredPos.y += -pointer.current.y * 0.15;
-      _desiredLook.set(base.look.x * 0.35, base.look.y * 0.3, base.look.z);
+      _desiredLook.set(_baseLook.x * 0.35, _baseLook.y * 0.3, _baseLook.z);
     } else {
       focusPos.current = null;
-      _desiredPos.copy(base.pos);
-      _desiredLook.copy(base.look);
+      _desiredPos.copy(_basePos);
+      _desiredLook.copy(_baseLook);
       _desiredPos.x += pointer.current.x * 0.9;
       _desiredPos.y += -pointer.current.y * 0.6;
       _desiredLook.x += pointer.current.x * 0.35;

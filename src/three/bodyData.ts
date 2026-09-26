@@ -82,6 +82,8 @@ const projectModels: Record<string, string> = {
   "dentist-clinic-prototype": "uranus.glb",
   "cricket-field-simulation": "saturn.glb",
   nightlight: "neptune.glb",
+  "web-development-packages": "mercury.glb",
+  "vikas-it-institute": "venus.glb",
 };
 
 /* ── ORBIT 2: the deployed projects — ringed main worlds ── */

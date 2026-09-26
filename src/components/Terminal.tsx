@@ -124,7 +124,7 @@ export function Terminal() {
         out(`  WebGL         : ${usePortfolioStore.getState().webgl ? "AVAILABLE" : "FALLBACK 2D"}`, "t-out-dim");
         out(`  Sound         : ${usePortfolioStore.getState().soundOn ? "ON" : "OFF"}`, "t-out-dim");
         out(`  GitHub data   : ${usePortfolioStore.getState().github.source.toUpperCase()}`, "t-out-dim");
-        out(`  Projects live : ${projects.filter((p) => p.status !== "PROTOTYPE").length}/5`, "t-out-dim");
+        out(`  Projects live : ${projects.filter((p) => p.status !== "PROTOTYPE").length}/${projects.length}`, "t-out-dim");
         out("All systems nominal.", "t-out-green");
         break;
       case "resume":

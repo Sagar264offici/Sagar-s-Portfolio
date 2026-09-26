@@ -594,14 +594,16 @@
   font-size: 9px;
   letter-spacing: 0.1em;
   color: var(--text);
-  background: rgba(6, 9, 15, 0.82);
+  /* Solid fill on purpose: these chips re-render every frame via drei Html
+     above the live WebGL canvas, and backdrop-filter would force a blur
+     pass per chip per frame. */
+  background: #06090f;
   border: 1px solid var(--line-strong);
   border-radius: 99px;
   padding: 4px 10px;
   white-space: nowrap;
   text-transform: uppercase;
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.55);
-  backdrop-filter: blur(4px);
 }
 .planet-chip svg {
   flex-shrink: 0;
@@ -614,8 +616,8 @@
   justify-content: center;
   border-radius: 50%;
   border: 1.5px solid var(--line-strong);
-  background: radial-gradient(circle at 32% 26%, rgba(255, 255, 255, 0.09), rgba(6, 9, 15, 0.94) 72%);
-  backdrop-filter: blur(5px);
+  /* Opaque coin — same perf rationale as .planet-chip above. */
+  background: radial-gradient(circle at 32% 26%, #232b3d, #06090f 72%);
 }
 
 .tech-chip svg {
@@ -925,35 +927,20 @@
 }
 
 /* ══════════════════════ PERFORMANCE HINTS ══════════════════════ */
-/* Promote heavily-animated sections to their own compositor layer */
-.section {
+/* Only elements animated every frame via JS get their own compositor layer
+   (cursor dot/ring). Blanket will-change/translateZ promotion is avoided on
+   purpose: N fullscreen layers composited over an always-invalidating WebGL
+   canvas every frame costs more VRAM and bandwidth than it saves. Transient
+   CSS transitions (card hovers) and framer-motion (which manages its own
+   layers during animation) don't need permanent layers. */
+.cursor-dot,
+.cursor-ring {
   will-change: transform;
-  transform: translateZ(0);
 }
 
 /* Smooth scroll hint animation */
 .hero-scroll-hint .line {
   will-change: opacity;
-}
-
-/* Card hover transforms — GPU-accelerated */
-.proj-card,
-.hobby-card,
-.contact-card,
-.repo-card {
-  will-change: transform;
-  transform: translateZ(0);
-}
-
-/* Navbar transitions */
-.nav-links,
-.nav-toggle {
-  will-change: backdrop-filter;
-}
-
-/* Prevent layout thrashing on gh-cell hover */
-.gh-cell {
-  will-change: transform;
 }
 
 /* Smooth contribution graph scrolling */
