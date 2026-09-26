@@ -21,6 +21,12 @@ body {
   font-size: 16px;
   line-height: 1.6;
   overflow-x: hidden;
+  /* clip (where supported) prevents horizontal overflow WITHOUT turning
+     body into a scroll container. With `hidden`, overflow-y computes to
+     `auto`, making body a degenerate container that — combined with
+     overscroll-behavior-y: none below — swallows touch/wheel gestures
+     before they can chain to the viewport (page froze in pro/native mode). */
+  overflow-x: clip;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   overscroll-behavior-y: none;
