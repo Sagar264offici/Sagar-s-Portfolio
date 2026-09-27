@@ -22,11 +22,24 @@ export function Hero() {
           INTERACTIVE PORTFOLIO — THE CAREER UNIVERSE
         </motion.div>
 
-        <motion.h1 {...fade(0.25)} className="hero-name">
-          SAGAR
-          <span className="ln">PATHAK</span>
-          <span className="sr-only"> — Web Developer &amp; React Developer in Rishikesh</span>
-        </motion.h1>
+        <motion.div {...fade(0.25)} className="hero-identity">
+          <span className="hero-photo">
+            <img
+              src="/portrait-hero-800.webp"
+              srcSet="/portrait-hero-480.webp 480w, /portrait-hero-800.webp 800w"
+              sizes="(max-width: 560px) 156px, 252px"
+              width={264}
+              height={264}
+              alt="Sagar Pathak"
+              decoding="async"
+            />
+          </span>
+          <h1 className="hero-name">
+            SAGAR
+            <span className="ln">PATHAK</span>
+            <span className="sr-only"> — Web Developer &amp; React Developer in Rishikesh</span>
+          </h1>
+        </motion.div>
 
         <motion.p {...fade(0.4)} className="hero-tagline">
           I build things that <span className="text-grad">shouldn't be this interactive.</span>
