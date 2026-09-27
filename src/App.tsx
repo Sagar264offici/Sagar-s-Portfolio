@@ -16,6 +16,7 @@ import { AstronomyOverlay } from "./components/AstronomyOverlay";
 import { PlanetTooltip } from "./components/PlanetTooltip";
 import { Hero } from "./sections/Hero";
 import { About } from "./sections/About";
+import { Showcase } from "./sections/Showcase";
 import { Projects } from "./sections/Projects";
 import { Skills } from "./sections/Skills";
 import { GitHubSection } from "./sections/GitHubSection";
@@ -109,6 +110,7 @@ export default function App() {
       <main className="scroll-content">
         <Hero />
         <About />
+        <Showcase />
         <Projects />
         <Skills />
         <GitHubSection />

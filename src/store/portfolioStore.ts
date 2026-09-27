@@ -4,6 +4,7 @@ import { detectDevice, detectQuality, isTouchDevice, type QualityTier } from "..
 export type SectionId =
   | "home"
   | "about"
+  | "showcase"
   | "projects"
   | "skills"
   | "github"
@@ -14,6 +15,7 @@ export type SectionId =
 export const SECTION_IDS: SectionId[] = [
   "home",
   "about",
+  "showcase",
   "projects",
   "skills",
   "github",

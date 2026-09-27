@@ -4,6 +4,7 @@ import { audio } from "../lib/audio";
 const labels: Record<string, string> = {
   home: "HOME",
   about: "ABOUT",
+  showcase: "LIVE",
   projects: "PROJECTS",
   skills: "SKILLS",
   github: "GITHUB",

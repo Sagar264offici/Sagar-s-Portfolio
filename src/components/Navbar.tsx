@@ -7,6 +7,7 @@ import { contactLinks } from "../data/contact";
 const sectionLabels: Record<string, string> = {
   home: "HOME",
   about: "ABOUT",
+  showcase: "LIVE",
   projects: "PROJECTS",
   skills: "SKILLS",
   github: "GITHUB",
