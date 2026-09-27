@@ -1020,9 +1020,11 @@
   overflow: hidden;
 }
 
-/* Month labels row */
+/* Month labels row — gap matches .gh-calendar-body so the grid starts
+   at the same x in both rows */
 .gh-months-row {
   display: flex;
+  gap: 4px;
   margin-bottom: 4px;
 }
 
@@ -2933,5 +2935,153 @@ html[data-pro="1"] .canvas-wrap canvas {
   .skills-legend .lg-item {
     flex-shrink: 0;
     font-size: 9px;
+  }
+}
+
+/* ═════════ PORTRAIT PHONES (9:16) — phone-only overhaul ═════════
+   Everything below is scoped to narrow portrait screens, so desktop,
+   tablet and landscape render exactly as before. */
+@media (max-width: 560px) and (orientation: portrait) {
+  /* ── Blowout guards: wide children must never push the page sideways ── */
+  .section-inner {
+    min-width: 0;
+    overflow-x: clip;
+  }
+
+  .gh-layout > *,
+  .proj-grid > *,
+  .hobby-grid > *,
+  .contact-grid > * {
+    min-width: 0;
+  }
+
+  .gh-wall {
+    overflow: hidden;
+    min-width: 0;
+    padding: 14px 12px;
+    border-radius: var(--radius-md);
+  }
+
+  /* ── GITHUB data block ── */
+  .gh-wall .gh-head {
+    align-items: flex-start;
+  }
+
+  .gh-wall .chip {
+    white-space: normal;
+    text-align: left;
+  }
+
+  .gh-source {
+    width: 100%;
+  }
+
+  .gh-legend {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    row-gap: 6px;
+  }
+
+  .repo-card .rc-meta {
+    row-gap: 6px;
+  }
+
+  /* ── PROJECT cards: long category chips wrap instead of overflowing ── */
+  .proj-card .pc-top {
+    align-items: flex-start;
+  }
+
+  .proj-card .pc-top .chip {
+    white-space: normal;
+    text-align: left;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .proj-card .proj-actions {
+    flex-wrap: wrap;
+  }
+
+  /* ── CHESS: a real square board, modern dark theme, touch-sized pieces ── */
+  .mini-world.mw-chess {
+    height: auto;
+    width: 100%;
+    max-width: 340px;
+    margin-inline: auto;
+    aspect-ratio: 1 / 1;
+  }
+
+  .mw-chess .board {
+    inset: 10px;
+    border-radius: 12px;
+    border-color: rgba(34, 211, 238, 0.28);
+    box-shadow:
+      0 0 0 4px rgba(9, 12, 19, 0.85),
+      inset 0 0 18px rgba(0, 0, 0, 0.55),
+      0 0 26px rgba(34, 211, 238, 0.12);
+  }
+
+  .mw-chess .sq.light { background: linear-gradient(135deg, #2b3550, #1e2537); }
+  .mw-chess .sq.dark { background: linear-gradient(135deg, #121724, #090d16); }
+
+  .mw-chess .piece {
+    font-size: 22px;
+  }
+
+  .mw-chess .piece.w {
+    color: #f4f7ff;
+    text-shadow:
+      0 1px 1px rgba(0, 0, 0, 0.7),
+      0 0 8px rgba(255, 255, 255, 0.35),
+      1px 2px 3px rgba(0, 0, 0, 0.5);
+  }
+
+  .mw-chess .piece.b {
+    color: #04060b;
+    text-shadow:
+      0 0 1px rgba(226, 232, 240, 0.9),
+      0 1px 2px rgba(226, 232, 240, 0.35),
+      0 0 10px rgba(34, 211, 238, 0.45);
+  }
+
+  .mw-chess .sq.legal::after {
+    width: 30%;
+    height: 30%;
+  }
+
+  /* ── LET'S TALK: compact 2×2 quick cards + calm full-width boxes ── */
+  .contact-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .contact-card {
+    padding: 14px 12px;
+  }
+
+  .contact-card .cc-icon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .contact-card .cc-label {
+    font-size: var(--text-sm);
+  }
+
+  .contact-card .cc-sub {
+    font-size: 9px;
+  }
+
+  .contact-bottom-row > div {
+    padding: var(--sp-4);
+    border-radius: var(--radius-md);
+  }
+
+  .contact-bottom-row .btn {
+    width: 100%;
+    white-space: normal;
+    word-break: break-all;
+    text-align: left;
+    font-size: 11px;
   }
 }

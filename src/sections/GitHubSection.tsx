@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { ExternalLink, Github, Star, GitFork } from "lucide-react";
 import { usePortfolioStore } from "../store/portfolioStore";
@@ -15,10 +15,14 @@ const fadeUp = {
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 const DAYS = ["", "Mon", "", "Wed", "", "Fri", ""];
 
-// Fixed column width — matches GitHub's actual cell sizing
+// Fixed column width — matches GitHub's actual cell sizing.
+// NOTE: .gh-grid-inner has a 3px flex gap between week columns, so the real
+// horizontal pitch is WEEK_WIDTH + 3. Month labels must use the pitch.
 const CELL_SIZE = 13;
 const CELL_GAP = 3;
-const WEEK_WIDTH = CELL_SIZE + CELL_GAP; // 16px per week column
+const WEEK_WIDTH = CELL_SIZE + CELL_GAP; // 16px week column box
+const GRID_GAP = 3; // .gh-grid-inner flex gap
+const WEEK_PITCH = WEEK_WIDTH + GRID_GAP; // 19px real pitch
 
 export function GitHubSection() {
   const repos = usePortfolioStore((s) => s.github.repos);
@@ -27,6 +31,13 @@ export function GitHubSection() {
   const contributions = usePortfolioStore((s) => s.github.contributions);
   const source = usePortfolioStore((s) => s.github.source);
   const [expanded, setExpanded] = useState<string | null>(null);
+  const monthsRef = useRef<HTMLDivElement>(null);
+
+  // Keep the month-label strip glued to the grid while scrolling on narrow
+  // (9:16 portrait) screens — the two strips have equal inner widths.
+  const syncMonths = (e: React.UIEvent<HTMLDivElement>) => {
+    if (monthsRef.current) monthsRef.current.scrollLeft = e.currentTarget.scrollLeft;
+  };
 
   const map = useMemo(() => buildContributionMap(contributions, events, source), [contributions, events, source]);
   const weeks = useMemo(() => {
@@ -56,7 +67,7 @@ export function GitHubSection() {
       if (firstDay) {
         const m = new Date(firstDay.date).getMonth();
         if (m !== lastMonth) {
-          labels.push({ month: MONTHS[m], left: i * WEEK_WIDTH });
+          labels.push({ month: MONTHS[m], left: i * WEEK_PITCH });
           lastMonth = m;
         }
       }
@@ -98,11 +109,12 @@ export function GitHubSection() {
 
             {/* GitHub-style contribution graph */}
             <div className="gh-calendar">
-              {/* Month labels — positioned absolutely over the scrollable grid */}
+              {/* Month labels — positioned absolutely over the scrollable grid.
+                  scrollLeft is synced from the grid below (see syncMonths). */}
               <div className="gh-months-row">
                 <div className="gh-months-spacer" />
-                <div className="gh-months-scroll">
-                  <div className="gh-months-inner" style={{ width: weeks.length * WEEK_WIDTH }}>
+                <div className="gh-months-scroll" ref={monthsRef}>
+                  <div className="gh-months-inner" style={{ width: weeks.length * WEEK_PITCH - GRID_GAP }}>
                     {monthLabels.map((ml, i) => (
                       <span key={i} className="gh-month-label" style={{ left: ml.left }}>
                         {ml.month}
@@ -122,8 +134,8 @@ export function GitHubSection() {
                 </div>
 
                 {/* Contribution grid — fixed-width columns, scrollable */}
-                <div className="gh-grid-scroll" aria-hidden>
-                  <div className="gh-grid-inner" style={{ width: weeks.length * WEEK_WIDTH }}>
+                <div className="gh-grid-scroll" aria-hidden onScroll={syncMonths}>
+                  <div className="gh-grid-inner" style={{ width: weeks.length * WEEK_PITCH - GRID_GAP }}>
                     {weeks.map((week, wi) => (
                       <div key={wi} className="gh-week-col" style={{ width: WEEK_WIDTH }}>
                         {Array.from({ length: 7 }).map((_, di) => {

@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { ExternalLink, Github } from "lucide-react";
+import SpotlightCard from "../components/SpotlightCard";
 import { projects } from "../data/projects";
 import { usePortfolioStore } from "../store/portfolioStore";
 import { audio } from "../lib/audio";
@@ -9,6 +10,26 @@ const fadeUp = {
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, margin: "-60px" },
   transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] as const },
+};
+
+/** Cursor-following glow per project theme — the SpotlightCard animation. */
+const spotlightFor = (theme: string): string => {
+  switch (theme) {
+    case "cyan":
+      return "rgba(0, 229, 255, 0.22)";
+    case "amber":
+      return "rgba(251, 191, 36, 0.22)";
+    case "magenta":
+      return "rgba(232, 121, 249, 0.22)";
+    case "blue":
+      return "rgba(96, 165, 250, 0.22)";
+    case "violet":
+      return "rgba(167, 139, 250, 0.24)";
+    case "nightlight":
+      return "rgba(79, 111, 255, 0.28)";
+    default:
+      return "rgba(0, 229, 255, 0.2)";
+  }
 };
 
 export function Projects() {
@@ -36,14 +57,18 @@ export function Projects() {
 
         <div className="proj-grid">
           {projects.map((p, i) => (
-            <motion.article
+            <motion.div
               key={p.id}
               {...fadeUp}
               transition={{ ...fadeUp.transition, delay: i * 0.06 }}
-              className="glass proj-card corner-lines"
-              onClick={() => openDetail(p.id)}
-              data-cursor-label="OPEN"
+              style={{ height: "100%" }}
             >
+              <SpotlightCard
+                className="glass proj-card"
+                spotlightColor={spotlightFor(p.visualTheme)}
+                onClick={() => openDetail(p.id)}
+                data-cursor-label="OPEN"
+              >
               <div className="pc-top">
                 <span className="pc-idx">{String(i + 1).padStart(2, "0")}</span>
                 <span className="chip tone-cyan">{p.category}</span>
@@ -81,7 +106,8 @@ export function Projects() {
                   </a>
                 )}
               </div>
-            </motion.article>
+            </SpotlightCard>
+            </motion.div>
           ))}
         </div>
       </div>

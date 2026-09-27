@@ -36,6 +36,23 @@
   }
 }
 
+/* Project cards keep the portfolio glass look — SpotlightCard only adds the
+   cursor-following glow + existing lift on hover. Higher specificity beats
+   both .card-spotlight and .glass since this file loads last. */
+.card-spotlight.glass.proj-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-5);
+  height: 100%;
+}
+
+.card-spotlight.glass.proj-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow-panel), 0 0 30px rgba(34, 211, 238, 0.08);
+}
+
 html[data-reduced="1"] .card-spotlight::before {
   transition: none;
 }
