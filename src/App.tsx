@@ -1,9 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { UserRound } from "lucide-react";
 import { UniverseCanvas } from "./three/UniverseCanvas";
 import { FallbackBackground } from "./components/FallbackBackground";
 import { Loader } from "./components/Loader";
-import { Intro } from "./components/Intro";
+import { ExperienceGate } from "./components/ExperienceGate";
 import { Cursor } from "./components/Cursor";
 import { Navbar } from "./components/Navbar";
 import { SideRail } from "./components/SideRail";
@@ -32,7 +32,6 @@ import { audio } from "./lib/audio";
 
 export default function App() {
   const booted = usePortfolioStore((s) => s.booted);
-  const introSeen = usePortfolioStore((s) => s.introSeen);
   const soundOn = usePortfolioStore((s) => s.soundOn);
   const professionalMode = usePortfolioStore((s) => s.professionalMode);
   const secretMode = usePortfolioStore((s) => s.secretMode);
@@ -40,6 +39,8 @@ export default function App() {
   const webgl = usePortfolioStore((s) => s.webgl);
   const setReducedMotion = usePortfolioStore((s) => s.setReducedMotion);
   const setRecruiterOpen = usePortfolioStore((s) => s.setRecruiterOpen);
+  // Entry experience gate — shown once per page load after boot.
+  const [gateOpen, setGateOpen] = useState(true);
 
   useLenis();
   useKonami();
@@ -96,7 +97,7 @@ export default function App() {
   return (
     <>
       <Loader />
-      {booted && <Intro />}
+      {booted && gateOpen && <ExperienceGate open={booted && gateOpen} onDone={() => setGateOpen(false)} />}
 
       <div className="canvas-wrap">{webgl ? <UniverseCanvas /> : <FallbackBackground />}</div>
 
