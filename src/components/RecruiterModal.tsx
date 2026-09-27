@@ -72,7 +72,7 @@ export function RecruiterModal() {
               </div>
               <div className="qp-item">
                 <div className="qp-k">PROJECTS</div>
-                <div className="qp-v small">5 projects — all live with source on GitHub</div>
+                <div className="qp-v small">8 projects — all live, most open-source on GitHub</div>
               </div>
               <div className="qp-item">
                 <div className="qp-k">LOCATION</div>

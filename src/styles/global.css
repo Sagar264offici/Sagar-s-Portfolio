@@ -491,6 +491,20 @@ html[data-reduced="1"] *::after {
   }
 }
 
+/* Screen-reader-only utility: keeps descriptive headings accessible to
+   search engines and assistive tech without changing the visual design. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 @media (hover: none), (pointer: coarse) {
   *,
   *::before,

@@ -37,7 +37,8 @@ export function Contact() {
             Let's <span className="text-grad">talk</span>
           </h2>
           <p className="section-sub">
-            Want to talk about a project, internship, collaboration, or just something nerdy? You can reach me here.
+            Want to talk about a project, internship, collaboration, or just something nerdy? I'm based in
+            Rishikesh, Uttarakhand and work remotely across India — you can reach me here.
           </p>
         </motion.div>
 

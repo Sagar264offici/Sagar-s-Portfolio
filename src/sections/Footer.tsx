@@ -38,7 +38,7 @@ export function Footer() {
           </a>
         ))}
       </div>
-      <div className="f-copy">© Sagar Pathak — Built from scratch, in Rishikesh</div>
+      <div className="f-copy">© Sagar Pathak — Web Developer in Rishikesh, Uttarakhand · Built from scratch</div>
     </footer>
   );
 }

@@ -25,6 +25,7 @@ export function Hero() {
         <motion.h1 {...fade(0.25)} className="hero-name">
           SAGAR
           <span className="ln">PATHAK</span>
+          <span className="sr-only"> — Web Developer &amp; React Developer in Rishikesh</span>
         </motion.h1>
 
         <motion.p {...fade(0.4)} className="hero-tagline">

@@ -37,6 +37,12 @@ export function About() {
                 direction to take next. The solar system you're flying through is mapped honestly: the bright planets
                 are things I've shipped with, and the distant ones are things I'm still exploring.
               </p>
+              <p>
+                I'm Sagar Pathak, a developer based in Rishikesh, Uttarakhand. I build websites and interactive
+                experiences with React, JavaScript and TypeScript — from business sites to real-time apps and 3D
+                work. I collaborate with teams and clients remotely across India, and I'm open to relevant on-site
+                opportunities in Rishikesh, Dehradun, Haridwar, Tehri and Pauri.
+              </p>
             </div>
             <ul className="about-facts">
               {facts.map((f) => (

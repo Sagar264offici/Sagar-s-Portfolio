@@ -30,7 +30,7 @@ export function Projects() {
             {projects.length} projects, <span className="text-grad">all shipped</span>
           </h2>
           <p className="section-sub">
-            Every project here is live and has source code on GitHub. Click any card (or its planet in 3D) to open the details.
+            Every project here is deployed live — most with public source code on GitHub. Click any card (or its planet in 3D) to open the details.
           </p>
         </motion.div>
 

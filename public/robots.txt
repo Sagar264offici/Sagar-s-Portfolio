@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://sagarpathak.dev/sitemap.xml
+Sitemap: https://sagar-horizon.vercel.app/sitemap.xml
