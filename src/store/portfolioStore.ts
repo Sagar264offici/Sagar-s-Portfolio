@@ -162,9 +162,9 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
       return false;
     }
   })() : true,
-  // recruiters mostly arrive on phones — default to the calm, scrollable
-  // professional layout there; desktop keeps the full immersive universe.
-  professionalMode: isTouchDevice() ? true : false,
+  // Immersive universe is the default everywhere, including phones.
+  // Users can still switch to the calm professional layout via the navbar toggle.
+  professionalMode: false,
   secretMode: readStoredFlag("sp-secret-mode"),
   setProfessionalMode: (v) => set({ professionalMode: v }),
   toggleProfessionalMode: () => set((s) => ({ professionalMode: !s.professionalMode })),

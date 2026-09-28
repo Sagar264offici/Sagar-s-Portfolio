@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { usePortfolioStore } from "../store/portfolioStore";
+import { isTouchDevice } from "../lib/device";
 
 interface Stage {
   id: string;
@@ -18,7 +19,15 @@ export function Loader() {
 
   useEffect(() => {
     if (booted) return;
-    const start = performance.now();
+    // Phones boot fast: show a brief splash, then let GitHub data
+    // stream in behind the already-interactive page.
+    if (isTouchDevice()) {
+      const quick = window.setTimeout(() => {
+        setHidden(true);
+        boot();
+      }, 400);
+      return () => window.clearTimeout(quick);
+    }
     const timers: number[] = [];
 
     // Each stage completes after its own micro-delay (engine first, github tied to real fetch).
