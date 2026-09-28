@@ -1,6 +1,5 @@
-import { useEffect } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import { UserRound } from "lucide-react";
-import { UniverseCanvas } from "./three/UniverseCanvas";
 import { FallbackBackground } from "./components/FallbackBackground";
 import { Loader } from "./components/Loader";
 import { Cursor } from "./components/Cursor";
@@ -29,6 +28,11 @@ import { useKonami } from "./hooks/useKonami";
 import { useGithubData } from "./hooks/useGithubData";
 import { usePortfolioStore } from "./store/portfolioStore";
 import { audio } from "./lib/audio";
+
+// Three.js is code-split: professional-mode phones never download it.
+const UniverseCanvas = lazy(() =>
+  import("./three/UniverseCanvas").then((m) => ({ default: m.UniverseCanvas }))
+);
 
 export default function App() {
   const soundOn = usePortfolioStore((s) => s.soundOn);
@@ -95,7 +99,15 @@ export default function App() {
     <>
       <Loader />
 
-      <div className="canvas-wrap">{webgl ? <UniverseCanvas /> : <FallbackBackground />}</div>
+      <div className="canvas-wrap">
+        {webgl && !professionalMode ? (
+          <Suspense fallback={null}>
+            <UniverseCanvas />
+          </Suspense>
+        ) : (
+          <FallbackBackground />
+        )}
+      </div>
 
       <Navbar />
       <SideRail />
