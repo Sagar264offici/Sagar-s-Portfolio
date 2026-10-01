@@ -22,7 +22,7 @@ export function Hero() {
           INTERACTIVE PORTFOLIO — THE CAREER UNIVERSE
         </motion.div>
 
-        <motion.div {...fade(0.25)} className="hero-identity">
+        <div className="hero-identity">
           <span className="hero-photo">
             <img
               src="/portrait-hero-800.webp"
@@ -39,7 +39,7 @@ export function Hero() {
             <span className="ln">PATHAK</span>
             <span className="sr-only"> — Web Developer &amp; React Developer in Rishikesh</span>
           </h1>
-        </motion.div>
+        </div>
 
         <motion.p {...fade(0.4)} className="hero-tagline">
           I build things that <span className="text-grad">shouldn't be this interactive.</span>
