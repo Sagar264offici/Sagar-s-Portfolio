@@ -172,7 +172,7 @@ export function GitHubSection() {
           </motion.div>
 
           <motion.div {...fadeUp} transition={{ ...fadeUp.transition, delay: 0.08 }}>
-            <div className="gh-repos" aria-label="Repositories">
+            <div className="gh-repos">
               {repos.map((r) => (
                 <div
                   key={r.id}
