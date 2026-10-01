@@ -21,7 +21,10 @@ export function detectWebGL(): boolean {
 }
 
 export function isTouchDevice(): boolean {
-  return typeof window !== "undefined" && ("ontouchstart" in window || navigator.maxTouchPoints > 0);
+  if (typeof window === "undefined") return false;
+  const coarsePointer = window.matchMedia?.("(pointer: coarse)").matches ?? false;
+  const narrowViewport = window.innerWidth <= 820;
+  return "ontouchstart" in window || navigator.maxTouchPoints > 0 || coarsePointer || narrowViewport;
 }
 
 export function prefersReducedMotion(): boolean {
