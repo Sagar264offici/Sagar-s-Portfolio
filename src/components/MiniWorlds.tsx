@@ -159,7 +159,7 @@ export function ChessWorld() {
 
   return (
     <div className="mini-world mw-chess">
-      <div className="board" aria-label="Mini chess board — select a piece, then move it to a highlighted square">
+      <div className="board" role="group" aria-label="Mini chess board — select a piece, then move it to a highlighted square">
         {board.map((row, r) =>
           row.map((pce, c) => {
             const light = (r + c) % 2 === 0;
