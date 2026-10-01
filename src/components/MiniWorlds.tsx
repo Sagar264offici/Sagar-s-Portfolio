@@ -32,7 +32,12 @@ export function CricketWorld() {
       }}
       onPointerUp={() => (dragging.current = false)}
     >
-      <div className="ball-drag" style={{ left: `${pos.x}%`, top: `${pos.y}%`, transform: "translate(-50%,-50%)", position: "absolute" }} aria-label="Cricket ball — drag me" />
+      <div
+        className="ball-drag"
+        role="img"
+        aria-label="Cricket ball — drag me"
+        style={{ left: `${pos.x}%`, top: `${pos.y}%`, transform: "translate(-50%,-50%)", position: "absolute" }}
+      />
     </div>
   );
 }
@@ -154,16 +159,16 @@ export function ChessWorld() {
 
   return (
     <div className="mini-world mw-chess">
-      <div className="board" role="grid" aria-label="Mini chess board — select a piece, then move it to a highlighted square">
+      <div className="board" aria-label="Mini chess board — select a piece, then move it to a highlighted square">
         {board.map((row, r) =>
           row.map((pce, c) => {
             const light = (r + c) % 2 === 0;
             const isSel = selected?.r === r && selected?.c === c;
             const isLegal = legal.some(([lr, lc]) => lr === r && lc === c);
             return (
-              <div
+              <button
                 key={`${r}-${c}`}
-                role="gridcell"
+                type="button"
                 className={`sq ${light ? "light" : "dark"} ${isSel ? "selected" : ""} ${isLegal ? "legal" : ""} ${isLegal && pce ? "has-piece" : ""}`}
                 onClick={() => click(r, c)}
                 aria-label={
@@ -177,7 +182,7 @@ export function ChessWorld() {
                     {pce.type}
                   </span>
                 )}
-              </div>
+              </button>
             );
           })
         )}
@@ -206,7 +211,8 @@ export function AstronomyWorld() {
       }}
       onPointerUp={() => (last.current = null)}
       onPointerLeave={() => (last.current = null)}
-      aria-label="Drag to orbit the planet"
+      role="img"
+      aria-label="Interactive astronomy planet — drag to orbit"
     >
       <div className="planet3d" style={{ transform: `rotateY(${rot}deg)` }} />
       <div className="orbit-line">
