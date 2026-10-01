@@ -100,6 +100,7 @@ function openLive() {
 
 export function Showcase() {
   const [frameState, setFrameState] = useState<FrameState>("loading");
+  const [frameReady, setFrameReady] = useState(false);
   const [frameKey, setFrameKey] = useState(0);
   const timer = useRef<number | null>(null);
   const reduceMotion = useReducedMotion();
@@ -107,17 +108,35 @@ export function Showcase() {
   const still = reduceMotion || storeReduced;
   const frameRef = useRef<HTMLDivElement>(null);
 
+  // The live site is an enhancement, not critical content. Do not download
+  // its separate React bundle/images during the initial page load.
+  useEffect(() => {
+    const target = frameRef.current?.parentElement;
+    if (!target) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) {
+          setFrameReady(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "500px 0px" }
+    );
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, []);
+
   // If the embed never confirms a load (X-Frame-Options / CSP / network),
   // settle into the designed fallback view — never a broken iframe.
   useEffect(() => {
-    if (frameState !== "loading") return;
+    if (!frameReady || frameState !== "loading") return;
     timer.current = window.setTimeout(() => {
       setFrameState((s) => (s === "loading" ? "fallback" : s));
     }, IFRAME_TIMEOUT_MS);
     return () => {
       if (timer.current) window.clearTimeout(timer.current);
     };
-  }, [frameState, frameKey]);
+  }, [frameReady, frameState, frameKey]);
 
   const handleLoad = useCallback(() => {
     if (timer.current) window.clearTimeout(timer.current);
@@ -241,7 +260,7 @@ export function Showcase() {
                 </div>
               )}
 
-              {frameState !== "fallback" && (
+              {frameReady && frameState !== "fallback" && (
                 <iframe
                   key={frameKey}
                   src={LIVE_SITE_URL}
