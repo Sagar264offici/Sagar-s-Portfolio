@@ -6,6 +6,7 @@ import { ReactLogoLoader } from "./ReactLogoLoader";
 export function Loader() {
   const boot = usePortfolioStore((s) => s.boot);
   const booted = usePortfolioStore((s) => s.booted);
+  const reducedMotion = usePortfolioStore((s) => s.reducedMotion);
   const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
@@ -35,7 +36,7 @@ export function Loader() {
   return (
     <div className={`loader ${hidden ? "hidden" : ""}`} role="status" aria-live="polite">
       <div className="l-title">please hang on</div>
-      <ReactLogoLoader size={150} />
+      <ReactLogoLoader size={150} reducedMotion={reducedMotion} />
       <button
         className="l-skip"
         onClick={() => {

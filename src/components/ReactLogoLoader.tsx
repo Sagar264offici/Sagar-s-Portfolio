@@ -1,16 +1,14 @@
 import { useEffect, useRef } from "react";
 
-// React logo geometry: 3 identical ellipses rotated 0°, 60°, 120°
 const RGB = "97,218,251"; // #61DAFB
 const TAU = Math.PI * 2;
 const RATIO = 0.38;
 const ORBIT_ANGLES = [0, Math.PI / 3, (Math.PI * 2) / 3];
 const PHASES = [0, 1 / 3, 2 / 3];
-const SPEED = 0.2; // laps per second
+const SPEED = 0.2;
 const SPIN = 0.1; // slow rotation of the whole logo (rad/s)
+const N = 360;
 
-// Arc-length table -> perfectly constant electron speed
-const N = 720;
 const table: { len: number; x: number; y: number }[] = [{ len: 0, x: 1, y: 0 }];
 let total = 0;
 for (let i = 1; i <= N; i++) {
@@ -21,8 +19,9 @@ for (let i = 1; i <= N; i++) {
   total += Math.hypot(x - prev.x, y - prev.y);
   table.push({ len: total, x, y });
 }
+
 const pointAt = (u: number) => {
-  const target = (((u % 1) + 1) % 1) * total;
+  const target = (((u % 1) + 1) % 1) * TAU;
   let lo = 0;
   let hi = N;
   while (hi - lo > 1) {
@@ -45,7 +44,7 @@ interface Dust {
   z: number;
 }
 
-export function ReactLogoLoader({ size = 150 }: { size?: number }) {
+export function ReactLogoLoader({ size = 150, reducedMotion = false }: { size?: number; reducedMotion?: boolean }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -53,6 +52,9 @@ export function ReactLogoLoader({ size = 150 }: { size?: number }) {
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
+
+    const reduced = reducedMotion;
+
     let raf = 0;
     let last = performance.now();
     let t = 0;
@@ -60,15 +62,16 @@ export function ReactLogoLoader({ size = 150 }: { size?: number }) {
     let H = 0;
     const mouse = { x: 0, y: 0, tx: 0, ty: 0 };
 
-    // drifting dust that gives the scene depth
-    const dust: Dust[] = Array.from({ length: 60 }, () => ({
-      a: Math.random() * TAU,
-      r: 0.25 + Math.random() * 1.1,
-      s: (Math.random() - 0.5) * 0.14,
-      size: 0.6 + Math.random() * 1.5,
-      tw: Math.random() * TAU,
-      z: 0.3 + Math.random() * 1,
-    }));
+    const dust: Dust[] = reduced
+      ? []
+      : Array.from({ length: 20 }, () => ({
+          a: Math.random() * TAU,
+          r: 0.25 + Math.random() * 1.1,
+          s: (Math.random() - 0.5) * 0.14,
+          size: 0.6 + Math.random() * 1.5,
+          tw: Math.random() * TAU,
+          z: 0.3 + Math.random() * 1,
+        }));
 
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -89,6 +92,14 @@ export function ReactLogoLoader({ size = 150 }: { size?: number }) {
     window.addEventListener("mousemove", onMove);
 
     const draw = (now: number) => {
+      if (reduced) {
+        ctx.clearRect(0, 0, W, H);
+        ctx.fillStyle = "#61DAFB";
+        ctx.fillRect(0, 0, W, H);
+        raf = requestAnimationFrame(draw);
+        return;
+      }
+
       const dt = Math.min((now - last) / 1000, 0.05);
       last = now;
       t += dt;
@@ -120,9 +131,9 @@ export function ReactLogoLoader({ size = 150 }: { size?: number }) {
       };
 
       ctx.clearRect(0, 0, W, H);
-      ctx.globalCompositeOperation = "lighter"; // additive light
+      ctx.globalCompositeOperation = "lighter";
 
-      // ---- ambient bloom (breathes) ----
+      // ambient bloom
       const breathe = 1 + Math.sin(t * 1.2) * 0.06;
       const bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 1.3 * breathe);
       bg.addColorStop(0, `rgba(${RGB},0.14)`);
@@ -131,63 +142,35 @@ export function ReactLogoLoader({ size = 150 }: { size?: number }) {
       ctx.fillStyle = bg;
       ctx.fillRect(0, 0, W, H);
 
-      // ---- dust ----
-      dust.forEach((p) => {
-        p.a += p.s * dt;
-        const x = cx + Math.cos(p.a) * p.r * R * 1.15 + mouse.x * p.z * 26;
-        const y = cy + Math.sin(p.a) * p.r * R * 0.85 + mouse.y * p.z * 26;
-        const tw = 0.5 + 0.5 * Math.sin(t * 1.6 + p.tw);
-        ctx.fillStyle = `rgba(${RGB},${(0.08 + 0.32 * tw) * p.z})`;
-        ctx.beginPath();
-        ctx.arc(x, y, p.size * p.z, 0, TAU);
-        ctx.fill();
-      });
-
-      // ---- nucleus ripples ----
-      const nR = R * 0.14 * (1 + Math.sin(t * 2.4) * 0.05);
-      for (let i = 0; i < 3; i++) {
-        const p = (t * 0.3 + i / 3) % 1;
-        ctx.strokeStyle = `rgba(${RGB},${Math.pow(1 - p, 2) * 0.28})`;
-        ctx.lineWidth = 1.5;
-        ctx.beginPath();
-        ctx.arc(cx, cy, nR * (1.2 + p * 5), 0, TAU);
-        ctx.stroke();
-      }
-
-      // ---- orbit rings: brighten right behind each electron ----
-      const us = PHASES.map((ph) => ph + t * SPEED);
-      const lw = Math.max(2, R * 0.02);
+      // orbit rings - simplified, fewer segments
+      const lw = Math.max(1, R * 0.02);
       ORBIT_ANGLES.forEach((ang, o) => {
-        const pts: { x: number; y: number; d: number }[] = [];
-        for (let i = 0; i <= N; i += 4) {
-          const p = table[i];
-          pts.push(toScreen(p.x, p.y, ang + spin));
+        const us = (PHASES[o] + t * SPEED) % 1;
+        const start = Math.floor(us * N) % N;
+        ctx.beginPath();
+        for (let i = 0; i <= 90; i++) {
+          const a = ((start + i) % N) / N * TAU;
+          const x = Math.cos(a) * R;
+          const y = Math.sin(a) * R * RATIO;
+          if (i === 0) ctx.moveTo(cx + x, cy + y);
+          else ctx.lineTo(cx + x, cy + y);
         }
-        for (let i = 1; i < pts.length; i++) {
-          const seg = table[i * 4].len / total;
-          const d = (((us[o] - seg) % 1) + 1) % 1;
-          const a = 0.2 + 0.8 * Math.exp(-d * 4.5);
-          ctx.beginPath();
-          ctx.moveTo(pts[i - 1].x, pts[i - 1].y);
-          ctx.lineTo(pts[i].x, pts[i].y);
-          ctx.lineWidth = lw * 3.6;
-          ctx.strokeStyle = `rgba(${RGB},${a * 0.09})`;
-          ctx.stroke();
-          ctx.lineWidth = lw;
-          ctx.strokeStyle = `rgba(${RGB},${a * 0.85})`;
-          ctx.stroke();
-        }
+        ctx.strokeStyle = `rgba(${RGB},0.04)`;
+        ctx.lineWidth = lw;
+        ctx.stroke();
       });
 
-      // ---- electrons ----
+      // electrons - fewer steps (30 vs 60)
       const coreR = R * 0.036;
       ORBIT_ANGLES.forEach((ang, i) => {
-        const u = us[i];
-        const steps = 60;
+        const u = (PHASES[i] + t * SPEED) % 1;
+        const steps = 30;
         for (let j = steps; j >= 1; j--) {
           const p = j / steps;
-          const lp = pointAt(u - p * 0.24);
-          const s = toScreen(lp.x, lp.y, ang + spin);
+          const a = (u - p * 0.24 + TAU) % TAU;
+          const x = Math.cos(a) * R;
+          const y = Math.sin(a) * R * RATIO;
+          const s = toScreen(x, y, ang + spin);
           const alpha = Math.pow(1 - p, 2) * 0.55;
           const g = Math.round(255 - p * 37);
           ctx.fillStyle = `rgba(${g},${Math.min(255, g + 20)},255,${alpha})`;
@@ -209,25 +192,14 @@ export function ReactLogoLoader({ size = 150 }: { size?: number }) {
         ctx.arc(h.x, h.y, glowR, 0, TAU);
         ctx.fill();
 
-        // soft lens flare streak along the orbit direction
-        ctx.save();
-        ctx.translate(h.x, h.y);
-        ctx.rotate(ang + spin);
-        const fl = ctx.createLinearGradient(-glowR * 1.3, 0, glowR * 1.3, 0);
-        fl.addColorStop(0, `rgba(${RGB},0)`);
-        fl.addColorStop(0.5, `rgba(${RGB},0.35)`);
-        fl.addColorStop(1, `rgba(${RGB},0)`);
-        ctx.fillStyle = fl;
-        ctx.fillRect(-glowR * 1.3, -1, glowR * 2.6, 2);
-        ctx.restore();
-
         ctx.fillStyle = "#fff";
         ctx.beginPath();
         ctx.arc(h.x, h.y, coreR * 1.1 * h.d, 0, TAU);
         ctx.fill();
       });
 
-      // ---- nucleus ----
+      // nucleus
+      const nR = R * 0.14 * (1 + Math.sin(t * 2.4) * 0.05);
       const aura = ctx.createRadialGradient(cx, cy, 0, cx, cy, nR * 3.4);
       aura.addColorStop(0, `rgba(${RGB},0.6)`);
       aura.addColorStop(0.4, `rgba(${RGB},0.18)`);
@@ -240,7 +212,7 @@ export function ReactLogoLoader({ size = 150 }: { size?: number }) {
       ctx.globalCompositeOperation = "source-over";
       ctx.save();
       ctx.shadowColor = `rgba(${RGB},1)`;
-      ctx.shadowBlur = 30;
+      ctx.shadowBlur = 20;
       const disc = ctx.createRadialGradient(cx - nR * 0.25, cy - nR * 0.3, 0, cx, cy, nR);
       disc.addColorStop(0, "#ffffff");
       disc.addColorStop(0.4, "#c9f4ff");
@@ -250,9 +222,8 @@ export function ReactLogoLoader({ size = 150 }: { size?: number }) {
       ctx.arc(cx, cy, nR, 0, TAU);
       ctx.fill();
       ctx.restore();
-
-      raf = requestAnimationFrame(draw);
     };
+
     raf = requestAnimationFrame(draw);
 
     return () => {
@@ -260,7 +231,7 @@ export function ReactLogoLoader({ size = 150 }: { size?: number }) {
       window.removeEventListener("resize", resize);
       window.removeEventListener("mousemove", onMove);
     };
-  }, []);
+  }, [size, reducedMotion]);
 
   return (
     <canvas

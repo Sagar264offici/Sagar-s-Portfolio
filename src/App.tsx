@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import { UserRound } from "lucide-react";
 import { FallbackBackground } from "./components/FallbackBackground";
 import { Loader } from "./components/Loader";
@@ -23,6 +23,7 @@ import { Hobbies } from "./sections/Hobbies";
 import { Contact } from "./sections/Contact";
 import { Footer } from "./sections/Footer";
 import { WarpDrive } from "./components/WarpDrive";
+import ModeTogglePopup from "./components/ModeTogglePopup";
 import { useLenis } from "./hooks/useLenis";
 import { useKonami } from "./hooks/useKonami";
 import { useGithubData } from "./hooks/useGithubData";
@@ -43,9 +44,27 @@ export default function App() {
   const setReducedMotion = usePortfolioStore((s) => s.setReducedMotion);
   const setRecruiterOpen = usePortfolioStore((s) => s.setRecruiterOpen);
 
-  useLenis();
-  useKonami();
-  useGithubData();
+  const [modePopupOpen, setModePopupOpen] = useState(false);
+  const modePopupSeen = localStorage.getItem("sp-mode-popup-seen");
+
+  useEffect(() => {
+    if (!modePopupSeen && webgl && !professionalMode) {
+      const t = setTimeout(() => setModePopupOpen(true), 1200);
+      return () => clearTimeout(t);
+    }
+  }, [modePopupSeen, webgl, professionalMode]);
+
+  useEffect(() => {
+    if (modePopupOpen && !modePopupSeen) {
+      try {
+        localStorage.setItem("sp-mode-popup-seen", "1");
+      } catch {
+        /* noop */
+      }
+    }
+  }, [modePopupOpen]);
+
+  // ... rest of the component
 
   // Root data attributes for CSS modes.
   useEffect(() => {
@@ -98,6 +117,7 @@ export default function App() {
   return (
     <>
       <Loader />
+      <ModeTogglePopup />
 
       <div className="canvas-wrap">
         {webgl && !professionalMode ? (

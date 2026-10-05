@@ -3094,3 +3094,118 @@ html[data-pro="1"] .canvas-wrap canvas {
     font-size: 11px;
   }
 }
+
+/* ── Mode Toggle Popup ── */
+.mode-popup-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  background: rgba(2, 3, 8, 0.85);
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.mode-popup-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mode-popup {
+  position: relative;
+  background: linear-gradient(160deg, rgba(14, 18, 28, 0.96), rgba(7, 9, 15, 0.98));
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-6);
+  max-width: 480px;
+  width: 90%;
+  color: var(--text);
+  backdrop-filter: blur(12px);
+  animation: fadeUp 0.35s var(--ease-out);
+  box-shadow: var(--shadow-panel);
+}
+
+.mode-popup-open {
+  animation: fadeUp 0.35s var(--ease-out);
+}
+
+.mode-popup-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: rgba(10, 13, 20, 0.7);
+  color: var(--text-2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--speed-fast);
+  flex-shrink: 0;
+}
+
+.mode-popup-close:hover {
+  color: var(--text);
+  border-color: var(--cyan);
+  transform: rotate(90deg);
+}
+
+.mode-popup h3 {
+  font-size: var(--text-lg);
+  margin: 0 0 var(--sp-3);
+  letter-spacing: -0.01em;
+}
+
+.mode-popup p {
+  font-size: var(--text-sm);
+  color: var(--text-2);
+  margin: 0 0 var(--sp-4);
+  line-height: 1.6;
+}
+
+.mode-toggle-demo {
+  display: flex;
+  gap: var(--sp-3);
+  margin: var(--sp-4) 0;
+}
+
+.mode-btn {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: rgba(8, 10, 16, 0.6);
+  color: var(--text-2);
+  cursor: pointer;
+  transition: all var(--speed-fast);
+  flex: 1;
+}
+
+.mode-btn:hover {
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+
+.mode-btn.active {
+  background: rgba(34, 211, 238, 0.2);
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+
+.mode-hint {
+  font-size: var(--text-xs);
+  color: var(--text-3);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-top: var(--sp-4);
+}
