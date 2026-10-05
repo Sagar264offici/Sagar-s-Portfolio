@@ -1,0 +1,56 @@
+# Sagar Pathak — Developer Portfolio
+
+Sagar Pathak is a web developer and final-year BSc Information Technology student based in
+Rishikesh, Uttarakhand, India. He builds web projects, interactive experiments and 3D
+simulations with React, JavaScript and TypeScript, and is open to remote work across India.
+
+## Site
+
+- [Homepage — Sagar Pathak | Web Developer & React Developer in Rishikesh](https://sagar-horizon.vercel.app/): main portfolio page.
+- [Sitemap](https://sagar-horizon.vercel.app/sitemap.xml): XML sitemap for the site.
+- [Robots.txt](https://sagar-horizon.vercel.app/robots.txt): crawler rules and sitemap pointer.
+- [Open Graph / social preview image](https://sagar-horizon.vercel.app/og-image.png): 1200x630 preview image.
+
+## Pages
+
+- [#home — Hero](https://sagar-horizon.vercel.app/#home): introduction and personal summary.
+- [#about — About](https://sagar-horizon.vercel.app/#about): background, studies and base location.
+- [#showcase — Live website showcase](https://sagar-horizon.vercel.app/#showcase): recently shipped live sites.
+- [#projects — Projects](https://sagar-horizon.vercel.app/#projects): project catalogue with live links and source.
+- [#skills — Skills](https://sagar-horizon.vercel.app/#skills): technologies used, split into Built / Foundation / Exploring.
+- [#github — GitHub activity](https://sagar-horizon.vercel.app/#github): public GitHub contribution activity.
+- [#journey — Journey](https://sagar-horizon.vercel.app/#journey): timeline of experience and milestones.
+- [#hobbies — Hobbies](https://sagar-horizon.vercel.app/#hobbies): chess and other hobbies.
+- [#contact — Contact](https://sagar-horizon.vercel.app/#contact): contact links and recruiter call-to-action.
+
+## Projects (LIVE / PROTOTYPE)
+
+- [SPDC Quiz Battle — real-time quiz platform](https://spdcquiz.vercel.app/): React + TypeScript + Upstash Redis real-time quiz. Source: https://github.com/Sagar264offici/QuizBattle
+- [Rishikesh Greens Cafe — restaurant website concept](https://rishikesh-greens-cafe.vercel.app/): responsive cafe site. Source: https://github.com/Sagar264offici/01_Restraunt_Web_Project
+- [Daitya Legion — cricket team landing page](https://daitya-legion.vercel.app/): team branding landing page. Source: https://github.com/Sagar264offici/Daitya_Legion_Landing_Page
+- [Dentist Clinic Prototype — clinic website prototype](https://dentist-clinic-prototype.vercel.app/): service/appointment prototype. Source: https://github.com/Sagar264offici/dentist-clinic-prototype
+- [Cricket Field Simulation — 3D cricket field](https://cricket-field-simulation.vercel.app/): Three.js 3D cricket field with controllable camera. Source: https://github.com/Sagar264offici/Cricket_Field_Simulation
+- [NightLight — immersive music experience](https://nightlight-music.vercel.app/): mood-aware music player.
+- [Sagar Web Package — website development packages](https://sagar-web-package.vercel.app/): five fixed-scope web development packages with comparison table and quote flow.
+
+## About the person
+
+- Name: Sagar Pathak
+- Role: Web Developer
+- Base location: Rishikesh, Uttarakhand, India (geo.region IN-UK)
+- Studies: BSc Information Technology (final year)
+- Focus: React, JavaScript, TypeScript, HTML, CSS, REST APIs, Node.js, Three.js, Upstash Redis, Vercel, Git, GitHub.
+- GitHub: https://github.com/Sagar264offici
+- LinkedIn: https://www.linkedin.com/in/sagarakanoone/
+
+## Resume
+
+- [Resume PDF](https://sagar-horizon.vercel.app/resume.pdf): downloadable resume.
+
+## Example questions this site can answer
+
+- Who is Sagar Pathak and what does he build?
+- What React and TypeScript projects has Sagar Pathak shipped?
+- Where is Sagar Pathak based and what is his background?
+- How can I contact Sagar Pathak or view his GitHub/LinkedIn?
+- What 3D or interactive experiments has he built with Three.js?

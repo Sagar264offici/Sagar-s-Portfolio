@@ -1,0 +1,20 @@
+{
+  "specVersion": "1.0",
+  "host": {
+    "displayName": "Sagar Pathak — Developer Portfolio",
+    "documentationUrl": "https://sagar-horizon.vercel.app/"
+  },
+  "entries": [
+    {
+      "identifier": "urn:air:sagar-horizon.vercel.app:doc:llms",
+      "displayName": "Portfolio llms.txt",
+      "type": "text/markdown",
+      "url": "https://sagar-horizon.vercel.app/llms.txt",
+      "description": "Markdown summary of the Sagar Pathak developer portfolio, including site sections, project list with live and source URLs, skills, and contact details.",
+      "representativeQueries": [
+        "Sagar Pathak portfolio projects and skills",
+        "Sagar Pathak React TypeScript portfolio Rishikesh"
+      ]
+    }
+  ]
+}
