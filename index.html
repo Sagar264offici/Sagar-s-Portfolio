@@ -128,6 +128,9 @@
     <link rel="icon" type="image/png" sizes="64x64" href="/favicon-64.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
+    <!-- The sun is the dominant first-frame texture; fetching it before React
+         starts prevents the 3D background from arriving as an empty shell. -->
+    <link rel="preload" as="image" type="image/jpeg" href="/models/Planets_Blendfile_Textures/Textures/Sun/2k_sun.jpg" fetchpriority="high" />
     <link rel="preload" as="image" type="image/webp" href="/portrait-hero-480.webp" media="(max-width: 560px)" fetchpriority="high" />
     <link rel="preload" as="image" type="image/webp" href="/portrait-hero-800.webp" media="(min-width: 561px)" fetchpriority="high" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />

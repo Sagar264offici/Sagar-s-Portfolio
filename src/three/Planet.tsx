@@ -102,13 +102,17 @@ export function Planet({ def }: Props) {
 
   /* swap to the real 2K map the moment it loads; keep procedural until then */
   const [, setTexTick] = useState(0);
-  useEffect(() => onRealTextures(() => setTexTick((t) => t + 1)), []);
-  const realTex = getRealTexture(REAL_KEY[style]);
-  const surfaceTex = realTex ?? proceduralTex;
+  const realTextureKey = REAL_KEY[style];
   const isEarth = def.key === "project:rishikesh-greens-cafe";
+  const isSaturn = def.key === "project:cricket-field-simulation";
+  useEffect(
+    () => onRealTextures(() => setTexTick((t) => t + 1), [realTextureKey, ...(isEarth ? ["earthClouds"] : []), ...(isSaturn ? ["saturnRing"] : [])]),
+    [realTextureKey, isEarth, isSaturn]
+  );
+  const realTex = getRealTexture(realTextureKey);
+  const surfaceTex = realTex ?? proceduralTex;
   const realEarth = isEarth ? getRealTexture("earth") : undefined;
   const cloudsTex = isEarth && realEarth ? getRealTexture("earthClouds") : undefined;
-  const isSaturn = def.key === "project:cricket-field-simulation";
   const isNightLight = def.key === "project:nightlight";
   const realRingTex = isSaturn ? getRealTexture("saturnRing") : undefined;
   const cloudsRef = useRef<THREE.Mesh>(null);
@@ -167,7 +171,8 @@ export function Planet({ def }: Props) {
     g.scale.setScalar(scale.current);
   });
 
-  const segments = def.size > 0.5 ? 48 : 32;
+  // Distant worlds do not benefit from high tessellation on the default tier.
+  const segments = quality === "ultra" ? (def.size > 0.5 ? 48 : 32) : quality === "high" ? 32 : 24;
   // the procedural sphere — used directly for skill/dwarf worlds and as the
   // automatic fallback when a real GLB model is missing
   const proceduralBody = (

@@ -9,7 +9,7 @@ import { usePortfolioStore } from "../store/portfolioStore";
 export function CareerSun() {
   const proceduralSun = useMemo(() => createSunTexture(), []);
   const [, setTexTick] = useState(0);
-  useEffect(() => onRealTextures(() => setTexTick((t) => t + 1)), []);
+  useEffect(() => onRealTextures(() => setTexTick((t) => t + 1), ["sun"]), []);
   /* the real 2K solar map once it loads — sunspots included, procedural until then */
   const sunTex = getRealTexture("sun") ?? proceduralSun;
   const core = useRef<THREE.Mesh>(null);

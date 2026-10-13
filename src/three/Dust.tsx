@@ -34,14 +34,16 @@ export function Dust({ count, reduced = false }: Props) {
     frameRef.current++;
     // Only upload to GPU every 3rd frame — saves ~66% of buffer uploads
     const shouldUpdate = frameRef.current % 3 === 0;
+    if (!shouldUpdate) return;
     const pos = ref.current.geometry.attributes.position as THREE.BufferAttribute;
     const arr = pos.array as Float32Array;
-    const step = shouldUpdate ? 1 : 0.33; // partial movement when not uploading
     for (let i = 0; i < count; i++) {
-      arr[i * 3 + 1] += speeds[i] * delta * 6 * (shouldUpdate ? 1 : 0.5);
+      // Advance by the elapsed time since the last upload, not by a partial
+      // value that is never drawn. This removes the visible stepped motion.
+      arr[i * 3 + 1] += speeds[i] * delta * 18;
       if (arr[i * 3 + 1] > 8) arr[i * 3 + 1] = -8;
     }
-    if (shouldUpdate) pos.needsUpdate = true;
+    pos.needsUpdate = true;
     ref.current.rotation.y += delta * 0.005;
   });
 

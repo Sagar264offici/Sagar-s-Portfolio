@@ -29,10 +29,16 @@ import { useKonami } from "./hooks/useKonami";
 import { useGithubData } from "./hooks/useGithubData";
 import { usePortfolioStore } from "./store/portfolioStore";
 import { audio } from "./lib/audio";
+import { isTouchDevice } from "./lib/device";
 
-// Three.js is code-split: professional-mode phones never download it.
+// Start fetching the 3D chunk while the UI bootstraps. It remains code-split
+// on desktop, while professional-mode phones retain the small fallback-only
+// startup path.
+const universeCanvasImport = typeof window !== "undefined" && !isTouchDevice()
+  ? import("./three/UniverseCanvas")
+  : null;
 const UniverseCanvas = lazy(() =>
-  import("./three/UniverseCanvas").then((m) => ({ default: m.UniverseCanvas }))
+  (universeCanvasImport ?? import("./three/UniverseCanvas")).then((m) => ({ default: m.UniverseCanvas }))
 );
 
 export default function App() {
@@ -120,13 +126,13 @@ export default function App() {
       <ModeTogglePopup />
 
       <div className="canvas-wrap">
+        {/* A lightweight sky is visible immediately while the 3D chunk/GPU starts. */}
+        <FallbackBackground />
         {webgl && !professionalMode ? (
           <Suspense fallback={null}>
             <UniverseCanvas />
           </Suspense>
-        ) : (
-          <FallbackBackground />
-        )}
+        ) : null}
       </div>
 
       <Navbar />

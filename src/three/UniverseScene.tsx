@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { CareerSun } from "./CareerSun";
@@ -16,6 +16,7 @@ import { usePortfolioStore } from "../store/portfolioStore";
 import { qualitySettings } from "../lib/device";
 import { clamp, smoothstep } from "../lib/utils";
 import { registerTooltipCamera } from "../components/PlanetTooltip";
+import { loadRealTexture, REAL_TEX } from "./realTextures";
 
 function CameraProbe() {
   const camera = useThree((s) => s.camera);
@@ -27,6 +28,31 @@ export function UniverseScene() {
   const quality = usePortfolioStore((s) => s.quality);
   const reduced = usePortfolioStore((s) => s.reducedMotion);
   const settings = qualitySettings(quality, reduced);
+
+  useEffect(() => {
+    // Keep the first paint lean: load the sun first, then progressively fill
+    // in high-resolution planet maps after the page is already interactive.
+    loadRealTexture("sun");
+    const rest = Object.keys(REAL_TEX).filter((key) => key !== "sun");
+    let index = 0;
+    let cancelled = false;
+    const schedule = () => {
+      if (cancelled || index >= rest.length) return;
+      loadRealTexture(rest[index++]);
+      const idleWindow = window as Window & {
+        requestIdleCallback?: (callback: () => void, options?: { timeout: number }) => number;
+      };
+      if (idleWindow.requestIdleCallback) {
+        idleWindow.requestIdleCallback(schedule, { timeout: 1200 });
+      } else {
+        window.setTimeout(schedule, 350);
+      }
+    };
+    schedule();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <>

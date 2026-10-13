@@ -102,20 +102,21 @@ export function qualitySettings(quality: QualityTier, reduced: boolean): Quality
       };
     case "medium":
       return {
-        starCount: 1200,
-        dustCount: 800,
+        starCount: 950,
+        dustCount: 350,
         planetSegments: 32,
-        bloom: true,
-        bloomIntensity: 0.55,
+        bloom: false,
+        bloomIntensity: 0.4,
         shadows: false,
-        postprocessing: true,
+        // Bloom is the most expensive pass; reserve it for high-end devices.
+        postprocessing: false,
         trails: false,
         sunDetail: "high",
       };
     case "high":
       return {
-        starCount: 1800,
-        dustCount: 1400,
+        starCount: 1500,
+        dustCount: 800,
         planetSegments: 48,
         bloom: true,
         bloomIntensity: 0.75,

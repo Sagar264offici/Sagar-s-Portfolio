@@ -21,11 +21,13 @@ export function Loader() {
       return () => window.clearTimeout(quick);
     }
 
+    // The universe now preloads in parallel, so a long artificial splash only
+    // makes the finished background feel late.
     const finish = window.setTimeout(() => {
       setHidden(true);
       boot();
       window.setTimeout(() => usePortfolioStore.getState().setGithubLoading(false), 0);
-    }, 1500);
+    }, 750);
 
     return () => {
       window.clearTimeout(finish);

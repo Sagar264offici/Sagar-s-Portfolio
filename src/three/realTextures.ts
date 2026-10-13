@@ -25,10 +25,12 @@ export const REAL_TEX: Record<string, string> = {
 const loader = new THREE.TextureLoader();
 const started = new Set<string>();
 const cache = new Map<string, THREE.Texture | null>(); // null = failed
-const listeners = new Set<() => void>();
+const listeners = new Map<() => void, Set<string> | undefined>();
 
-function emit() {
-  listeners.forEach((fn) => fn());
+function emit(key: string) {
+  listeners.forEach((keys, fn) => {
+    if (!keys || keys.has(key)) fn();
+  });
 }
 
 function load(key: string) {
@@ -41,12 +43,12 @@ function load(key: string) {
       tex.colorSpace = THREE.SRGBColorSpace;
       tex.anisotropy = 4;
       cache.set(key, tex);
-      emit();
+      emit(key);
     },
     undefined,
     () => {
       cache.set(key, null);
-      emit();
+      emit(key);
     }
   );
 }
@@ -54,13 +56,18 @@ function load(key: string) {
 /** Returns the real texture when loaded, null once it failed,
     undefined while still loading. Callers fall back procedurally. */
 export function getRealTexture(key: string): THREE.Texture | null | undefined {
-  load(key);
   return cache.get(key);
 }
 
-/** Re-render when any real texture finishes loading or fails. */
-export function onRealTextures(fn: () => void): () => void {
-  listeners.add(fn);
+/** Start a texture explicitly. Rendering no longer starts a network request,
+ * which prevents every planet map from competing during initial paint. */
+export function loadRealTexture(key: string): void {
+  load(key);
+}
+
+/** Re-render only when a texture used by this component has finished loading. */
+export function onRealTextures(fn: () => void, keys?: string[]): () => void {
+  listeners.set(fn, keys ? new Set(keys) : undefined);
   return () => {
     listeners.delete(fn);
   };
