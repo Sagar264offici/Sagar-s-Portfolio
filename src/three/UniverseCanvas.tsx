@@ -4,7 +4,11 @@ import { usePortfolioStore } from "../store/portfolioStore";
 import { isTouchDevice, qualitySettings } from "../lib/device";
 import { UniverseScene } from "./UniverseScene";
 
-export function UniverseCanvas() {
+interface Props {
+  onReady?: () => void;
+}
+
+export function UniverseCanvas({ onReady }: Props) {
   const quality = usePortfolioStore((s) => s.quality);
   const reduced = usePortfolioStore((s) => s.reducedMotion);
   const webgl = usePortfolioStore((s) => s.webgl);
@@ -28,7 +32,10 @@ export function UniverseCanvas() {
         // Power-of-two textures + no depth pre-pass for faster rendering
         toneMapping: 0, // NoToneMapping — faster, and the scene is already dark
       }}
-      onCreated={({ gl }) => gl.setClearColor("#01030a")}
+      onCreated={({ gl }) => {
+        gl.setClearColor("#01030a");
+        onReady?.();
+      }}
       performance={{ min: 0.5 }}
       frameloop="always"
     >

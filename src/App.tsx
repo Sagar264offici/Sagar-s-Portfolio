@@ -23,7 +23,6 @@ import { Hobbies } from "./sections/Hobbies";
 import { Contact } from "./sections/Contact";
 import { Footer } from "./sections/Footer";
 import { WarpDrive } from "./components/WarpDrive";
-import ModeTogglePopup from "./components/ModeTogglePopup";
 import { useLenis } from "./hooks/useLenis";
 import { useKonami } from "./hooks/useKonami";
 import { useGithubData } from "./hooks/useGithubData";
@@ -49,28 +48,19 @@ export default function App() {
   const webgl = usePortfolioStore((s) => s.webgl);
   const setReducedMotion = usePortfolioStore((s) => s.setReducedMotion);
   const setRecruiterOpen = usePortfolioStore((s) => s.setRecruiterOpen);
+  const [sceneReady, setSceneReady] = useState(false);
 
-  const [modePopupOpen, setModePopupOpen] = useState(false);
-  const modePopupSeen = localStorage.getItem("sp-mode-popup-seen");
-
-  useEffect(() => {
-    if (!modePopupSeen && webgl && !professionalMode) {
-      const t = setTimeout(() => setModePopupOpen(true), 1200);
-      return () => clearTimeout(t);
-    }
-  }, [modePopupSeen, webgl, professionalMode]);
+  // Keep global interaction features active. These were imported but never
+  // invoked, leaving scroll-aware navigation, lazy GitHub data, and the
+  // keyboard easter egg inactive.
+  useLenis();
+  useKonami();
+  useGithubData();
 
   useEffect(() => {
-    if (modePopupOpen && !modePopupSeen) {
-      try {
-        localStorage.setItem("sp-mode-popup-seen", "1");
-      } catch {
-        /* noop */
-      }
-    }
-  }, [modePopupOpen]);
-
-  // ... rest of the component
+    // Prepare the instant fallback whenever the 3D canvas is turned off.
+    if (professionalMode || !webgl) setSceneReady(false);
+  }, [professionalMode, webgl]);
 
   // Root data attributes for CSS modes.
   useEffect(() => {
@@ -123,14 +113,14 @@ export default function App() {
   return (
     <>
       <Loader />
-      <ModeTogglePopup />
 
       <div className="canvas-wrap">
-        {/* A lightweight sky is visible immediately while the 3D chunk/GPU starts. */}
-        <FallbackBackground />
+        {/* A lightweight sky is visible immediately while the 3D chunk/GPU
+            starts, then unmounts so it cannot compete with WebGL for frames. */}
+        {(!webgl || professionalMode || !sceneReady) && <FallbackBackground />}
         {webgl && !professionalMode ? (
           <Suspense fallback={null}>
-            <UniverseCanvas />
+            <UniverseCanvas onReady={() => setSceneReady(true)} />
           </Suspense>
         ) : null}
       </div>
