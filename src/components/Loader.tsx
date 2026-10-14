@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import { usePortfolioStore } from "../store/portfolioStore";
-import { isTouchDevice } from "../lib/device";
-import { ReactLogoLoader } from "./ReactLogoLoader";
 
 export function Loader() {
   const boot = usePortfolioStore((s) => s.boot);
@@ -11,43 +9,28 @@ export function Loader() {
 
   useEffect(() => {
     if (booted) return;
-    // Phones boot fast: brief splash, then GitHub data streams in
-    // behind the already-interactive page.
-    if (isTouchDevice()) {
-      const quick = window.setTimeout(() => {
-        setHidden(true);
-        boot();
-      }, 400);
-      return () => window.clearTimeout(quick);
-    }
 
-    // The universe now preloads in parallel, so a long artificial splash only
-    // makes the finished background feel late.
+    // The portfolio initializes behind this opaque intro. Reduced-motion users
+    // get a shorter hold, while everyone sees the same clean first frame.
+    const duration = reducedMotion ? 900 : 2700;
     const finish = window.setTimeout(() => {
       setHidden(true);
       boot();
       window.setTimeout(() => usePortfolioStore.getState().setGithubLoading(false), 0);
-    }, 750);
+    }, duration);
 
-    return () => {
-      window.clearTimeout(finish);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [booted]);
+    return () => window.clearTimeout(finish);
+  }, [booted, boot, reducedMotion]);
 
   return (
-    <div className={`loader ${hidden ? "hidden" : ""}`} role="status" aria-live="polite">
-      <div className="l-title">please hang on</div>
-      <ReactLogoLoader size={150} reducedMotion={reducedMotion} />
-      <button
-        className="l-skip"
-        onClick={() => {
-          setHidden(true);
-          boot();
-        }}
-      >
-        SKIP
-      </button>
+    <div
+      className={"loader apple-hello-loader " + (hidden ? "hidden" : "")}
+      role="status"
+      aria-live="polite"
+      aria-label="Welcome"
+    >
+      <div className="apple-hello-word" aria-label="hello">hello</div>
+      <span className="apple-hello-caption" aria-hidden="true">SAGAR HORIZON</span>
     </div>
   );
 }
