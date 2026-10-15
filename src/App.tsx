@@ -46,9 +46,43 @@ export default function App() {
   const secretMode = usePortfolioStore((s) => s.secretMode);
   const reducedMotion = usePortfolioStore((s) => s.reducedMotion);
   const webgl = usePortfolioStore((s) => s.webgl);
+  const booted = usePortfolioStore((s) => s.booted);
   const setReducedMotion = usePortfolioStore((s) => s.setReducedMotion);
   const setRecruiterOpen = usePortfolioStore((s) => s.setRecruiterOpen);
   const [sceneReady, setSceneReady] = useState(false);
+  const [portraitReady, setPortraitReady] = useState(false);
+
+  // Keep the first-paint splash until the hero portrait is decoded. The 3D
+  // scene can use procedural textures immediately and refine in the background.
+  useEffect(() => {
+    const portrait = document.querySelector<HTMLImageElement>(".hero-photo img");
+    if (!portrait) {
+      setPortraitReady(true);
+      return;
+    }
+
+    let cancelled = false;
+    const markReady = () => {
+      void portrait.decode().catch(() => undefined).then(() => {
+        if (!cancelled) setPortraitReady(true);
+      });
+    };
+
+    if (portrait.complete) {
+      markReady();
+    } else {
+      portrait.addEventListener("load", markReady, { once: true });
+      portrait.addEventListener("error", markReady, { once: true });
+    }
+
+    return () => {
+      cancelled = true;
+      portrait.removeEventListener("load", markReady);
+      portrait.removeEventListener("error", markReady);
+    };
+  }, []);
+
+  const splashReady = portraitReady && (professionalMode || !webgl || sceneReady);
 
   // Keep global interaction features active. These were imported but never
   // invoked, leaving scroll-aware navigation, lazy GitHub data, and the
@@ -112,7 +146,7 @@ export default function App() {
 
   return (
     <>
-      <Loader />
+      <Loader ready={splashReady} />
 
       <div className="canvas-wrap">
         {/* A lightweight sky is visible immediately while the 3D chunk/GPU
@@ -120,7 +154,7 @@ export default function App() {
         {(!webgl || professionalMode || !sceneReady) && <FallbackBackground />}
         {webgl && !professionalMode ? (
           <Suspense fallback={null}>
-            <UniverseCanvas onReady={() => setSceneReady(true)} />
+            <UniverseCanvas onReady={() => setSceneReady(true)} booted={booted} />
           </Suspense>
         ) : null}
       </div>

@@ -1,53 +1,60 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import { usePortfolioStore } from "../store/portfolioStore";
-import { isTouchDevice } from "../lib/device";
-import { ReactLogoLoader } from "./ReactLogoLoader";
 
-export function Loader() {
+interface LoaderProps {
+  ready: boolean;
+}
+
+/**
+ * Controls the static HTML splash from index.html.
+ * Keeping its visuals out of React lets it appear before the app bundle loads.
+ */
+export function Loader({ ready }: LoaderProps) {
   const boot = usePortfolioStore((s) => s.boot);
-  const booted = usePortfolioStore((s) => s.booted);
   const reducedMotion = usePortfolioStore((s) => s.reducedMotion);
-  const [hidden, setHidden] = useState(false);
+  const readyRef = useRef(ready);
+  const finishRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
-    if (booted) return;
-    // Phones boot fast: brief splash, then GitHub data streams in
-    // behind the already-interactive page.
-    if (isTouchDevice()) {
-      const quick = window.setTimeout(() => {
-        setHidden(true);
-        boot();
-      }, 400);
-      return () => window.clearTimeout(quick);
+    readyRef.current = ready;
+    const minimumElapsed = reducedMotion ? 600 : 2150;
+    if (ready && performance.now() >= minimumElapsed) {
+      finishRef.current?.();
     }
+  }, [ready, reducedMotion]);
 
-    // The universe now preloads in parallel, so a long artificial splash only
-    // makes the finished background feel late.
-    const finish = window.setTimeout(() => {
-      setHidden(true);
+  useEffect(() => {
+    const splash = document.getElementById("startup-splash");
+    let finished = false;
+    let removeTimer = 0;
+
+    const finish = () => {
+      if (finished) return;
+      finished = true;
+      splash?.classList.add("is-leaving");
+      removeTimer = window.setTimeout(() => splash?.remove(), 700);
       boot();
       window.setTimeout(() => usePortfolioStore.getState().setGithubLoading(false), 0);
-    }, 750);
+    };
+
+    finishRef.current = finish;
+
+    // The CSS animation begins during HTML parsing. Measure from navigation
+    // start, then wait for the essential page shell and portrait to be ready.
+    const minimumElapsed = reducedMotion ? 600 : 2150;
+    const maximumElapsed = reducedMotion ? 3600 : 6000;
+    const minTimer = window.setTimeout(() => {
+      if (readyRef.current) finish();
+    }, Math.max(0, minimumElapsed - performance.now()));
+    const maxTimer = window.setTimeout(finish, Math.max(0, maximumElapsed - performance.now()));
 
     return () => {
-      window.clearTimeout(finish);
+      window.clearTimeout(minTimer);
+      window.clearTimeout(maxTimer);
+      if (removeTimer) window.clearTimeout(removeTimer);
+      finishRef.current = null;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [booted]);
+  }, [boot, reducedMotion]);
 
-  return (
-    <div className={`loader ${hidden ? "hidden" : ""}`} role="status" aria-live="polite">
-      <div className="l-title">please hang on</div>
-      <ReactLogoLoader size={150} reducedMotion={reducedMotion} />
-      <button
-        className="l-skip"
-        onClick={() => {
-          setHidden(true);
-          boot();
-        }}
-      >
-        SKIP
-      </button>
-    </div>
-  );
+  return null;
 }

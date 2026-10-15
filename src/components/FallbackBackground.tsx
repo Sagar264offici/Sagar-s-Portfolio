@@ -1,6 +1,8 @@
 import { useEffect, useRef } from "react";
+import { usePortfolioStore } from "../store/portfolioStore";
 
 export function FallbackBackground() {
+  const booted = usePortfolioStore((s) => s.booted);
   const ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -60,15 +62,17 @@ export function FallbackBackground() {
         ctx.fill();
       }
       ctx.globalAlpha = 1;
-      raf = requestAnimationFrame(loop);
+      if (booted) raf = requestAnimationFrame(loop);
     };
+    // While the splash is visible, paint a single static frame rather than
+    // animating hundreds of stars underneath an opaque overlay.
     raf = requestAnimationFrame(loop);
 
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", resize);
     };
-  }, []);
+  }, [booted]);
 
   return (
     <canvas
