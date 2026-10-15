@@ -1,36 +1,60 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import { usePortfolioStore } from "../store/portfolioStore";
 
-export function Loader() {
+interface LoaderProps {
+  ready: boolean;
+}
+
+/**
+ * Controls the static HTML splash from index.html.
+ * Keeping its visuals out of React lets it appear before the app bundle loads.
+ */
+export function Loader({ ready }: LoaderProps) {
   const boot = usePortfolioStore((s) => s.boot);
-  const booted = usePortfolioStore((s) => s.booted);
   const reducedMotion = usePortfolioStore((s) => s.reducedMotion);
-  const [hidden, setHidden] = useState(false);
+  const readyRef = useRef(ready);
+  const finishRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
-    if (booted) return;
+    readyRef.current = ready;
+    const minimumElapsed = reducedMotion ? 600 : 2150;
+    if (ready && performance.now() >= minimumElapsed) {
+      finishRef.current?.();
+    }
+  }, [ready, reducedMotion]);
 
-    // The portfolio initializes behind this opaque intro. Reduced-motion users
-    // get a shorter hold, while everyone sees the same clean first frame.
-    const duration = reducedMotion ? 900 : 2700;
-    const finish = window.setTimeout(() => {
-      setHidden(true);
+  useEffect(() => {
+    const splash = document.getElementById("startup-splash");
+    let finished = false;
+    let removeTimer = 0;
+
+    const finish = () => {
+      if (finished) return;
+      finished = true;
+      splash?.classList.add("is-leaving");
+      removeTimer = window.setTimeout(() => splash?.remove(), 700);
       boot();
       window.setTimeout(() => usePortfolioStore.getState().setGithubLoading(false), 0);
-    }, duration);
+    };
 
-    return () => window.clearTimeout(finish);
-  }, [booted, boot, reducedMotion]);
+    finishRef.current = finish;
 
-  return (
-    <div
-      className={"loader apple-hello-loader " + (hidden ? "hidden" : "")}
-      role="status"
-      aria-live="polite"
-      aria-label="Welcome"
-    >
-      <div className="apple-hello-word" aria-label="hello">hello</div>
-      <span className="apple-hello-caption" aria-hidden="true">SAGAR HORIZON</span>
-    </div>
-  );
+    // The CSS animation begins during HTML parsing. Measure from navigation
+    // start, then wait for the essential page shell and portrait to be ready.
+    const minimumElapsed = reducedMotion ? 600 : 2150;
+    const maximumElapsed = reducedMotion ? 3600 : 6000;
+    const minTimer = window.setTimeout(() => {
+      if (readyRef.current) finish();
+    }, Math.max(0, minimumElapsed - performance.now()));
+    const maxTimer = window.setTimeout(finish, Math.max(0, maximumElapsed - performance.now()));
+
+    return () => {
+      window.clearTimeout(minTimer);
+      window.clearTimeout(maxTimer);
+      if (removeTimer) window.clearTimeout(removeTimer);
+      finishRef.current = null;
+    };
+  }, [boot, reducedMotion]);
+
+  return null;
 }

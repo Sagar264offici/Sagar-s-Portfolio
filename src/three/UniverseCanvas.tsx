@@ -6,9 +6,10 @@ import { UniverseScene } from "./UniverseScene";
 
 interface Props {
   onReady?: () => void;
+  booted: boolean;
 }
 
-export function UniverseCanvas({ onReady }: Props) {
+export function UniverseCanvas({ onReady, booted }: Props) {
   const quality = usePortfolioStore((s) => s.quality);
   const reduced = usePortfolioStore((s) => s.reducedMotion);
   const webgl = usePortfolioStore((s) => s.webgl);
@@ -37,7 +38,9 @@ export function UniverseCanvas({ onReady }: Props) {
         onReady?.();
       }}
       performance={{ min: 0.5 }}
-      frameloop="always"
+      // Render one startup frame, then pause animation until the splash exits.
+      // Texture requests still resolve in the background, without a 60fps GPU loop.
+      frameloop={booted ? "always" : "demand"}
     >
       <fog attach="fog" args={["#01030a", 45, 150]} />
       <UniverseScene />

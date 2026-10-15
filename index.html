@@ -5,6 +5,103 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#05060a" />
     <meta name="color-scheme" content="dark" />
+    <style>
+
+    /* First-paint startup splash: independent of React and external fonts. */
+    html, body, #root { min-height: 100%; background: #030409; }
+    body { margin: 0; }
+    #startup-splash {
+      position: fixed;
+      inset: 0;
+      z-index: 2147483000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.25rem;
+      overflow: hidden;
+      isolation: isolate;
+      background: #030409;
+      color: #f7fbff;
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transition: opacity 620ms cubic-bezier(.22, 1, .36, 1), visibility 0s linear 620ms;
+    }
+    #startup-splash::before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      width: min(68vw, 540px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(34, 211, 238, .10) 0%, rgba(139, 92, 246, .055) 38%, transparent 72%);
+      filter: blur(8px);
+      pointer-events: none;
+    }
+    #startup-splash.is-leaving {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .startup-hello {
+      position: relative;
+      padding: 0 .08em .14em;
+      font-family: "Apple Chancery", "Snell Roundhand", "Segoe Script", "Brush Script MT", cursive;
+      font-size: clamp(6rem, 21vw, 14rem);
+      font-weight: 400;
+      letter-spacing: -.065em;
+      line-height: .95;
+      user-select: none;
+      background: linear-gradient(108deg, #f8fdff 4%, #a7f0ff 43%, #b9a7ff 79%, #f8fdff 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 10px rgba(103, 232, 249, .20)) drop-shadow(0 0 24px rgba(139, 92, 246, .10));
+      clip-path: inset(0 100% 0 0);
+      transform: translateY(9px) scale(.985);
+      animation: startup-hello-reveal 1.75s cubic-bezier(.65, 0, .35, 1) 120ms forwards;
+    }
+    .startup-caption {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: .62rem;
+      font-weight: 500;
+      letter-spacing: .42em;
+      color: rgba(230, 241, 255, .58);
+      padding-left: .42em;
+      opacity: 0;
+      transform: translateY(7px);
+      animation: startup-caption-in 620ms ease 1.05s forwards;
+    }
+    .startup-signal {
+      width: 54px;
+      height: 1px;
+      overflow: hidden;
+      margin-top: .1rem;
+      background: rgba(148, 163, 184, .14);
+    }
+    .startup-signal::after {
+      content: "";
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, #72e8ff 48%, #a78bfa 70%, transparent);
+      transform: translateX(-100%);
+      animation: startup-signal-sweep 1.4s cubic-bezier(.22, 1, .36, 1) .5s infinite;
+    }
+    @keyframes startup-hello-reveal {
+      to { clip-path: inset(0 -2% 0 0); transform: translateY(0) scale(1); }
+    }
+    @keyframes startup-caption-in { to { opacity: 1; transform: translateY(0); } }
+    @keyframes startup-signal-sweep { to { transform: translateX(100%); } }
+    @media (prefers-reduced-motion: reduce) {
+      .startup-hello { animation: none; clip-path: none; transform: none; }
+      .startup-caption { animation: none; opacity: 1; transform: none; }
+      .startup-signal::after { animation: none; transform: translateX(0); }
+      #startup-splash { transition-duration: .01ms; }
+    }
+    </style>
 
     <!-- Primary SEO -->
     <title>Sagar Pathak | Web Developer &amp; React Developer in Rishikesh</title>
@@ -141,6 +238,11 @@
     />
   </head>
   <body>
+    <div id="startup-splash" role="status" aria-live="polite" aria-label="Loading Sagar Horizon">
+      <span class="startup-hello" aria-label="hello">hello</span>
+      <span class="startup-caption" aria-hidden="true">SAGAR HORIZON</span>
+      <span class="startup-signal" aria-hidden="true"></span>
+    </div>
     <div id="root"></div>
     <noscript>
       <main style="max-width: 720px; margin: 0 auto; padding: 48px 20px; font-family: system-ui, sans-serif; color: #e6e9f2; background: #05060a;">

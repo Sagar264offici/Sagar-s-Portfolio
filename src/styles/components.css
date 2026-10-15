@@ -304,69 +304,6 @@
   transform: scale(1);
 }
 
-/* ══════════════════════ APPLE-INSPIRED HELLO INTRO ══════════════════════ */
-.loader.apple-hello-loader {
-  position: fixed;
-  inset: 0;
-  z-index: 99999;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1.2rem;
-  background: #000;
-  opacity: 1;
-  visibility: visible;
-  transition: opacity 750ms cubic-bezier(0.22, 1, 0.36, 1), visibility 750ms ease;
-  isolation: isolate;
-}
-
-.loader.apple-hello-loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-
-.apple-hello-word {
-  padding: 0 0.08em 0.14em;
-  font-family: "Apple Chancery", "Snell Roundhand", "Segoe Script", "Brush Script MT", cursive;
-  font-size: clamp(6rem, 21vw, 14rem);
-  font-weight: 400;
-  letter-spacing: -0.065em;
-  line-height: 0.95;
-  background: linear-gradient(105deg, #ff5f6d 2%, #ffad66 19%, #ffe66d 34%, #69db7c 49%, #4dabf7 66%, #9775fa 82%, #ff6bcb 100%);
-  background-size: 220% 100%;
-  background-position: 0% 50%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.055));
-  clip-path: inset(0 100% 0 0);
-  animation: apple-hello-reveal 1.75s cubic-bezier(0.65, 0, 0.35, 1) 180ms forwards, apple-hello-colors 3.4s ease-in-out 1.3s infinite alternate;
-  user-select: none;
-}
-
-.apple-hello-caption {
-  font-family: var(--font-display, -apple-system, BlinkMacSystemFont, sans-serif);
-  font-size: 0.62rem;
-  font-weight: 500;
-  letter-spacing: 0.42em;
-  color: rgba(255, 255, 255, 0.52);
-  opacity: 0;
-  transform: translateY(8px);
-  animation: apple-hello-caption-in 650ms ease 1.25s forwards;
-}
-
-@keyframes apple-hello-reveal {
-  0% { clip-path: inset(0 100% 0 0); transform: translateY(10px) scale(0.985); }
-  100% { clip-path: inset(0 -2% 0 0); transform: translateY(0) scale(1); }
-}
-@keyframes apple-hello-colors { from { background-position: 0% 50%; } to { background-position: 100% 50%; } }
-@keyframes apple-hello-caption-in { to { opacity: 1; transform: translateY(0); } }
-
-@media (prefers-reduced-motion: reduce) {
-  .apple-hello-word { animation: none; clip-path: none; background-position: 50% 50%; }
-  .apple-hello-caption { animation: none; opacity: 1; transform: none; }
-}
-
 /* ══════════════════════ HERO ══════════════════════ */
 .hero {
   position: relative;
