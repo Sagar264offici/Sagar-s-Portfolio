@@ -101,6 +101,30 @@
       .startup-signal::after { animation: none; transform: translateX(0); }
       #startup-splash { transition-duration: .01ms; }
     }
+          #startup-animation {
+        display: grid;
+        place-items: center;
+        width: min(84vw, 638px);
+        max-height: min(32vh, 190px);
+        position: relative;
+      }
+      #startup-splash.has-animated-hello .startup-hello { display: none; }
+      .apple-hello-svg {
+        display: block;
+        width: min(84vw, 638px);
+        height: auto;
+        max-height: min(32vh, 190px);
+        overflow: visible;
+        color: #eafaff;
+        stroke: currentColor;
+        filter:
+          drop-shadow(0 0 3px rgba(103, 232, 249, .8))
+          drop-shadow(0 0 12px rgba(34, 211, 238, .26))
+          drop-shadow(0 0 20px rgba(139, 92, 246, .13));
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .apple-hello-svg { filter: none; }
+      }
     </style>
 
     <!-- Primary SEO -->
@@ -240,6 +264,7 @@
   <body>
     <div id="startup-splash" role="status" aria-live="polite" aria-label="Loading Sagar Horizon">
       <span class="startup-hello" aria-label="hello">hello</span>
+      <div id="startup-animation" aria-hidden="true"></div>
       <span class="startup-caption" aria-hidden="true">SAGAR HORIZON</span>
       <span class="startup-signal" aria-hidden="true"></span>
     </div>

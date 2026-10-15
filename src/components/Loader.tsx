@@ -1,30 +1,55 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { AnimatePresence } from "framer-motion";
 import { usePortfolioStore } from "../store/portfolioStore";
+import { AppleHelloEffectEnglish } from "./apple-hello-effect/AppleHelloEffectEnglish";
+import { AppleHelloEffectHindi } from "./apple-hello-effect/AppleHelloEffectHindi";
+import { AppleHelloEffectSpanish } from "./apple-hello-effect/AppleHelloEffectSpanish";
+import { AppleHelloEffectVietnamese } from "./apple-hello-effect/AppleHelloEffectVietnamese";
 
 interface LoaderProps {
   ready: boolean;
 }
 
 /**
- * Controls the static HTML splash from index.html.
- * Keeping its visuals out of React lets it appear before the app bundle loads.
+ * The HTML shell paints the fallback before React starts. Once React mounts,
+ * the handwritten SVG animates above the app while the initial scene starts.
  */
 export function Loader({ ready }: LoaderProps) {
   const boot = usePortfolioStore((s) => s.boot);
   const reducedMotion = usePortfolioStore((s) => s.reducedMotion);
+  const [index, setIndex] = useState(0);
+  const [animationTarget, setAnimationTarget] = useState<HTMLElement | null>(null);
+  const [animationFinished, setAnimationFinished] = useState(false);
   const readyRef = useRef(ready);
+  const animationFinishedRef = useRef(animationFinished);
   const finishRef = useRef<(() => void) | null>(null);
+  const minimumElapsed = reducedMotion ? 600 : 2150;
 
   useEffect(() => {
     readyRef.current = ready;
-    const minimumElapsed = reducedMotion ? 600 : 2150;
-    if (ready && performance.now() >= minimumElapsed) {
+    animationFinishedRef.current = animationFinished;
+
+    if (
+      ready &&
+      performance.now() >= minimumElapsed &&
+      (reducedMotion || animationFinished)
+    ) {
       finishRef.current?.();
     }
-  }, [ready, reducedMotion]);
+  }, [ready, reducedMotion, animationFinished, minimumElapsed]);
 
   useEffect(() => {
     const splash = document.getElementById("startup-splash");
+    const target = document.getElementById("startup-animation");
+    if (target && splash && !reducedMotion) {
+      splash.classList.add("has-animated-hello");
+      setAnimationTarget(target);
+    } else {
+      splash?.classList.remove("has-animated-hello");
+      setAnimationTarget(null);
+    }
+
     let finished = false;
     let removeTimer = 0;
 
@@ -39,12 +64,17 @@ export function Loader({ ready }: LoaderProps) {
 
     finishRef.current = finish;
 
-    // The CSS animation begins during HTML parsing. Measure from navigation
-    // start, then wait for the essential page shell and portrait to be ready.
-    const minimumElapsed = reducedMotion ? 600 : 2150;
-    const maximumElapsed = reducedMotion ? 3600 : 6000;
+    // Large planet maps stream progressively. Only the first-screen portrait
+    // and canvas shell gate the splash; the background's animation loop is
+    // paused until the splash exits.
+    const maximumElapsed = reducedMotion ? 3600 : 7200;
     const minTimer = window.setTimeout(() => {
-      if (readyRef.current) finish();
+      if (
+        readyRef.current &&
+        (reducedMotion || animationFinishedRef.current)
+      ) {
+        finish();
+      }
     }, Math.max(0, minimumElapsed - performance.now()));
     const maxTimer = window.setTimeout(finish, Math.max(0, maximumElapsed - performance.now()));
 
@@ -54,7 +84,48 @@ export function Loader({ ready }: LoaderProps) {
       if (removeTimer) window.clearTimeout(removeTimer);
       finishRef.current = null;
     };
-  }, [boot, reducedMotion]);
+  }, [boot, reducedMotion, minimumElapsed]);
 
-  return null;
+  const handleAnimationEnd = () => {
+    if (readyRef.current && performance.now() >= minimumElapsed) {
+      finishRef.current?.();
+      return;
+    }
+
+    if (index === 3) {
+      setAnimationFinished(true);
+      return;
+    }
+
+    setIndex((previous) => Math.min(previous + 1, 3));
+  };
+
+  const demos = [
+    <AppleHelloEffectEnglish
+      key="english"
+      durationScale={0.62}
+      onAnimationComplete={handleAnimationEnd}
+    />,
+    <AppleHelloEffectHindi
+      key="hindi"
+      durationScale={0.62}
+      onAnimationComplete={handleAnimationEnd}
+    />,
+    <AppleHelloEffectSpanish
+      key="spanish"
+      durationScale={0.62}
+      onAnimationComplete={handleAnimationEnd}
+    />,
+    <AppleHelloEffectVietnamese
+      key="vietnamese"
+      durationScale={0.52}
+      onAnimationComplete={handleAnimationEnd}
+    />,
+  ];
+
+  if (!animationTarget || reducedMotion) return null;
+  return createPortal(
+    <AnimatePresence mode="wait">{demos[index]}</AnimatePresence>,
+    animationTarget
+  );
 }
