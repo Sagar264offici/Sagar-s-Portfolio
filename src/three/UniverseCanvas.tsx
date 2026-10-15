@@ -21,6 +21,8 @@ export function UniverseCanvas({ onReady, booted }: Props) {
   // than the scene's visual payoff there.
   const dprMax = isTouchDevice() ? 1.5 : reduced ? 1.5 : 2;
 
+  // Keep the scene in demand mode while the HTML splash is visible. Texture
+  // downloads can complete without driving a continuous startup render loop.
   return (
     <Canvas
       dpr={[1, dprMax]}
@@ -38,8 +40,6 @@ export function UniverseCanvas({ onReady, booted }: Props) {
         onReady?.();
       }}
       performance={{ min: 0.5 }}
-      // Render one startup frame, then pause animation until the splash exits.
-      // Texture requests still resolve in the background, without a 60fps GPU loop.
       frameloop={booted ? "always" : "demand"}
     >
       <fog attach="fog" args={["#01030a", 45, 150]} />
