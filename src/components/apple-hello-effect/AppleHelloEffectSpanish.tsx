@@ -1,35 +1,18 @@
-import type { ComponentProps } from "react"
-import type { TargetAndTransition } from "framer-motion"
 import { motion } from "framer-motion"
-const initialProps: TargetAndTransition = {
-  pathLength: 0,
-  opacity: 0,
-}
+const initialProps = { pathLength: 0, opacity: 0 }
+const animateProps = { pathLength: 1, opacity: 1 }
 
-const animateProps: TargetAndTransition = {
-  pathLength: 1,
-  opacity: 1,
-}
-
-export type AppleHelloEffectProps = Omit<
-  ComponentProps<typeof motion.svg>,
-  "durationScale" | "onAnimationComplete"
-> & {
-  /**
-   * Scales the duration and delay of the handwriting animation.
-   * Values below 1 speed up, values above 1 slow down.
-   * @defaultValue 1
-   */
-  durationScale?: number
-  /** Called when the full handwriting animation completes. */
-  onAnimationComplete?: () => void
+interface AppleHelloEffectProps {
+  className?: string;
+  durationScale?: number;
+  onAnimationComplete?: () => void;
 }
 
 export function AppleHelloEffectSpanish({
   className,
   durationScale = 1,
   onAnimationComplete,
-  ...props
+
 }: AppleHelloEffectProps) {
   const calc = (x: number) => x * durationScale
 
@@ -45,7 +28,7 @@ export function AppleHelloEffectSpanish({
       initial={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      {...props}
+
     >
       <title>hola</title>
       <motion.path
