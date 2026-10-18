@@ -157,8 +157,8 @@ export default function App() {
       <div className="canvas-wrap">
         {/* A lightweight sky is visible immediately while the 3D chunk/GPU
             starts, then unmounts so it cannot compete with WebGL for frames. */}
-        {booted && showFallback && <FallbackBackground fadeOut={sceneReady && webgl && !professionalMode} />}
-        {booted && webgl && !professionalMode ? (
+        {showFallback && <FallbackBackground fadeOut={sceneReady && webgl && !professionalMode} />}
+        {webgl && !professionalMode ? (
           <Suspense fallback={null}>
             <UniverseCanvas onReady={() => setSceneReady(true)} booted={booted} />
           </Suspense>

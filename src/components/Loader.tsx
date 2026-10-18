@@ -77,7 +77,7 @@ export function Loader({ ready }: LoaderProps) {
         finish();
       }
     }, Math.max(0, minimumElapsed - performance.now()));
-    const maxTimer = window.setTimeout(finish, Math.max(0, maximumElapsed - performance.now()));
+    const maxTimer = window.setTimeout(finish, maximumElapsed);
 
     return () => {
       window.clearTimeout(minTimer);

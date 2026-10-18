@@ -11,7 +11,7 @@ export function FallbackBackground({ fadeOut = false }: FallbackBackgroundProps)
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const stars: { x: number; y: number; r: number; speed: number; c: string }[] = [];
+    const stars: { x: number; y: number; r: number; c: string }[] = [];
     const count = Math.min(260, Math.floor(window.innerWidth / 6));
 
     for (let i = 0; i < count; i++) {
@@ -19,7 +19,6 @@ export function FallbackBackground({ fadeOut = false }: FallbackBackgroundProps)
         x: Math.random(),
         y: Math.random(),
         r: 0.4 + Math.random() * 1.3,
-        speed: 0.004 + Math.random() * 0.02,
         c: Math.random() > 0.85 ? "#a78bfa" : Math.random() > 0.7 ? "#67e8f9" : "#e2e8f0",
       });
     }
@@ -28,8 +27,6 @@ export function FallbackBackground({ fadeOut = false }: FallbackBackgroundProps)
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     };
-    resize();
-    window.addEventListener("resize", resize);
 
     const draw = () => {
       ctx.fillStyle = "#05060a";
@@ -60,12 +57,19 @@ export function FallbackBackground({ fadeOut = false }: FallbackBackgroundProps)
       }
       ctx.globalAlpha = 1;
     };
+
+    const handleResize = () => {
+      resize();
+      draw();
+    };
+
     // Paint once. The placeholder is temporary and should not compete with
     // the 3D scene in a second full-screen render loop.
-    draw();
+    handleResize();
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener("resize", resize);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
