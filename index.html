@@ -59,9 +59,9 @@
       color: transparent;
       -webkit-text-fill-color: transparent;
       filter: drop-shadow(0 0 10px rgba(103, 232, 249, .20)) drop-shadow(0 0 24px rgba(139, 92, 246, .10));
-      clip-path: inset(0 100% 0 0);
-      transform: translateY(9px) scale(.985);
-      animation: startup-hello-reveal 1.75s cubic-bezier(.65, 0, .35, 1) 120ms forwards;
+      opacity: 0;
+      transform: translate3d(0, 10px, 0) scale(.985);
+      animation: startup-hello-reveal 850ms cubic-bezier(.22, 1, .36, 1) 100ms forwards;
     }
     .startup-caption {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -88,15 +88,15 @@
       height: 100%;
       background: linear-gradient(90deg, transparent, #72e8ff 48%, #a78bfa 70%, transparent);
       transform: translateX(-100%);
-      animation: startup-signal-sweep 1.4s cubic-bezier(.22, 1, .36, 1) .5s infinite;
+      animation: startup-signal-sweep 1.1s cubic-bezier(.22, 1, .36, 1) .3s 2;
     }
     @keyframes startup-hello-reveal {
-      to { clip-path: inset(0 -2% 0 0); transform: translateY(0) scale(1); }
+      to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
     }
     @keyframes startup-caption-in { to { opacity: 1; transform: translateY(0); } }
     @keyframes startup-signal-sweep { to { transform: translateX(100%); } }
     @media (prefers-reduced-motion: reduce) {
-      .startup-hello { animation: none; clip-path: none; transform: none; }
+      .startup-hello { animation: none; opacity: 1; transform: none; }
       .startup-caption { animation: none; opacity: 1; transform: none; }
       .startup-signal::after { animation: none; transform: translateX(0); }
       #startup-splash { transition-duration: .01ms; }
@@ -117,13 +117,22 @@
         overflow: visible;
         color: #eafaff;
         stroke: currentColor;
-        filter:
-          drop-shadow(0 0 3px rgba(103, 232, 249, .8))
-          drop-shadow(0 0 12px rgba(34, 211, 238, .26))
-          drop-shadow(0 0 20px rgba(139, 92, 246, .13));
+        filter: none;
+      }
+      .apple-hello-draw-path {
+        stroke-dasharray: 1;
+        stroke-dashoffset: 1;
+        opacity: 0;
+        animation: apple-hello-stroke-draw var(--hello-duration, 1s) cubic-bezier(.45, 0, .25, 1) var(--hello-delay, 0s) both;
+      }
+      @keyframes apple-hello-stroke-draw {
+        0% { stroke-dashoffset: 1; opacity: 0; }
+        12% { opacity: 1; }
+        100% { stroke-dashoffset: 0; opacity: 1; }
       }
       @media (prefers-reduced-motion: reduce) {
         .apple-hello-svg { filter: none; }
+        .apple-hello-draw-path { animation: none; stroke-dashoffset: 0; opacity: 1; }
       }
     </style>
 
@@ -249,9 +258,8 @@
     <link rel="icon" type="image/png" sizes="64x64" href="/favicon-64.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    <!-- The sun is the dominant first-frame texture; fetching it before React
-         starts prevents the 3D background from arriving as an empty shell. -->
-    <link rel="preload" as="image" type="image/jpeg" href="/models/Planets_Blendfile_Textures/Textures/Sun/2k_sun.jpg" fetchpriority="high" />
+    <!-- The 3D scene starts after the greeting so its textures do not compete
+         with the intro for bandwidth or frame time. -->
     <link rel="preload" as="image" type="image/webp" href="/portrait-hero-480.webp" media="(max-width: 560px)" fetchpriority="high" />
     <link rel="preload" as="image" type="image/webp" href="/portrait-hero-800.webp" media="(min-width: 561px)" fetchpriority="high" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />

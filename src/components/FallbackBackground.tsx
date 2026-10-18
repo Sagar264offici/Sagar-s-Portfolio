@@ -1,8 +1,8 @@
 import { useEffect, useRef } from "react";
-import { usePortfolioStore } from "../store/portfolioStore";
 
-export function FallbackBackground() {
-  const booted = usePortfolioStore((s) => s.booted);
+interface FallbackBackgroundProps { fadeOut?: boolean }
+
+export function FallbackBackground({ fadeOut = false }: FallbackBackgroundProps) {
   const ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -11,7 +11,6 @@ export function FallbackBackground() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    let raf = 0;
     const stars: { x: number; y: number; r: number; speed: number; c: string }[] = [];
     const count = Math.min(260, Math.floor(window.innerWidth / 6));
 
@@ -32,7 +31,7 @@ export function FallbackBackground() {
     resize();
     window.addEventListener("resize", resize);
 
-    const loop = () => {
+    const draw = () => {
       ctx.fillStyle = "#05060a";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -52,9 +51,7 @@ export function FallbackBackground() {
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       for (const s of stars) {
-        s.y += s.speed * 0.016 * 60 * 0.001;
-        if (s.y > 1.02) s.y = -0.02;
-        const tw = 0.5 + Math.sin((s.x * 100 + performance.now() * 0.001 * s.speed * 200) % (Math.PI * 2)) * 0.35;
+        const tw = 0.5 + Math.sin(s.x * 100) * 0.2;
         ctx.globalAlpha = 0.35 + tw * 0.5;
         ctx.fillStyle = s.c;
         ctx.beginPath();
@@ -62,22 +59,27 @@ export function FallbackBackground() {
         ctx.fill();
       }
       ctx.globalAlpha = 1;
-      if (booted) raf = requestAnimationFrame(loop);
     };
-    // While the splash is visible, paint a single static frame rather than
-    // animating hundreds of stars underneath an opaque overlay.
-    raf = requestAnimationFrame(loop);
+    // Paint once. The placeholder is temporary and should not compete with
+    // the 3D scene in a second full-screen render loop.
+    draw();
 
     return () => {
-      cancelAnimationFrame(raf);
       window.removeEventListener("resize", resize);
     };
-  }, [booted]);
+  }, []);
 
   return (
     <canvas
       ref={ref}
-      style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none" }}
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 0,
+        pointerEvents: "none",
+        opacity: fadeOut ? 0 : 1,
+        transition: "opacity 480ms cubic-bezier(0.22, 1, 0.36, 1)",
+      }}
       aria-hidden
     />
   );

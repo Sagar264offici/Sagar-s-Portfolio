@@ -28,16 +28,11 @@ import { useKonami } from "./hooks/useKonami";
 import { useGithubData } from "./hooks/useGithubData";
 import { usePortfolioStore } from "./store/portfolioStore";
 import { audio } from "./lib/audio";
-import { isTouchDevice } from "./lib/device";
 
-// Start fetching the 3D chunk while the UI bootstraps. It remains code-split
-// on desktop, while professional-mode phones retain the small fallback-only
-// startup path.
-const universeCanvasImport = typeof window !== "undefined" && !isTouchDevice()
-  ? import("./three/UniverseCanvas")
-  : null;
+// Do not download the heavyweight WebGL scene during the greeting.
+// React.lazy requests it only after the splash exits and booted becomes true.
 const UniverseCanvas = lazy(() =>
-  (universeCanvasImport ?? import("./three/UniverseCanvas")).then((m) => ({ default: m.UniverseCanvas }))
+  import("./three/UniverseCanvas").then((m) => ({ default: m.UniverseCanvas }))
 );
 
 export default function App() {
@@ -50,6 +45,7 @@ export default function App() {
   const setReducedMotion = usePortfolioStore((s) => s.setReducedMotion);
   const setRecruiterOpen = usePortfolioStore((s) => s.setRecruiterOpen);
   const [sceneReady, setSceneReady] = useState(false);
+  const [showFallback, setShowFallback] = useState(true);
   const [portraitReady, setPortraitReady] = useState(false);
 
   // Keep the first-paint splash until the hero portrait is decoded. The 3D
@@ -82,7 +78,7 @@ export default function App() {
     };
   }, []);
 
-  const splashReady = portraitReady && (professionalMode || !webgl || sceneReady);
+  const splashReady = portraitReady;
 
   // Keep global interaction features active. These were imported but never
   // invoked, leaving scroll-aware navigation, lazy GitHub data, and the
@@ -92,9 +88,19 @@ export default function App() {
   useGithubData();
 
   useEffect(() => {
-    // Prepare the instant fallback whenever the 3D canvas is turned off.
+    // If 3D is unavailable, keep the lightweight fallback permanently visible.
     if (professionalMode || !webgl) setSceneReady(false);
   }, [professionalMode, webgl]);
+
+  useEffect(() => {
+    if (!sceneReady) {
+      setShowFallback(true);
+      return;
+    }
+    // Crossfade the fallback out instead of flashing to a blank canvas.
+    const timer = window.setTimeout(() => setShowFallback(false), 480);
+    return () => window.clearTimeout(timer);
+  }, [sceneReady]);
 
   // Root data attributes for CSS modes.
   useEffect(() => {
@@ -151,8 +157,8 @@ export default function App() {
       <div className="canvas-wrap">
         {/* A lightweight sky is visible immediately while the 3D chunk/GPU
             starts, then unmounts so it cannot compete with WebGL for frames. */}
-        {(!webgl || professionalMode || !sceneReady) && <FallbackBackground />}
-        {webgl && !professionalMode ? (
+        {booted && showFallback && <FallbackBackground fadeOut={sceneReady && webgl && !professionalMode} />}
+        {booted && webgl && !professionalMode ? (
           <Suspense fallback={null}>
             <UniverseCanvas onReady={() => setSceneReady(true)} booted={booted} />
           </Suspense>

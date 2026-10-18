@@ -4,8 +4,6 @@ import { AnimatePresence } from "framer-motion";
 import { usePortfolioStore } from "../store/portfolioStore";
 import { AppleHelloEffectEnglish } from "./apple-hello-effect/AppleHelloEffectEnglish";
 import { AppleHelloEffectHindi } from "./apple-hello-effect/AppleHelloEffectHindi";
-import { AppleHelloEffectSpanish } from "./apple-hello-effect/AppleHelloEffectSpanish";
-import { AppleHelloEffectVietnamese } from "./apple-hello-effect/AppleHelloEffectVietnamese";
 
 interface LoaderProps {
   ready: boolean;
@@ -24,7 +22,7 @@ export function Loader({ ready }: LoaderProps) {
   const readyRef = useRef(ready);
   const animationFinishedRef = useRef(animationFinished);
   const finishRef = useRef<(() => void) | null>(null);
-  const minimumElapsed = reducedMotion ? 600 : 2150;
+  const minimumElapsed = reducedMotion ? 600 : 1500;
 
   useEffect(() => {
     readyRef.current = ready;
@@ -57,9 +55,12 @@ export function Loader({ ready }: LoaderProps) {
       if (finished) return;
       finished = true;
       splash?.classList.add("is-leaving");
-      removeTimer = window.setTimeout(() => splash?.remove(), 700);
-      boot();
-      window.setTimeout(() => usePortfolioStore.getState().setGithubLoading(false), 0);
+      // Complete the black overlay fade before mounting the heavyweight scene.
+      removeTimer = window.setTimeout(() => {
+        splash?.remove();
+        boot();
+        window.setTimeout(() => usePortfolioStore.getState().setGithubLoading(false), 0);
+      }, 650);
     };
 
     finishRef.current = finish;
@@ -87,38 +88,27 @@ export function Loader({ ready }: LoaderProps) {
   }, [boot, reducedMotion, minimumElapsed]);
 
   const handleAnimationEnd = () => {
-    if (readyRef.current && performance.now() >= minimumElapsed) {
-      finishRef.current?.();
-      return;
-    }
-
-    if (index === 3) {
+    // The Hindi greeting is always the final animated word.
+    if (index === 1) {
       setAnimationFinished(true);
+      if (readyRef.current && performance.now() >= minimumElapsed) {
+        finishRef.current?.();
+      }
       return;
     }
 
-    setIndex((previous) => Math.min(previous + 1, 3));
+    setIndex(1);
   };
 
   const demos = [
     <AppleHelloEffectEnglish
       key="english"
-      durationScale={0.62}
+      durationScale={0.5}
       onAnimationComplete={handleAnimationEnd}
     />,
     <AppleHelloEffectHindi
-      key="hindi"
-      durationScale={0.62}
-      onAnimationComplete={handleAnimationEnd}
-    />,
-    <AppleHelloEffectSpanish
-      key="spanish"
-      durationScale={0.62}
-      onAnimationComplete={handleAnimationEnd}
-    />,
-    <AppleHelloEffectVietnamese
-      key="vietnamese"
-      durationScale={0.52}
+      key="namaste"
+      durationScale={0.5}
       onAnimationComplete={handleAnimationEnd}
     />,
   ];
