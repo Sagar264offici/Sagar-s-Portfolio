@@ -4,6 +4,8 @@ import { AnimatePresence } from "framer-motion";
 import { usePortfolioStore } from "../store/portfolioStore";
 import { AppleHelloEffectEnglish } from "./apple-hello-effect/AppleHelloEffectEnglish";
 import { AppleHelloEffectHindi } from "./apple-hello-effect/AppleHelloEffectHindi";
+import { AppleHelloEffectSpanish } from "./apple-hello-effect/AppleHelloEffectSpanish";
+import { AppleHelloEffectJapanese } from "./apple-hello-effect/AppleHelloEffectJapanese";
 
 interface LoaderProps {
   ready: boolean;
@@ -88,8 +90,8 @@ export function Loader({ ready }: LoaderProps) {
   }, [boot, reducedMotion, minimumElapsed]);
 
   const handleAnimationEnd = () => {
-    // The Hindi greeting is always the final animated word.
-    if (index === 1) {
+    // Japanese is the final greeting in the four-language sequence.
+    if (index === 3) {
       setAnimationFinished(true);
       if (readyRef.current && performance.now() >= minimumElapsed) {
         finishRef.current?.();
@@ -97,7 +99,7 @@ export function Loader({ ready }: LoaderProps) {
       return;
     }
 
-    setIndex(1);
+    setIndex((current) => current + 1);
   };
 
   const demos = [
@@ -109,6 +111,16 @@ export function Loader({ ready }: LoaderProps) {
     <AppleHelloEffectHindi
       key="namaste"
       durationScale={0.5}
+      onAnimationComplete={handleAnimationEnd}
+    />,
+    <AppleHelloEffectSpanish
+      key="hola"
+      durationScale={0.5}
+      onAnimationComplete={handleAnimationEnd}
+    />,
+    <AppleHelloEffectJapanese
+      key="konnichiwa"
+      durationScale={0.7}
       onAnimationComplete={handleAnimationEnd}
     />,
   ];
