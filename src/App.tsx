@@ -28,16 +28,11 @@ import { useKonami } from "./hooks/useKonami";
 import { useGithubData } from "./hooks/useGithubData";
 import { usePortfolioStore } from "./store/portfolioStore";
 import { audio } from "./lib/audio";
-import { isTouchDevice } from "./lib/device";
 
-// Start fetching the 3D chunk while the UI bootstraps. It remains code-split
-// on desktop, while professional-mode phones retain the small fallback-only
-// startup path.
-const universeCanvasImport = typeof window !== "undefined" && !isTouchDevice()
-  ? import("./three/UniverseCanvas")
-  : null;
+// Do not download the heavyweight WebGL scene during the greeting.
+// React.lazy requests it only after the splash exits and booted becomes true.
 const UniverseCanvas = lazy(() =>
-  (universeCanvasImport ?? import("./three/UniverseCanvas")).then((m) => ({ default: m.UniverseCanvas }))
+  import("./three/UniverseCanvas").then((m) => ({ default: m.UniverseCanvas }))
 );
 
 export default function App() {
@@ -46,9 +41,44 @@ export default function App() {
   const secretMode = usePortfolioStore((s) => s.secretMode);
   const reducedMotion = usePortfolioStore((s) => s.reducedMotion);
   const webgl = usePortfolioStore((s) => s.webgl);
+  const booted = usePortfolioStore((s) => s.booted);
   const setReducedMotion = usePortfolioStore((s) => s.setReducedMotion);
   const setRecruiterOpen = usePortfolioStore((s) => s.setRecruiterOpen);
   const [sceneReady, setSceneReady] = useState(false);
+  const [showFallback, setShowFallback] = useState(true);
+  const [portraitReady, setPortraitReady] = useState(false);
+
+  // Keep the first-paint splash until the hero portrait is decoded. The 3D
+  // scene can use procedural textures immediately and refine in the background.
+  useEffect(() => {
+    const portrait = document.querySelector<HTMLImageElement>(".hero-photo img");
+    if (!portrait) {
+      setPortraitReady(true);
+      return;
+    }
+
+    let cancelled = false;
+    const markReady = () => {
+      void portrait.decode().catch(() => undefined).then(() => {
+        if (!cancelled) setPortraitReady(true);
+      });
+    };
+
+    if (portrait.complete) {
+      markReady();
+    } else {
+      portrait.addEventListener("load", markReady, { once: true });
+      portrait.addEventListener("error", markReady, { once: true });
+    }
+
+    return () => {
+      cancelled = true;
+      portrait.removeEventListener("load", markReady);
+      portrait.removeEventListener("error", markReady);
+    };
+  }, []);
+
+  const splashReady = portraitReady;
 
   // Keep global interaction features active. These were imported but never
   // invoked, leaving scroll-aware navigation, lazy GitHub data, and the
@@ -58,9 +88,19 @@ export default function App() {
   useGithubData();
 
   useEffect(() => {
-    // Prepare the instant fallback whenever the 3D canvas is turned off.
+    // If 3D is unavailable, keep the lightweight fallback permanently visible.
     if (professionalMode || !webgl) setSceneReady(false);
   }, [professionalMode, webgl]);
+
+  useEffect(() => {
+    if (!sceneReady) {
+      setShowFallback(true);
+      return;
+    }
+    // Crossfade the fallback out instead of flashing to a blank canvas.
+    const timer = window.setTimeout(() => setShowFallback(false), 480);
+    return () => window.clearTimeout(timer);
+  }, [sceneReady]);
 
   // Root data attributes for CSS modes.
   useEffect(() => {
@@ -112,15 +152,15 @@ export default function App() {
 
   return (
     <>
-      <Loader />
+      <Loader ready={splashReady} />
 
       <div className="canvas-wrap">
         {/* A lightweight sky is visible immediately while the 3D chunk/GPU
             starts, then unmounts so it cannot compete with WebGL for frames. */}
-        {(!webgl || professionalMode || !sceneReady) && <FallbackBackground />}
+        {showFallback && <FallbackBackground fadeOut={sceneReady && webgl && !professionalMode} />}
         {webgl && !professionalMode ? (
           <Suspense fallback={null}>
-            <UniverseCanvas onReady={() => setSceneReady(true)} />
+            <UniverseCanvas onReady={() => setSceneReady(true)} booted={booted} />
           </Suspense>
         ) : null}
       </div>

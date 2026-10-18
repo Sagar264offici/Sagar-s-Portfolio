@@ -1,6 +1,8 @@
 import { useEffect, useRef } from "react";
 
-export function FallbackBackground() {
+interface FallbackBackgroundProps { fadeOut?: boolean }
+
+export function FallbackBackground({ fadeOut = false }: FallbackBackgroundProps) {
   const ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -9,8 +11,7 @@ export function FallbackBackground() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    let raf = 0;
-    const stars: { x: number; y: number; r: number; speed: number; c: string }[] = [];
+    const stars: { x: number; y: number; r: number; c: string }[] = [];
     const count = Math.min(260, Math.floor(window.innerWidth / 6));
 
     for (let i = 0; i < count; i++) {
@@ -18,7 +19,6 @@ export function FallbackBackground() {
         x: Math.random(),
         y: Math.random(),
         r: 0.4 + Math.random() * 1.3,
-        speed: 0.004 + Math.random() * 0.02,
         c: Math.random() > 0.85 ? "#a78bfa" : Math.random() > 0.7 ? "#67e8f9" : "#e2e8f0",
       });
     }
@@ -27,10 +27,8 @@ export function FallbackBackground() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     };
-    resize();
-    window.addEventListener("resize", resize);
 
-    const loop = () => {
+    const draw = () => {
       ctx.fillStyle = "#05060a";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -50,9 +48,7 @@ export function FallbackBackground() {
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       for (const s of stars) {
-        s.y += s.speed * 0.016 * 60 * 0.001;
-        if (s.y > 1.02) s.y = -0.02;
-        const tw = 0.5 + Math.sin((s.x * 100 + performance.now() * 0.001 * s.speed * 200) % (Math.PI * 2)) * 0.35;
+        const tw = 0.5 + Math.sin(s.x * 100) * 0.2;
         ctx.globalAlpha = 0.35 + tw * 0.5;
         ctx.fillStyle = s.c;
         ctx.beginPath();
@@ -60,20 +56,34 @@ export function FallbackBackground() {
         ctx.fill();
       }
       ctx.globalAlpha = 1;
-      raf = requestAnimationFrame(loop);
     };
-    raf = requestAnimationFrame(loop);
+
+    const handleResize = () => {
+      resize();
+      draw();
+    };
+
+    // Paint once. The placeholder is temporary and should not compete with
+    // the 3D scene in a second full-screen render loop.
+    handleResize();
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("resize", resize);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
   return (
     <canvas
       ref={ref}
-      style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none" }}
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 0,
+        pointerEvents: "none",
+        opacity: fadeOut ? 0 : 1,
+        transition: "opacity 480ms cubic-bezier(0.22, 1, 0.36, 1)",
+      }}
       aria-hidden
     />
   );

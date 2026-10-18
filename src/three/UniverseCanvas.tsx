@@ -1,4 +1,5 @@
-import { Canvas } from "@react-three/fiber";
+import { useRef } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { Bloom, EffectComposer, Vignette } from "@react-three/postprocessing";
 import { usePortfolioStore } from "../store/portfolioStore";
 import { isTouchDevice, qualitySettings } from "../lib/device";
@@ -6,9 +7,22 @@ import { UniverseScene } from "./UniverseScene";
 
 interface Props {
   onReady?: () => void;
+  booted: boolean;
 }
 
-export function UniverseCanvas({ onReady }: Props) {
+// Signal readiness after the renderer has completed its first scene frame.
+// onCreated alone fires before the first visible frame is guaranteed.
+function SceneFirstFrame({ onReady }: { onReady?: () => void }) {
+  const signalled = useRef(false);
+  useFrame(() => {
+    if (signalled.current) return;
+    signalled.current = true;
+    onReady?.();
+  });
+  return null;
+}
+
+export function UniverseCanvas({ onReady, booted }: Props) {
   const quality = usePortfolioStore((s) => s.quality);
   const reduced = usePortfolioStore((s) => s.reducedMotion);
   const webgl = usePortfolioStore((s) => s.webgl);
@@ -20,6 +34,8 @@ export function UniverseCanvas({ onReady }: Props) {
   // than the scene's visual payoff there.
   const dprMax = isTouchDevice() ? 1.5 : reduced ? 1.5 : 2;
 
+  // Keep the scene in demand mode while the HTML splash is visible. Texture
+  // downloads can complete without driving a continuous startup render loop.
   return (
     <Canvas
       dpr={[1, dprMax]}
@@ -34,13 +50,13 @@ export function UniverseCanvas({ onReady }: Props) {
       }}
       onCreated={({ gl }) => {
         gl.setClearColor("#01030a");
-        onReady?.();
       }}
       performance={{ min: 0.5 }}
-      frameloop="always"
+      frameloop={booted ? "always" : "demand"}
     >
       <fog attach="fog" args={["#01030a", 45, 150]} />
       <UniverseScene />
+      <SceneFirstFrame onReady={onReady} />
 
       {settings.postprocessing && (
         <EffectComposer multisampling={reduced || quality === "low" || quality === "medium" ? 0 : 2}>

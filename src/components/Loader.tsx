@@ -1,53 +1,121 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { AnimatePresence } from "framer-motion";
 import { usePortfolioStore } from "../store/portfolioStore";
-import { isTouchDevice } from "../lib/device";
-import { ReactLogoLoader } from "./ReactLogoLoader";
+import { AppleHelloEffectEnglish } from "./apple-hello-effect/AppleHelloEffectEnglish";
+import { AppleHelloEffectHindi } from "./apple-hello-effect/AppleHelloEffectHindi";
 
-export function Loader() {
+interface LoaderProps {
+  ready: boolean;
+}
+
+/**
+ * The HTML shell paints the fallback before React starts. Once React mounts,
+ * the handwritten SVG animates above the app while the initial scene starts.
+ */
+export function Loader({ ready }: LoaderProps) {
   const boot = usePortfolioStore((s) => s.boot);
-  const booted = usePortfolioStore((s) => s.booted);
   const reducedMotion = usePortfolioStore((s) => s.reducedMotion);
-  const [hidden, setHidden] = useState(false);
+  const [index, setIndex] = useState(0);
+  const [animationTarget, setAnimationTarget] = useState<HTMLElement | null>(null);
+  const [animationFinished, setAnimationFinished] = useState(false);
+  const readyRef = useRef(ready);
+  const animationFinishedRef = useRef(animationFinished);
+  const finishRef = useRef<(() => void) | null>(null);
+  const minimumElapsed = reducedMotion ? 600 : 1500;
 
   useEffect(() => {
-    if (booted) return;
-    // Phones boot fast: brief splash, then GitHub data streams in
-    // behind the already-interactive page.
-    if (isTouchDevice()) {
-      const quick = window.setTimeout(() => {
-        setHidden(true);
-        boot();
-      }, 400);
-      return () => window.clearTimeout(quick);
+    readyRef.current = ready;
+    animationFinishedRef.current = animationFinished;
+
+    if (
+      ready &&
+      performance.now() >= minimumElapsed &&
+      (reducedMotion || animationFinished)
+    ) {
+      finishRef.current?.();
+    }
+  }, [ready, reducedMotion, animationFinished, minimumElapsed]);
+
+  useEffect(() => {
+    const splash = document.getElementById("startup-splash");
+    const target = document.getElementById("startup-animation");
+    if (target && splash && !reducedMotion) {
+      splash.classList.add("has-animated-hello");
+      setAnimationTarget(target);
+    } else {
+      splash?.classList.remove("has-animated-hello");
+      setAnimationTarget(null);
     }
 
-    // The universe now preloads in parallel, so a long artificial splash only
-    // makes the finished background feel late.
-    const finish = window.setTimeout(() => {
-      setHidden(true);
-      boot();
-      window.setTimeout(() => usePortfolioStore.getState().setGithubLoading(false), 0);
-    }, 750);
+    let finished = false;
+    let removeTimer = 0;
+
+    const finish = () => {
+      if (finished) return;
+      finished = true;
+      splash?.classList.add("is-leaving");
+      // Complete the black overlay fade before mounting the heavyweight scene.
+      removeTimer = window.setTimeout(() => {
+        splash?.remove();
+        boot();
+        window.setTimeout(() => usePortfolioStore.getState().setGithubLoading(false), 0);
+      }, 650);
+    };
+
+    finishRef.current = finish;
+
+    // Large planet maps stream progressively. Only the first-screen portrait
+    // and canvas shell gate the splash; the background's animation loop is
+    // paused until the splash exits.
+    const maximumElapsed = reducedMotion ? 3600 : 7200;
+    const minTimer = window.setTimeout(() => {
+      if (
+        readyRef.current &&
+        (reducedMotion || animationFinishedRef.current)
+      ) {
+        finish();
+      }
+    }, Math.max(0, minimumElapsed - performance.now()));
+    const maxTimer = window.setTimeout(finish, maximumElapsed);
 
     return () => {
-      window.clearTimeout(finish);
+      window.clearTimeout(minTimer);
+      window.clearTimeout(maxTimer);
+      if (removeTimer) window.clearTimeout(removeTimer);
+      finishRef.current = null;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [booted]);
+  }, [boot, reducedMotion, minimumElapsed]);
 
-  return (
-    <div className={`loader ${hidden ? "hidden" : ""}`} role="status" aria-live="polite">
-      <div className="l-title">please hang on</div>
-      <ReactLogoLoader size={150} reducedMotion={reducedMotion} />
-      <button
-        className="l-skip"
-        onClick={() => {
-          setHidden(true);
-          boot();
-        }}
-      >
-        SKIP
-      </button>
-    </div>
+  const handleAnimationEnd = () => {
+    // The Hindi greeting is always the final animated word.
+    if (index === 1) {
+      setAnimationFinished(true);
+      if (readyRef.current && performance.now() >= minimumElapsed) {
+        finishRef.current?.();
+      }
+      return;
+    }
+
+    setIndex(1);
+  };
+
+  const demos = [
+    <AppleHelloEffectEnglish
+      key="english"
+      durationScale={0.5}
+      onAnimationComplete={handleAnimationEnd}
+    />,
+    <AppleHelloEffectHindi
+      key="namaste"
+      durationScale={0.5}
+      onAnimationComplete={handleAnimationEnd}
+    />,
+  ];
+
+  if (!animationTarget || reducedMotion) return null;
+  return createPortal(
+    <AnimatePresence mode="wait">{demos[index]}</AnimatePresence>,
+    animationTarget
   );
 }
