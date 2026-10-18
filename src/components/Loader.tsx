@@ -4,7 +4,6 @@ import { AnimatePresence } from "framer-motion";
 import { usePortfolioStore } from "../store/portfolioStore";
 import { AppleHelloEffectEnglish } from "./apple-hello-effect/AppleHelloEffectEnglish";
 import { AppleHelloEffectHindi } from "./apple-hello-effect/AppleHelloEffectHindi";
-import { AppleHelloEffectSpanish } from "./apple-hello-effect/AppleHelloEffectSpanish";
 import { AppleHelloEffectJapanese } from "./apple-hello-effect/AppleHelloEffectJapanese";
 
 interface LoaderProps {
@@ -70,7 +69,9 @@ export function Loader({ ready }: LoaderProps) {
     // Large planet maps stream progressively. Only the first-screen portrait
     // and canvas shell gate the splash; the background's animation loop is
     // paused until the splash exits.
-    const maximumElapsed = reducedMotion ? 3600 : 7200;
+    // Leave enough time for all three greetings and their exit transitions.
+    // The timeout remains a safety net if an animation callback never fires.
+    const maximumElapsed = reducedMotion ? 3600 : 11000;
     const minTimer = window.setTimeout(() => {
       if (
         readyRef.current &&
@@ -90,8 +91,8 @@ export function Loader({ ready }: LoaderProps) {
   }, [boot, reducedMotion, minimumElapsed]);
 
   const handleAnimationEnd = () => {
-    // Japanese is the final greeting in the four-language sequence.
-    if (index === 3) {
+    // Japanese is the final greeting in the three-language sequence.
+    if (index === 2) {
       setAnimationFinished(true);
       if (readyRef.current && performance.now() >= minimumElapsed) {
         finishRef.current?.();
@@ -113,14 +114,10 @@ export function Loader({ ready }: LoaderProps) {
       durationScale={0.5}
       onAnimationComplete={handleAnimationEnd}
     />,
-    <AppleHelloEffectSpanish
-      key="hola"
-      durationScale={0.5}
-      onAnimationComplete={handleAnimationEnd}
-    />,
     <AppleHelloEffectJapanese
-      key="konnichiwa"
-      durationScale={0.7}
+      key="japanese-hello"
+      // Keep the Japanese greeting on screen long enough to finish its motion.
+      durationScale={1.6}
       onAnimationComplete={handleAnimationEnd}
     />,
   ];
