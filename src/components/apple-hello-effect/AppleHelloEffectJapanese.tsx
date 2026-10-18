@@ -34,8 +34,8 @@ const STROKE_GROUPS: string[][] = [
 
 const GLYPH_SIZE = 109;
 const GLYPH_GAP = -6;
-const TOTAL_SECONDS = 3.5;
-const STROKE_SECONDS = 0.55;
+const TOTAL_SECONDS = 2.55;
+const STROKE_SECONDS = 0.25;
 const STROKE_COUNT = STROKE_GROUPS.reduce((sum, group) => sum + group.length, 0);
 const STROKE_STEP = (TOTAL_SECONDS - STROKE_SECONDS) / (STROKE_COUNT - 1);
 
