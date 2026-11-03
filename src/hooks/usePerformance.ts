@@ -123,8 +123,9 @@ export function useRAFScheduler() {
 /**
  * useThrottledEvent: Create a throttled event handler
  * Returns memoized throttled function
+ * Supports both DOM events and React synthetic events
  */
-export function useThrottledEvent<E extends Event>(
+export function useThrottledEvent<E extends Event | React.SyntheticEvent>(
   handler: (event: E) => void,
   interval: number = 16
 ): (event: E) => void {
