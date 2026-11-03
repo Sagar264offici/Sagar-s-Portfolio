@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import type { CSSProperties } from "react";
+import './apple-hello-effect.css';
 
 interface AppleHelloEffectJapaneseProps {
   className?: string;
@@ -61,12 +62,24 @@ export function AppleHelloEffectJapanese({
           "drop-shadow(0 0 6px rgba(120, 230, 255, .75)) drop-shadow(0 0 18px rgba(60, 170, 255, .45))",
       }}
       role="img"
-      aria-label="こんにちは"
+      aria-label="こんにちは (Konnichiva)"
       initial={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
       <title>こんにちは</title>
+      {/* Text label below the animation: "Konnichiva" */}
+      <text
+        x="257.5"
+        y="105"
+        textAnchor="middle"
+        fontSize="8"
+        fill="currentColor"
+        opacity="0.8"
+        className="apple-hello-text-label"
+      >
+        Konnichiva
+      </text>
       {STROKE_GROUPS.map((strokes, groupIndex) => (
         <g
           key={groupIndex}

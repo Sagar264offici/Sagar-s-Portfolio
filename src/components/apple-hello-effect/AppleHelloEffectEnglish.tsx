@@ -1,5 +1,6 @@
 import { motion } from "framer-motion"
 import type { CSSProperties } from "react"
+import './apple-hello-effect.css';
 
 interface AppleHelloEffectEnglishProps {
   className?: string;

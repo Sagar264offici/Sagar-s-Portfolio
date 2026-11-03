@@ -1,0 +1,46 @@
+/* Apple Hello Effect Styles */
+
+.apple-hello-svg {
+  width: 100%;
+  height: auto;
+  max-width: 400px;
+  display: block;
+  margin: 0 auto;
+}
+
+.apple-hello-draw-path {
+  pathLength: 1;
+  animation: dasharray 1s linear infinite;
+}
+
+@apple-hello-svg .apple-hello-draw-path {
+  animation-timing-function: steps(2, end);
+}
+
+/* Text label for Japanese greeting */
+.apple-hello-text-label {
+  font-family: 'Courier New', monospace;
+  font-weight: 300;
+  letter-spacing: 1px;
+  text-shadow: 0 0 4px rgba(255, 255, 255, 0.3);
+}
+
+/* Performance optimizations for hello animations */
+.apple-hello-svg {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Reduce motion preference support */
+@media (prefers-reduced-motion: reduce) {
+  .apple-hello-draw-path {
+    animation: none !important;
+    stroke-dasharray: 1;
+    opacity: 1;
+  }
+
+  .apple-hello-svg {
+    will-change: auto;
+  }
+}
