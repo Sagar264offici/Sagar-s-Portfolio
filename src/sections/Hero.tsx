@@ -1,15 +1,8 @@
-import { motion } from "framer-motion";
 import { ChevronDown, TerminalSquare } from "lucide-react";
 import { usePortfolioStore, scrollToSection } from "../store/portfolioStore";
 import { audio } from "../lib/audio";
 
 const roles = ["Developer", "Student", "Builder"];
-
-const fade = (delay: number) => ({
-  initial: { opacity: 0, y: 26 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] as const },
-});
 
 export function Hero() {
   const setTerminalOpen = usePortfolioStore((s) => s.setTerminalOpen);
@@ -18,9 +11,9 @@ export function Hero() {
   return (
     <section id="home" className="hero">
       <div className="hero-copy">
-        <motion.div {...fade(0.15)} className="tag">
+        <div className="tag">
           INTERACTIVE PORTFOLIO — THE CAREER UNIVERSE
-        </motion.div>
+        </div>
 
         <div className="hero-identity">
           <span className="hero-photo">
@@ -31,7 +24,9 @@ export function Hero() {
               width={264}
               height={264}
               alt="Sagar Pathak"
-              decoding="async"
+              decoding="sync"
+              fetchPriority="high"
+              loading="eager"
             />
           </span>
           <h1 className="hero-name">
@@ -41,23 +36,23 @@ export function Hero() {
           </h1>
         </div>
 
-        <motion.p {...fade(0.4)} className="hero-tagline">
+        <p className="hero-tagline">
           I build things that <span className="text-grad">shouldn't be this interactive.</span>
-        </motion.p>
+        </p>
 
-        <motion.div {...fade(0.5)} className="hero-roles">
+        <div className="hero-roles">
           {roles.map((r) => (
             <span key={r} className="chip">
               {r}
             </span>
           ))}
-        </motion.div>
+        </div>
 
-        <motion.p {...fade(0.6)} className="hero-desc">
+        <p className="hero-desc">
           BSc IT student from Rishikesh — I build web projects, interactive experiments and the occasional 3D simulation. Still learning, still shipping.
-        </motion.p>
+        </p>
 
-        <motion.div {...fade(0.7)} className="hero-ctas">
+        <div className="hero-ctas">
           <button
             className="btn btn-primary"
             data-cursor-label="ENTER"
@@ -88,7 +83,7 @@ export function Hero() {
           >
             <TerminalSquare size={14} /> INSPECT SYSTEM
           </button>
-        </motion.div>
+        </div>
       </div>
 
       {!professional && (

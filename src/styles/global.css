@@ -437,6 +437,55 @@ html[data-reduced="1"] *::after {
   }
 }
 
+/* ── CSS animations for Hero (replaces Framer Motion overhead) ─── */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Hero fade-ins with staggered delays */
+.hero-copy .tag {
+  animation: fadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 0.15s;
+  opacity: 0;
+}
+
+.hero-identity {
+  animation: fadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 0.25s;
+  opacity: 0;
+}
+
+.hero-tagline {
+  animation: fadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 0.4s;
+  opacity: 0;
+}
+
+.hero-roles {
+  animation: fadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 0.5s;
+  opacity: 0;
+}
+
+.hero-desc {
+  animation: fadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 0.6s;
+  opacity: 0;
+}
+
+.hero-ctas {
+  animation: fadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 0.7s;
+  opacity: 0;
+}
+
 /* Mobile viewport height — respect dynamic browser toolbars */
 .section {
   min-height: 100vh;

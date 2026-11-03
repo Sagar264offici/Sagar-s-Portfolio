@@ -23,7 +23,8 @@ export function Loader({ ready }: LoaderProps) {
   const readyRef = useRef(ready);
   const animationFinishedRef = useRef(animationFinished);
   const finishRef = useRef<(() => void) | null>(null);
-  const minimumElapsed = reducedMotion ? 600 : 1500;
+  // Reduced from 1500ms to 800ms for faster initial load
+  const minimumElapsed = reducedMotion ? 400 : 800;
 
   useEffect(() => {
     readyRef.current = ready;
@@ -71,7 +72,8 @@ export function Loader({ ready }: LoaderProps) {
     // paused until the splash exits.
     // Leave enough time for all three greetings and their exit transitions.
     // The timeout remains a safety net if an animation callback never fires.
-    const maximumElapsed = reducedMotion ? 3600 : 11000;
+    // Reduced from 11000ms to 6000ms for faster initial load
+    const maximumElapsed = reducedMotion ? 2400 : 6000;
     const minTimer = window.setTimeout(() => {
       if (
         readyRef.current &&

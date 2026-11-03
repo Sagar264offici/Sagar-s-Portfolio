@@ -1,0 +1,156 @@
+/* TextBlock: Clean typography with no decorative effects */
+
+.text-block {
+  margin: 0;
+  padding: 0;
+}
+
+/* Heading variant - no glows, solid colors */
+.text-block--heading {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  margin-bottom: 1.5rem;
+}
+
+.text-block--heading strong {
+  background: linear-gradient(135deg, #22d3ee 0%, #e879f9 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+}
+
+/* Subtitle variant */
+.text-block--subtitle {
+  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0em;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 1rem;
+}
+
+/* Body variant - improved readability */
+.text-block--body {
+  font-size: clamp(1rem, 1.5vw, 1.1rem);
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 1.5rem;
+  max-width: 65ch;
+}
+
+.text-block--body p {
+  margin: 0 0 1rem 0;
+}
+
+.text-block--body p:last-child {
+  margin-bottom: 0;
+}
+
+.text-block--body strong {
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 600;
+}
+
+.text-block--body em {
+  color: #22d3ee;
+  font-style: italic;
+}
+
+/* Caption variant */
+.text-block--caption {
+  font-size: clamp(0.85rem, 1vw, 0.95rem);
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.03em;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+}
+
+/* Lists */
+.text-block--body ul,
+.text-block--body ol {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+.text-block--body li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+.text-block--body li:before {
+  color: #22d3ee;
+}
+
+/* Links */
+.text-block--body a {
+  color: #22d3ee;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(34, 211, 238, 0.5);
+  transition: all 0.2s ease;
+}
+
+.text-block--body a:hover {
+  color: #e879f9;
+  border-bottom-color: #e879f9;
+}
+
+/* Code blocks */
+.text-block--body code {
+  background: rgba(34, 211, 238, 0.1);
+  color: #22d3ee;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.9em;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .text-block--heading {
+    margin-bottom: 1rem;
+  }
+
+  .text-block--subtitle {
+    margin-bottom: 0.75rem;
+  }
+
+  .text-block--body {
+    margin-bottom: 1.25rem;
+    line-height: 1.55;
+  }
+
+  .text-block--body ul,
+  .text-block--body ol {
+    margin: 0.75rem 0;
+    padding-left: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .text-block--heading {
+    font-size: 1.5rem;
+  }
+
+  .text-block--subtitle {
+    font-size: 1rem;
+  }
+
+  .text-block--body {
+    font-size: 0.95rem;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .text-block {
+    animation: none;
+  }
+}
