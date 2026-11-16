@@ -23,6 +23,7 @@ import { useLenis } from "./hooks/useLenis";
 import { useKonami } from "./hooks/useKonami";
 import { useGithubData } from "./hooks/useGithubData";
 import { usePortfolioStore } from "./store/portfolioStore";
+import { audio } from "./lib/audio";
 
 // Do not download the heavyweight WebGL scene during the greeting.
 // React.lazy requests it only after the splash exits and booted becomes true.
