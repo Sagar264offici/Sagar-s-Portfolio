@@ -3,8 +3,6 @@ import { createPortal } from "react-dom";
 import { AnimatePresence } from "framer-motion";
 import { usePortfolioStore } from "../store/portfolioStore";
 import { AppleHelloEffectEnglish } from "./apple-hello-effect/AppleHelloEffectEnglish";
-import { AppleHelloEffectHindi } from "./apple-hello-effect/AppleHelloEffectHindi";
-import { AppleHelloEffectJapanese } from "./apple-hello-effect/AppleHelloEffectJapanese";
 
 interface LoaderProps {
   ready: boolean;
@@ -17,7 +15,6 @@ interface LoaderProps {
 export function Loader({ ready }: LoaderProps) {
   const boot = usePortfolioStore((s) => s.boot);
   const reducedMotion = usePortfolioStore((s) => s.reducedMotion);
-  const [index, setIndex] = useState(0);
   const [animationTarget, setAnimationTarget] = useState<HTMLElement | null>(null);
   const [animationFinished, setAnimationFinished] = useState(false);
   const readyRef = useRef(ready);
@@ -70,10 +67,10 @@ export function Loader({ ready }: LoaderProps) {
     // Large planet maps stream progressively. Only the first-screen portrait
     // and canvas shell gate the splash; the background's animation loop is
     // paused until the splash exits.
-    // Leave enough time for all three greetings and their exit transitions.
+    // Keep a generous fallback window for the single complete greeting and its exit transition.
     // The timeout remains a safety net if an animation callback never fires.
     // Reduced from 11000ms to 6000ms for faster initial load
-    const maximumElapsed = reducedMotion ? 2400 : 6000;
+    const maximumElapsed = reducedMotion ? 2400 : 9000;
     const minTimer = window.setTimeout(() => {
       if (
         readyRef.current &&
@@ -93,40 +90,22 @@ export function Loader({ ready }: LoaderProps) {
   }, [boot, reducedMotion, minimumElapsed]);
 
   const handleAnimationEnd = () => {
-    // Japanese is the final greeting in the three-language sequence.
-    if (index === 2) {
-      setAnimationFinished(true);
-      if (readyRef.current && performance.now() >= minimumElapsed) {
-        finishRef.current?.();
-      }
-      return;
+    setAnimationFinished(true);
+    if (readyRef.current && performance.now() >= minimumElapsed) {
+      finishRef.current?.();
     }
-
-    setIndex((current) => current + 1);
   };
 
-  const demos = [
+  const demo = (
     <AppleHelloEffectEnglish
-      key="english"
-      durationScale={0.5}
+      durationScale={1}
       onAnimationComplete={handleAnimationEnd}
-    />,
-    <AppleHelloEffectHindi
-      key="namaste"
-      durationScale={0.5}
-      onAnimationComplete={handleAnimationEnd}
-    />,
-    <AppleHelloEffectJapanese
-      key="japanese-hello"
-      // Keep the Japanese greeting on screen long enough to finish its motion.
-      durationScale={1.6}
-      onAnimationComplete={handleAnimationEnd}
-    />,
-  ];
+    />
+  );
 
   if (!animationTarget || reducedMotion) return null;
   return createPortal(
-    <AnimatePresence mode="wait">{demos[index]}</AnimatePresence>,
+    <AnimatePresence mode="wait">{demo}</AnimatePresence>,
     animationTarget
   );
 }

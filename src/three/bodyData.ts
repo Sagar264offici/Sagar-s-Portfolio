@@ -1,7 +1,6 @@
 import { projects } from "../data/projects";
-import { skillCategories } from "../data/skills";
 
-export type BodyKind = "project" | "built" | "foundation" | "exploring" | "moon";
+export type BodyKind = "project" | "moon";
 
 export interface BodyDef {
   key: string;
@@ -104,81 +103,10 @@ const projectBodies: BodyDef[] = projects.map((p, i) => ({
   note: p.category,
 }));
 
-/* ── ORBIT 3: the stacks actually used on those websites ──
-   (every technology that has a shipped project) */
-const stackSkills = [...skillCategories[0].skills, ...skillCategories[1].skills].filter(
-  (s) => s.projects.length > 0
-);
-
-const stackBodies: BodyDef[] = stackSkills.map((skill, i) => ({
-  key: `stack:${skill.name}`,
-  name: skill.name,
-  kind: "built" as const,
-  ring: 16.5,
-  angle: spread(i, stackSkills.length, 0.3),
-  speed: 0.036 * (1 + hash(skill.name) * 0.7),
-  size: 0.5 + 0.3 * skill.confidence,
-  color: "#22d3ee",
-  opacity: 1,
-  tilt: (hash(skill.name) - 0.5) * 0.2,
-  seed: seedOf(skill.name),
-  dwarf: false,
-  skillName: skill.name,
-  note: "Used on the project sites",
-}));
-
-/* ── ORBIT 4: foundation / system skills ──
-   (Linux, Git, GitHub, Technical Documentation, C, C++ — project-less ones are dwarfs) */
-const foundationSkills = skillCategories[1].skills;
-const coreSkills = [
-  ...skillCategories[0].skills.filter((s) => s.name === "Linux" || s.name === "Git" || s.name === "GitHub" || s.name === "Technical Documentation"),
-  ...foundationSkills.filter((s) => s.name === "C" || s.name === "C++"),
-];
-
-const foundationBodies: BodyDef[] = coreSkills.map((skill, i) => ({
-  key: `foundation:${skill.name}`,
-  name: skill.name,
-  kind: "foundation" as const,
-  ring: 22.5,
-  angle: spread(i, coreSkills.length, 0.32),
-  speed: 0.026 * (1 + hash(skill.name) * 0.7),
-  size: skill.projects.length > 0 ? 0.48 + 0.2 * skill.confidence : 0.34 + hash(skill.name) * 0.06,
-  color: skill.projects.length > 0 ? "#60a5fa" : "#7d8597",
-  opacity: skill.projects.length > 0 ? 1 : 0.8,
-  tilt: (hash(skill.name) - 0.5) * 0.24,
-  seed: seedOf(skill.name),
-  dwarf: skill.projects.length === 0,
-  skillName: skill.name,
-  note: skill.projects.length > 0 ? "Foundation" : "Dwarf — no shipped project yet",
-}));
-
-/* ── ORBIT 5 (outer): exploring — all rendered as dwarf planets ── */
-const exploringSkills = skillCategories[2].skills;
-
-const exploringBodies: BodyDef[] = exploringSkills.map((skill, i) => ({
-  key: `exploring:${skill.name}`,
-  name: skill.name,
-  kind: "exploring" as const,
-  ring: 29.5,
-  angle: spread(i, exploringSkills.length, 0.4),
-  speed: 0.018 * (1 + hash(skill.name) * 0.8),
-  size: 0.26 + hash(skill.name) * 0.12,
-  color: "#a78bfa",
-  opacity: 0.85,
-  tilt: (hash(skill.name) - 0.5) * 0.34,
-  seed: seedOf(skill.name),
-  dwarf: true,
-  skillName: skill.name,
-  note: "Exploring — dwarf planet",
-}));
-
-export const bodyDefs: BodyDef[] = [
-  moonBody,
-  ...projectBodies,
-  ...stackBodies,
-  ...foundationBodies,
-  ...exploringBodies,
-];
+/* Keep the 3D universe focused: the planets represent shipped work only.
+   Skills and tools stay in the dedicated Skills section instead of filling
+   every remaining orbit with tiny, overlapping bodies. */
+export const bodyDefs: BodyDef[] = [moonBody, ...projectBodies];
 
 export function findBody(key: string): BodyDef | undefined {
   return bodyDefs.find((b) => b.key === key);
@@ -188,7 +116,4 @@ export function findBody(key: string): BodyDef | undefined {
 export const orbitKinds: { ring: number; kind: BodyKind; color: string }[] = [
   { ring: 7.5, kind: "moon", color: "#94a3b8" },
   { ring: 11.5, kind: "project", color: "#fb923c" },
-  { ring: 16.5, kind: "built", color: "#22d3ee" },
-  { ring: 22.5, kind: "foundation", color: "#3b82f6" },
-  { ring: 29.5, kind: "exploring", color: "#8b5cf6" },
 ];

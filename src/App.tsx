@@ -1,12 +1,8 @@
 import { Suspense, lazy, useEffect, useState } from "react";
-import { UserRound } from "lucide-react";
 import { FallbackBackground } from "./components/FallbackBackground";
 import { Loader } from "./components/Loader";
-import { Cursor } from "./components/Cursor";
 import { Navbar } from "./components/Navbar";
-import { SideRail } from "./components/SideRail";
 import { OrbitNav } from "./components/OrbitNav";
-import { Hud } from "./components/Hud";
 import { Terminal } from "./components/Terminal";
 import { HoloPanel } from "./components/HoloPanel";
 import { RecruiterModal } from "./components/RecruiterModal";
@@ -27,7 +23,6 @@ import { useLenis } from "./hooks/useLenis";
 import { useKonami } from "./hooks/useKonami";
 import { useGithubData } from "./hooks/useGithubData";
 import { usePortfolioStore } from "./store/portfolioStore";
-import { audio } from "./lib/audio";
 
 // Do not download the heavyweight WebGL scene during the greeting.
 // React.lazy requests it only after the splash exits and booted becomes true.
@@ -43,7 +38,6 @@ export default function App() {
   const webgl = usePortfolioStore((s) => s.webgl);
   const booted = usePortfolioStore((s) => s.booted);
   const setReducedMotion = usePortfolioStore((s) => s.setReducedMotion);
-  const setRecruiterOpen = usePortfolioStore((s) => s.setRecruiterOpen);
   const [sceneReady, setSceneReady] = useState(false);
   const [showFallback, setShowFallback] = useState(true);
   const [portraitReady, setPortraitReady] = useState(false);
@@ -133,18 +127,6 @@ export default function App() {
     return () => audio.disable();
   }, [soundOn]);
 
-  // Quiet hover blips on interactive chrome.
-  useEffect(() => {
-    const onOver = (e: Event) => {
-      const t = e.target as HTMLElement;
-      if (t.closest?.(".btn, .nav-link, .nav-toggle, .rail-dot, .contact-card, .proj-card, .repo-card")) {
-        audio.blip("hover");
-      }
-    };
-    document.addEventListener("pointerover", onOver, { passive: true });
-    return () => document.removeEventListener("pointerover", onOver);
-  }, []);
-
   // Ensure we start at the top.
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -166,9 +148,7 @@ export default function App() {
       </div>
 
       <Navbar />
-      <SideRail />
       <OrbitNav />
-      <Hud />
 
       <main className="scroll-content">
         <Hero />
@@ -184,23 +164,11 @@ export default function App() {
         <WarpDrive />
       </main>
 
-      <button
-        className="float-hr"
-        onClick={() => {
-          setRecruiterOpen(true);
-          audio.blip("select");
-        }}
-        data-cursor-label="PROFILE"
-      >
-        <UserRound size={13} /> FOR RECRUITERS
-      </button>
-
       <Terminal />
       <HoloPanel />
       <RecruiterModal />
       <AstronomyOverlay />
       <PlanetTooltip />
-      <Cursor />
     </>
   );
 }
