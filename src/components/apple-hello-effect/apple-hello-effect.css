@@ -1,46 +1,43 @@
-/* Apple Hello Effect Styles */
-
+/* Handwriting paths are animated only by the splash shell's stroke timing. */
 .apple-hello-svg {
-  width: 100%;
+  width: min(84vw, 638px);
   height: auto;
-  max-width: 400px;
+  max-height: min(32vh, 190px);
   display: block;
   margin: 0 auto;
+  overflow: visible;
+  color: #eafaff;
+  stroke: currentColor;
+  will-change: opacity;
+  backface-visibility: hidden;
 }
 
 .apple-hello-draw-path {
   pathLength: 1;
-  animation: dasharray 1s linear infinite;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+  animation: apple-hello-stroke-draw var(--hello-duration, 1s) cubic-bezier(.33, 1, .45, 1) var(--hello-delay, 0s) both;
 }
 
-@apple-hello-svg .apple-hello-draw-path {
-  animation-timing-function: steps(2, end);
+@keyframes apple-hello-stroke-draw {
+  0% { stroke-dashoffset: 1; opacity: 0; }
+  8% { opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 1; }
 }
 
-/* Text label for Japanese greeting */
 .apple-hello-text-label {
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
   font-weight: 300;
   letter-spacing: 1px;
-  text-shadow: 0 0 4px rgba(255, 255, 255, 0.3);
+  text-shadow: 0 0 4px rgba(255, 255, 255, .3);
 }
 
-/* Performance optimizations for hello animations */
-.apple-hello-svg {
-  will-change: transform, opacity;
-  transform: translateZ(0);
-  backface-visibility: hidden;
-}
-
-/* Reduce motion preference support */
 @media (prefers-reduced-motion: reduce) {
   .apple-hello-draw-path {
     animation: none !important;
-    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
     opacity: 1;
   }
-
-  .apple-hello-svg {
-    will-change: auto;
-  }
+  .apple-hello-svg { will-change: auto; }
 }
