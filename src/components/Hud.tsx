@@ -23,26 +23,6 @@ export function Hud() {
 
   return (
     <>
-      <div className="hud" aria-hidden>
-        <div className="row">
-          <span className="dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--green)", boxShadow: "0 0 8px var(--green)" }} />
-          <span>SYSTEM STATUS: <span className="val">ONLINE</span></span>
-        </div>
-        <div className="row">
-          <span>{microcopy(progress)}</span>
-        </div>
-        <div className="row">
-          <span>RENDER: <span className="val">{quality.toUpperCase()}</span></span>
-        </div>
-        <div className="row">
-          <span>GITHUB: <span className="val">{githubSource === "live" ? "LIVE" : githubSource === "fallback" ? "OFFLINE CACHE" : "UNREACHABLE"}</span></span>
-        </div>
-      </div>
-
-      <div className="hud-corner" aria-hidden>
-        <span>UNIVERSE MAP {pct}%</span>
-      </div>
-
       {secret && (
         <div className="secret-badge" role="status">
           DEV SECRET MODE
