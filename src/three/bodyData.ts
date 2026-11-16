@@ -1,6 +1,6 @@
 import { projects } from "../data/projects";
 
-export type BodyKind = "project" | "moon";
+export type BodyKind = "project" | "built" | "foundation" | "exploring" | "moon";
 
 export interface BodyDef {
   key: string;
