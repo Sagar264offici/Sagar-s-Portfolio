@@ -1,5 +1,5 @@
 import { useState, type CSSProperties } from "react";
-import { Orbit, RotateCw, X } from "lucide-react";
+import { Orbit, X } from "lucide-react";
 import { bodyDefs, type BodyDef } from "../three/bodyData";
 import { scrollToSection, usePortfolioStore } from "../store/portfolioStore";
 import { audio } from "../lib/audio";
@@ -23,8 +23,6 @@ const STATIONS: Station[] = [
 export function OrbitNav() {
   const [open, setOpen] = useState<string | null>(null);
   const professional = usePortfolioStore((s) => s.professionalMode);
-  const orbitSpin = usePortfolioStore((s) => s.orbitSpin);
-  const setOrbitSpin = usePortfolioStore((s) => s.setOrbitSpin);
   const setFocusedBody = usePortfolioStore((s) => s.setFocusedBody);
   const setHoloCard = usePortfolioStore((s) => s.setHoloCard);
   const setAstronomyOpen = usePortfolioStore((s) => s.setAstronomyOpen);
@@ -105,33 +103,7 @@ export function OrbitNav() {
         ))}
       </div>
 
-      {/* manual spin — a scrollbar that rotates the whole solar system */}
-      <div className="on-spin">
-        <RotateCw size={11} style={{ color: "var(--cyan)", flexShrink: 0 }} />
-        <span className="on-spin-label">ROTATE</span>
-        <input
-          type="range"
-          min={0}
-          max={360}
-          step={1}
-          value={orbitSpin}
-          onChange={(e) => setOrbitSpin(Number(e.target.value))}
-          aria-label="Rotate the solar system"
-          data-cursor-label="SPIN"
-        />
-        <span className="on-spin-val">{Math.round(orbitSpin)}°</span>
-        <button
-          className="on-spin-reset"
-          onClick={() => {
-            audio.blip("click");
-            setOrbitSpin(0);
-          }}
-          aria-label="Reset rotation"
-          title="Reset rotation"
-        >
-          ↺
-        </button>
-      </div>
+
     </div>
   );
 }
