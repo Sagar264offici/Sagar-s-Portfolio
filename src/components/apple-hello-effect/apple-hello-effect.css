@@ -41,3 +41,27 @@
   }
   .apple-hello-svg { will-change: auto; }
 }
+
+/* English uses its own stroke rule so the shared Hindi/Japanese timing is untouched.
+   Linear dash movement keeps this longer compound path at a steady pen speed. */
+.apple-hello-english-path {
+  pathLength: 1;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+  animation: apple-hello-english-draw var(--hello-duration, 1s) linear var(--hello-delay, 0s) both;
+}
+
+@keyframes apple-hello-english-draw {
+  0% { stroke-dashoffset: 1; opacity: 0; }
+  8% { opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .apple-hello-english-path {
+    animation: none !important;
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}

@@ -3,6 +3,8 @@ import { createPortal } from "react-dom";
 import { AnimatePresence } from "framer-motion";
 import { usePortfolioStore } from "../store/portfolioStore";
 import { AppleHelloEffectEnglish } from "./apple-hello-effect/AppleHelloEffectEnglish";
+import { AppleHelloEffectHindi } from "./apple-hello-effect/AppleHelloEffectHindi";
+import { AppleHelloEffectJapanese } from "./apple-hello-effect/AppleHelloEffectJapanese";
 
 interface LoaderProps {
   ready: boolean;
@@ -10,17 +12,17 @@ interface LoaderProps {
 
 /**
  * The HTML shell paints the fallback before React starts. Once React mounts,
- * the handwritten SVG animates above the app while the initial scene starts.
+ * the handwritten SVG greetings animate above the app while the initial scene starts.
  */
 export function Loader({ ready }: LoaderProps) {
   const boot = usePortfolioStore((s) => s.boot);
   const reducedMotion = usePortfolioStore((s) => s.reducedMotion);
+  const [index, setIndex] = useState(0);
   const [animationTarget, setAnimationTarget] = useState<HTMLElement | null>(null);
   const [animationFinished, setAnimationFinished] = useState(false);
   const readyRef = useRef(ready);
   const animationFinishedRef = useRef(animationFinished);
   const finishRef = useRef<(() => void) | null>(null);
-  // Reduced from 1500ms to 800ms for faster initial load
   const minimumElapsed = reducedMotion ? 400 : 800;
 
   useEffect(() => {
@@ -54,7 +56,6 @@ export function Loader({ ready }: LoaderProps) {
       if (finished) return;
       finished = true;
       splash?.classList.add("is-leaving");
-      // Complete the black overlay fade before mounting the heavyweight scene.
       removeTimer = window.setTimeout(() => {
         splash?.remove();
         boot();
@@ -64,12 +65,8 @@ export function Loader({ ready }: LoaderProps) {
 
     finishRef.current = finish;
 
-    // Large planet maps stream progressively. Only the first-screen portrait
-    // and canvas shell gate the splash; the background's animation loop is
-    // paused until the splash exits.
-    // Keep a generous fallback window for the single complete greeting and its exit transition.
-    // The timeout remains a safety net if an animation callback never fires.
-    // Reduced from 11000ms to 6000ms for faster initial load
+    // Wait for the complete three-language sequence. This timeout is only a
+    // safety net for a browser that fails to dispatch an animation-end event.
     const maximumElapsed = reducedMotion ? 2400 : 9000;
     const minTimer = window.setTimeout(() => {
       if (
@@ -90,22 +87,38 @@ export function Loader({ ready }: LoaderProps) {
   }, [boot, reducedMotion, minimumElapsed]);
 
   const handleAnimationEnd = () => {
-    setAnimationFinished(true);
-    if (readyRef.current && performance.now() >= minimumElapsed) {
-      finishRef.current?.();
+    if (index === 2) {
+      setAnimationFinished(true);
+      if (readyRef.current && performance.now() >= minimumElapsed) {
+        finishRef.current?.();
+      }
+      return;
     }
+
+    setIndex((current) => current + 1);
   };
 
-  const demo = (
+  const demos = [
     <AppleHelloEffectEnglish
-      durationScale={1}
+      key="english"
+      durationScale={0.5}
       onAnimationComplete={handleAnimationEnd}
-    />
-  );
+    />,
+    <AppleHelloEffectHindi
+      key="namaste"
+      durationScale={0.5}
+      onAnimationComplete={handleAnimationEnd}
+    />,
+    <AppleHelloEffectJapanese
+      key="japanese-hello"
+      durationScale={1.6}
+      onAnimationComplete={handleAnimationEnd}
+    />,
+  ];
 
   if (!animationTarget || reducedMotion) return null;
   return createPortal(
-    <AnimatePresence mode="wait">{demo}</AnimatePresence>,
+    <AnimatePresence mode="wait">{demos[index]}</AnimatePresence>,
     animationTarget
   );
 }
